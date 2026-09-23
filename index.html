@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>English Hindi Dictionary</title>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+<style>
+
+*{
+box-sizing:border-box;
+}
+
+body{
+margin:0;
+font-family:Arial, sans-serif;
+background:#f4f7fb;
+color:#222;
+}
+
+header{
+background:#0b5ed7;
+color:white;
+padding:22px;
+text-align:center;
+}
+
+header h1{
+margin:0;
+font-size:28px;
+}
+
+header p{
+margin:7px 0 0;
+}
+
+.container{
+max-width:1100px;
+margin:auto;
+padding:20px;
+}
+
+.card{
+background:white;
+border-radius:14px;
+padding:20px;
+margin-bottom:20px;
+box-shadow:0 3px 12px rgba(0,0,0,.08);
+}
+
+.searchBox{
+display:flex;
+gap:10px;
+}
+
+input{
+width:100%;
+padding:14px;
+font-size:17px;
+border:1px solid #ccc;
+border-radius:8px;
+}
+
+button{
+border:0;
+padding:13px 20px;
+border-radius:8px;
+background:#0b5ed7;
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+
+button:hover{
+opacity:.9;
+}
+
+button.secondary{
+background:#555;
+}
+
+button.green{
+background:#198754;
+}
+
+button.red{
+background:#dc3545;
+}
+
+.wordTitle{
+font-size:32px;
+font-weight:bold;
+color:#0b5ed7;
+}
+
+.meaning{
+font-size:24px;
+font-weight:bold;
+margin:10px 0;
+}
+
+.pronunciation{
+color:#666;
+font-style:italic;
+}
+
+.sentence{
+padding:15px;
+margin:12px 0;
+background:#f5f8ff;
+border-left:5px solid #0b5ed7;
+border-radius:6px;
+}
+
+.english{
+font-size:18px;
+font-weight:bold;
+}
+
+.hindi{
+margin-top:7px;
+font-size:17px;
+color:#333;
+}
+
+.status{
+padding:12px;
+margin-top:12px;
+border-radius:8px;
+display:none;
+}
+
+.status.success{
+display:block;
+background:#d1e7dd;
+color:#0f5132;
+}
+
+.status.error{
+display:block;
+background:#f8d7da;
+color:#842029;
+}
+
+.examQuestion{
+font-size:22px;
+font-weight:bold;
+margin-bottom:20px;
+}
+
+.option{
+padding:15px;
+border:2px solid #ddd;
+border-radius:10px;
+margin:10px 0;
+cursor:pointer;
+font-size:18px;
+background:white;
+}
+
+.option:hover{
+background:#f0f5ff;
+}
+
+.option.correct{
+background:#d1e7dd;
+border-color:#198754;
+color:#0f5132;
+}
+
+.option.incorrect{
+background:#f8d7da;
+border-color:#dc3545;
+color:#842029;
+}
+
+.option.disabled{
+cursor:default;
+}
+
+.correctAnswer{
+margin-top:15px;
+padding:12px;
+background:#fff3cd;
+border-radius:8px;
+font-weight:bold;
+}
+
+.examResult{
+font-size:22px;
+font-weight:bold;
+margin-top:20px;
+}
+
+.tabs{
+display:flex;
+gap:8px;
+flex-wrap:wrap;
+margin-bottom:20px;
+}
+
+.tab{
+background:#6c757d;
+}
+
+.tab.active{
+background:#0b5ed7;
+}
+
+.hidden{
+display:none;
+}
+
+#importProgress{
+margin-top:15px;
+font-weight:bold;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th,td{
+padding:10px;
+border:1px solid #ddd;
+text-align:left;
+}
+
+th{
+background:#0b5ed7;
+color:white;
+}
+
+@media(max-width:600px){
+
+.searchBox{
+flex-direction:column;
+}
+
+.wordTitle{
+font-size:26px;
+}
+
+header h1{
+font-size:23px;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>📚 English → Hindi Dictionary</h1>
+
+<p>Personal Vocabulary & Exam Practice</p>
+
+</header>
+
+
+<div class="container">
+
+
+<div class="tabs">
+
+<button class="tab active"
+onclick="showSection('dictionary',this)">
+📚 Dictionary
+</button>
+
+<button class="tab"
+onclick="showSection('import',this)">
+📥 Excel Import
+</button>
+
+<button class="tab"
+onclick="showSection('exam',this)">
+📝 Exam
+</button>
+
+</div>
+
+
+<!-- ================= DICTIONARY ================= -->
+
+<section id="dictionary">
+
+<div class="card">
+
+<h2>🔍 Search Word</h2>
+
+<div class="searchBox">
+
+<input
+id="searchInput"
+placeholder="Enter English word..."
+onkeydown="if(event.key==='Enter') searchWord()">
+
+<button onclick="searchWord()">
+Search
+</button>
+
+</div>
+
+<div id="searchStatus"
+class="status">
+</div>
+
+</div>
+
+
+<div id="wordResult"
+class="card hidden">
+
+<div class="wordTitle"
+id="wordTitle">
+</div>
+
+<div class="meaning"
+id="wordMeaning">
+</div>
+
+<div class="pronunciation"
+id="wordPronunciation">
+</div>
+
+<hr>
+
+<h2>📖 5 Example Sentences</h2>
+
+<div id="sentences"></div>
+
+</div>
+
+</section>
+
+
+<!-- ================= IMPORT ================= -->
+
+<section id="import"
+class="hidden">
+
+<div class="card">
+
+<h2>📥 Import Excel Words</h2>
+
+<p>
+Excel file में एक column में English words रखें।
+</p>
+
+<p>
+उदाहरण:
+</p>
+
+<table>
+
+<tr>
+<th>Word</th>
+</tr>
+
+<tr>
+<td>Abandon</td>
+</tr>
+
+<tr>
+<td>Ability</td>
+</tr>
+
+<tr>
+<td>Contract</td>
+</tr>
+
+</table>
+
+<br>
+
+<input
+type="file"
+id="excelFile"
+accept=".xlsx,.xls,.csv">
+
+<br><br>
+
+<button
+onclick="importExcel()"
+class="green">
+
+Import Excel
+
+</button>
+
+<div id="importProgress"></div>
+
+</div>
+
+</section>
+
+
+<!-- ================= EXAM ================= -->
+
+<section id="exam"
+class="hidden">
+
+<div class="card">
+
+<h2>📝 English Vocabulary Exam</h2>
+
+<p>
+Random vocabulary questions
+</p>
+
+<button
+onclick="startExam()"
+class="green">
+
+Start Exam
+
+</button>
+
+</div>
+
+
+<div id="examBox"
+class="card hidden">
+
+<div id="examCounter"></div>
+
+<br>
+
+<div
+id="examQuestion"
+class="examQuestion">
+</div>
+
+<div id="options"></div>
+
+<div
+id="correctAnswer"
+class="correctAnswer hidden">
+</div>
+
+<br>
+
+<button
+id="nextButton"
+onclick="nextQuestion()"
+class="hidden">
+
+Next Question →
+
+</button>
+
+<div
+id="examResult"
+class="examResult">
+</div>
+
+</div>
+
+</section>
+
+
+</div>
+
+
+<script>
+
+/*
+==================================================
+PA ENGLISH DICTIONARY
+FRONTEND
+==================================================
+*/
+
+
+// ==============================================
+// IMPORTANT
+// ==============================================
+
+const API_URL =
+"https://script.google.com/macros/s/PASTE_YOUR_WEB_APP_URL_HERE/exec";
+
+
+// ==============================================
+// SECTION SWITCH
+// ==============================================
+
+function showSection(id, button){
+
+document
+.querySelectorAll("section")
+.forEach(function(section){
+
+section.classList.add("hidden");
+
+});
+
+document
+.getElementById(id)
+.classList.remove("hidden");
+
+document
+.querySelectorAll(".tab")
+.forEach(function(btn){
+
+btn.classList.remove("active");
+
+});
+
+button.classList.add("active");
+
+}
+
+
+// ==============================================
+// API GET
+// ==============================================
+
+async function apiGet(params){
+
+const url =
+API_URL +
+"?" +
+new URLSearchParams(params).toString();
+
+const response =
+await fetch(url);
+
+return await response.json();
+
+}
+
+
+// ==============================================
+// API POST
+// ==============================================
+
+async function apiPost(data){
+
+const response =
+await fetch(API_URL,{
+
+method:"POST",
+
+headers:{
+"Content-Type":"text/plain;charset=utf-8"
+},
+
+body:JSON.stringify(data)
+
+});
+
+return await response.json();
+
+}
+
+
+// ==============================================
+// SEARCH
+// ==============================================
+
+async function searchWord(){
+
+const input =
+document.getElementById("searchInput");
+
+const word =
+input.value.trim();
+
+const status =
+document.getElementById("searchStatus");
+
+const result =
+document.getElementById("wordResult");
+
+if(!word){
+
+status.className="status error";
+
+status.innerText=
+"कृपया English word लिखें।";
+
+return;
+
+}
+
+status.className="status success";
+
+status.innerText=
+"🔎 Searching...";
+
+result.classList.add("hidden");
+
+try{
+
+const data =
+await apiGet({
+
+action:"search",
+
+word:word
+
+});
+
+if(!data.success){
+
+status.className="status error";
+
+status.innerText=
+data.message || "Word नहीं मिला।";
+
+return;
+
+}
+
+displayWord(data);
+
+status.className="status success";
+
+status.innerText=
+"✅ Word found / generated successfully.";
+
+}
+catch(error){
+
+status.className="status error";
+
+status.innerText=
+"Server connection error.";
+
+console.error(error);
+
+}
+
+}
+
+
+// ==============================================
+// DISPLAY WORD
+// ==============================================
+
+function displayWord(data){
+
+document
+.getElementById("wordResult")
+.classList.remove("hidden");
+
+document
+.getElementById("wordTitle")
+.innerText=
+data.word;
+
+document
+.getElementById("wordMeaning")
+innerText =
+"हिंदी अर्थ: " +
+data.meaning;
+
+document
+.getElementById("wordPronunciation")
+.innerText =
+data.pronunciation
+?
+"Pronunciation: " +
+data.pronunciation
+:
+"";
+
+const box =
+document.getElementById("sentences");
+
+box.innerHTML="";
+
+if(data.sentences){
+
+data.sentences.forEach(function(item,index){
+
+const div =
+document.createElement("div");
+
+div.className="sentence";
+
+div.innerHTML=
+
+"<div class='english'>" +
+(index+1) +
+". " +
+escapeHTML(item.english) +
+"</div>" +
+
+"<div class='hindi'>" +
+"हिंदी: " +
+escapeHTML(item.hindi) +
+"</div>";
+
+box.appendChild(div);
+
+});
+
+}
+
+}
+
+
+// ==============================================
+// HTML ESCAPE
+// ==============================================
+
+function escapeHTML(text){
+
+const div =
+document.createElement("div");
+
+div.innerText =
+text || "";
+
+return div.innerHTML;
+
+}
+
+
+// ==============================================
+// EXCEL IMPORT
+// ==============================================
+
+async function importExcel(){
+
+const file =
+document.getElementById("excelFile")
+.files[0];
+
+const progress =
+document.getElementById("importProgress");
+
+if(!file){
+
+progress.innerText=
+"कृपया Excel file select करें।";
+
+return;
+
+}
+
+progress.innerText=
+"📖 Excel पढ़ी जा रही है...";
+
+try{
+
+const buffer =
+await file.arrayBuffer();
+
+const workbook =
+XLSX.read(buffer,{
+type:"array"
+});
+
+const firstSheet =
+workbook.Sheets[
+workbook.SheetNames[0]
+];
+
+const rows =
+XLSX.utils.sheet_to_json(
+firstSheet,
+{
+header:1
+}
+);
+
+const words=[];
+
+rows.forEach(function(row,index){
+
+if(index===0){
+
+// Header ignore
+return;
+
+}
+
+if(row[0]){
+
+words.push(
+String(row[0]).trim()
+);
+
+}
+
+});
+
+if(words.length===0){
+
+progress.innerText=
+"Excel में कोई word नहीं मिला।";
+
+return;
+
+}
+
+progress.innerText =
+"⏳ " +
+words.length +
+" words server पर भेजे जा रहे हैं...";
+
+const result =
+await apiPost({
+
+action:"importWords",
+
+words:words
+
+});
+
+if(result.success){
+
+progress.innerHTML=
+
+"✅ Import Complete<br><br>" +
+
+"Total: " +
+result.total +
+
+"<br>" +
+
+"Added: " +
+result.added +
+
+"<br>" +
+
+"Duplicate: " +
+result.duplicate;
+
+}
+else{
+
+progress.innerText=
+"❌ " +
+result.message;
+
+}
+
+}
+catch(error){
+
+console.error(error);
+
+progress.innerText=
+"❌ Excel import error.";
+
+}
+
+}
+
+
+// ==============================================
+// EXAM VARIABLES
+// ==============================================
+
+let examWords=[];
+
+let examQuestions=[];
+
+let currentQuestion=0;
+
+let examScore=0;
+
+let examAnswered=false;
+
+
+// ==============================================
+// START EXAM
+// ==============================================
+
+async function startExam(){
+
+const examBox =
+document.getElementById("examBox");
+
+examBox.classList.remove("hidden");
+
+document
+.getElementById("examResult")
+.innerText="";
+
+document
+.getElementById("correctAnswer")
+.classList.add("hidden");
+
+try{
+
+const result =
+await apiGet({
+
+action:"randomWords",
+
+limit:10
+
+});
+
+if(
+!result.success ||
+!result.words ||
+result.words.length===0
+){
+
+alert(
+"Dictionary में पर्याप्त words नहीं हैं।"
+);
+
+return;
+
+}
+
+examWords =
+result.words;
+
+examQuestions=[];
+
+currentQuestion=0;
+
+examScore=0;
+
+examAnswered=false;
+
+generateAllQuestions();
+
+}
+catch(error){
+
+alert(
+"Exam server से connect नहीं हो पाया।"
+);
+
+}
+
+}
+
+
+// ==============================================
+// GENERATE QUESTIONS
+// ==============================================
+
+async function generateAllQuestions(){
+
+document.getElementById("examQuestion")
+.innerText=
+"Questions तैयार किए जा रहे हैं...";
+
+for(
+let i=0;
+i<examWords.length;
+i++
+){
+
+const result =
+await apiPost({
+
+action:"generateMCQ",
+
+word:examWords[i]
+
+});
+
+if(result.success){
+
+examQuestions.push(result);
+
+}
+
+}
+
+if(examQuestions.length===0){
+
+alert(
+"Questions generate नहीं हो सके।"
+);
+
+return;
+
+}
+
+showQuestion();
+
+}
+
+
+// ==============================================
+// SHOW QUESTION
+// ==============================================
+
+function showQuestion(){
+
+if(
+currentQuestion >=
+examQuestions.length
+){
+
+finishExam();
+
+return;
+
+}
+
+examAnswered=false;
+
+const question =
+examQuestions[currentQuestion];
+
+document.getElementById("examCounter")
+.innerText=
+"Question " +
+(currentQuestion+1) +
+" / " +
+examQuestions.length;
+
+document.getElementById("examQuestion")
+.innerText=
+question.question;
+
+const options =
+document.getElementById("options");
+
+options.innerHTML="";
+
+question.options.forEach(
+function(option,index){
+
+const div =
+document.createElement("div");
+
+div.className="option";
+
+div.innerText=
+String.fromCharCode(65+index) +
+". " +
+option;
+
+div.onclick =
+function(){
+
+selectAnswer(index);
+
+};
+
+options.appendChild(div);
+
+});
+
+document
+.getElementById("correctAnswer")
+.classList.add("hidden");
+
+document
+.getElementById("nextButton")
+.classList.add("hidden");
+
+}
+
+
+// ==============================================
+// SELECT ANSWER
+// ==============================================
+
+function selectAnswer(index){
+
+if(examAnswered){
+
+return;
+
+}
+
+examAnswered=true;
+
+const question =
+examQuestions[currentQuestion];
+
+const options =
+document
+.querySelectorAll(".option");
+
+if(
+index ===
+question.correctIndex
+){
+
+options[index]
+.classList.add("correct");
+
+examScore++;
+
+}
+else{
+
+options[index]
+.classList.add("incorrect");
+
+options[
+question.correctIndex
+]
+.classList.add("correct");
+
+const correctBox =
+document.getElementById(
+"correctAnswer"
+);
+
+correctBox.classList.remove("hidden");
+
+correctBox.innerText =
+"✅ Correct Answer: " +
+String.fromCharCode(
+65 + question.correctIndex
+) +
+". " +
+question.correctAnswer;
+
+}
+
+options.forEach(
+function(option){
+
+option.classList.add(
+"disabled"
+);
+
+});
+
+document
+.getElementById("nextButton")
+.classList.remove("hidden");
+
+}
+
+
+// ==============================================
+// NEXT QUESTION
+// ==============================================
+
+function nextQuestion(){
+
+currentQuestion++;
+
+showQuestion();
+
+}
+
+
+// ==============================================
+// FINISH EXAM
+// ==============================================
+
+function finishExam(){
+
+const total =
+examQuestions.length;
+
+const percentage =
+Math.round(
+(examScore / total) * 100
+);
+
+document.getElementById("examQuestion")
+.innerText=
+"🎉 Exam Complete";
+
+document.getElementById("options")
+.innerHTML="";
+
+document.getElementById("examCounter")
+.innerText=
+"Result";
+
+document.getElementById("examResult")
+.innerHTML=
+
+"Score: " +
+examScore +
+" / " +
+total +
+"<br><br>" +
+
+"Percentage: " +
+percentage +
+"%";
+
+document
+.getElementById("nextButton")
+.classList.add("hidden");
+
+}
+
+</script>
+
+</body>
+
+</html>
