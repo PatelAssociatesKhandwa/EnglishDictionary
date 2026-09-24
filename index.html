@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -20,7 +21,7 @@ box-sizing:border-box;
 
 body{
 margin:0;
-font-family:Arial, sans-serif;
+font-family:Arial,sans-serif;
 background:#f4f7fb;
 color:#222;
 }
@@ -60,7 +61,7 @@ display:flex;
 gap:10px;
 }
 
-input{
+input,select{
 width:100%;
 padding:14px;
 font-size:17px;
@@ -92,6 +93,15 @@ background:#198754;
 
 button.red{
 background:#dc3545;
+}
+
+button.orange{
+background:#fd7e14;
+}
+
+button:disabled{
+opacity:.6;
+cursor:not-allowed;
 }
 
 .wordTitle{
@@ -149,6 +159,69 @@ background:#f8d7da;
 color:#842029;
 }
 
+.status.info{
+display:block;
+background:#cff4fc;
+color:#055160;
+}
+
+.tabs{
+display:flex;
+gap:8px;
+flex-wrap:wrap;
+margin-bottom:20px;
+}
+
+.tab{
+background:#6c757d;
+}
+
+.tab.active{
+background:#0b5ed7;
+}
+
+.hidden{
+display:none !important;
+}
+
+#importProgress{
+margin-top:15px;
+font-weight:bold;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th,td{
+padding:10px;
+border:1px solid #ddd;
+text-align:left;
+}
+
+th{
+background:#0b5ed7;
+color:white;
+}
+
+.dictionaryTable td{
+vertical-align:middle;
+}
+
+.wordCell{
+font-weight:bold;
+}
+
+.meaningCell{
+font-size:17px;
+}
+
+.deleteBtn{
+padding:8px 12px;
+font-size:14px;
+}
+
 .examQuestion{
 font-size:22px;
 font-weight:bold;
@@ -199,44 +272,43 @@ font-weight:bold;
 margin-top:20px;
 }
 
-.tabs{
+.examTop{
 display:flex;
-gap:8px;
+justify-content:space-between;
+align-items:center;
+gap:15px;
 flex-wrap:wrap;
-margin-bottom:20px;
+margin-bottom:15px;
 }
 
-.tab{
-background:#6c757d;
-}
-
-.tab.active{
-background:#0b5ed7;
-}
-
-.hidden{
-display:none;
-}
-
-#importProgress{
-margin-top:15px;
+.timerBox{
+padding:12px 18px;
+border-radius:10px;
+background:#212529;
+color:white;
+font-size:18px;
 font-weight:bold;
 }
 
-table{
-width:100%;
-border-collapse:collapse;
+.timerDanger{
+background:#dc3545;
 }
 
-th,td{
-padding:10px;
-border:1px solid #ddd;
-text-align:left;
+.examInfo{
+padding:12px;
+background:#f5f8ff;
+border-radius:8px;
+margin-bottom:15px;
 }
 
-th{
-background:#0b5ed7;
-color:white;
+.listSearch{
+margin-bottom:15px;
+}
+
+.empty{
+padding:20px;
+text-align:center;
+color:#666;
 }
 
 @media(max-width:600px){
@@ -251,6 +323,23 @@ font-size:26px;
 
 header h1{
 font-size:23px;
+}
+
+.examTop{
+flex-direction:column;
+align-items:stretch;
+}
+
+.timerBox{
+text-align:center;
+}
+
+table{
+font-size:14px;
+}
+
+th,td{
+padding:7px;
 }
 
 }
@@ -272,7 +361,6 @@ font-size:23px;
 
 <div class="container">
 
-
 <div class="tabs">
 
 <button class="tab active"
@@ -283,6 +371,11 @@ onclick="showSection('dictionary',this)">
 <button class="tab"
 onclick="showSection('import',this)">
 📥 Excel Import
+</button>
+
+<button class="tab"
+onclick="showSection('list',this)">
+📋 Dictionary List
 </button>
 
 <button class="tab"
@@ -360,10 +453,6 @@ class="hidden">
 Excel file में एक column में English words रखें।
 </p>
 
-<p>
-उदाहरण:
-</p>
-
 <table>
 
 <tr>
@@ -408,6 +497,34 @@ Import Excel
 </section>
 
 
+<!-- ================= DICTIONARY LIST ================= -->
+
+<section id="list"
+class="hidden">
+
+<div class="card">
+
+<h2>📋 Dictionary List</h2>
+
+<input
+id="listSearch"
+class="listSearch"
+placeholder="Search saved words..."
+oninput="filterDictionaryList()">
+
+<div id="listStatus"
+class="status">
+</div>
+
+<div id="dictionaryList">
+Loading...
+</div>
+
+</div>
+
+</section>
+
+
 <!-- ================= EXAM ================= -->
 
 <section id="exam"
@@ -417,15 +534,33 @@ class="hidden">
 
 <h2>📝 English Vocabulary Exam</h2>
 
+<div class="examInfo">
+
 <p>
-Random vocabulary questions
+<strong>Exam Rules:</strong>
 </p>
+
+<ul>
+
+<li>Questions केवल Dictionary में मौजूद words से होंगे।</li>
+
+<li>एक exam में कोई word repeat नहीं होगा।</li>
+
+<li>पहले completed exams में इस्तेमाल हुए words दोबारा नहीं आएँगे।</li>
+
+<li>सभी words एक बार इस्तेमाल होने के बाद नया cycle शुरू होगा।</li>
+
+<li>Timer समाप्त होने पर exam automatically submit होगा।</li>
+
+</ul>
+
+</div>
 
 <button
 onclick="startExam()"
 class="green">
 
-Start Exam
+🚀 Start Exam
 
 </button>
 
@@ -435,9 +570,23 @@ Start Exam
 <div id="examBox"
 class="card hidden">
 
-<div id="examCounter"></div>
+<div class="examTop">
 
-<br>
+<div id="examCounter">
+Question
+</div>
+
+<div id="timerBox"
+class="timerBox">
+
+⏱ Total: 00:00 |
+Remaining: 00:00
+
+</div>
+
+</div>
+
+<hr>
 
 <div
 id="examQuestion"
@@ -462,6 +611,15 @@ Next Question →
 
 </button>
 
+<button
+id="submitExamButton"
+onclick="finishExam(true)"
+class="orange hidden">
+
+Submit Exam
+
+</button>
+
 <div
 id="examResult"
 class="examResult">
@@ -471,33 +629,50 @@ class="examResult">
 
 </section>
 
-
 </div>
 
 
 <script>
 
-/*
-==================================================
-PA ENGLISH DICTIONARY
-FRONTEND
-==================================================
-*/
 
-
-// ==============================================
-// IMPORTANT
-// ==============================================
+// ==================================================
+// API URL
+// ==================================================
 
 const API_URL =
-"https://https://script.google.com/macros/s/AKfycbxU7gTZ1OPsV1Eat2BGiJ9BmExUk8G7zcDd-gFPVMOF0IMRffXHQPSBvjc9N5ADET_k/exec";
+"https://script.google.com/macros/s/AKfycbxU7gTZ1OPsV1Eat2BGiJ9BmExUk8G7zcDd-gFPVMOF0IMRffXHQPSBvjc9N5ADET_k/exec";
 
 
-// ==============================================
+// ==================================================
+// GLOBAL VARIABLES
+// ==================================================
+
+let examWords = [];
+
+let examQuestions = [];
+
+let currentQuestion = 0;
+
+let examScore = 0;
+
+let examAnswered = false;
+
+let examTimer = null;
+
+let examStartTime = null;
+
+let examTotalSeconds = 0;
+
+let examRemainingSeconds = 0;
+
+let examFinished = false;
+
+
+// ==================================================
 // SECTION SWITCH
-// ==============================================
+// ==================================================
 
-function showSection(id, button){
+function showSection(id,button){
 
 document
 .querySelectorAll("section")
@@ -521,12 +696,18 @@ btn.classList.remove("active");
 
 button.classList.add("active");
 
+if(id === "list"){
+
+loadDictionaryList();
+
+}
+
 }
 
 
-// ==============================================
+// ==================================================
 // API GET
-// ==============================================
+// ==================================================
 
 async function apiGet(params){
 
@@ -543,9 +724,9 @@ return await response.json();
 }
 
 
-// ==============================================
+// ==================================================
 // API POST
-// ==============================================
+// ==================================================
 
 async function apiPost(data){
 
@@ -567,9 +748,9 @@ return await response.json();
 }
 
 
-// ==============================================
-// SEARCH
-// ==============================================
+// ==================================================
+// SEARCH WORD
+// ==================================================
 
 async function searchWord(){
 
@@ -596,10 +777,10 @@ return;
 
 }
 
-status.className="status success";
+status.className="status info";
 
 status.innerText=
-"🔎 Searching...";
+"🔎 Searching / generating...";
 
 result.classList.add("hidden");
 
@@ -619,7 +800,8 @@ if(!data.success){
 status.className="status error";
 
 status.innerText=
-data.message || "Word नहीं मिला।";
+data.message ||
+"Word नहीं मिला।";
 
 return;
 
@@ -629,27 +811,36 @@ displayWord(data);
 
 status.className="status success";
 
+if(data.autoSaved){
+
 status.innerText=
-"✅ Word found / generated successfully.";
+"✅ नया word generate होकर Dictionary में automatically save हो गया।";
+
+}else{
+
+status.innerText=
+"✅ Word Dictionary में मिल गया।";
+
+}
 
 }
 catch(error){
 
+console.error(error);
+
 status.className="status error";
 
 status.innerText=
-"Server connection error.";
-
-console.error(error);
+"❌ Server connection error.";
 
 }
 
 }
 
 
-// ==============================================
+// ==================================================
 // DISPLAY WORD
-// ==============================================
+// ==================================================
 
 function displayWord(data){
 
@@ -664,9 +855,9 @@ data.word;
 
 document
 .getElementById("wordMeaning")
-.innerText =
+innerText =
 "हिंदी अर्थ: " +
-data.meaning;
+(data.meaning || "");
 
 document
 .getElementById("wordPronunciation")
@@ -714,9 +905,9 @@ box.appendChild(div);
 }
 
 
-// ==============================================
+// ==================================================
 // HTML ESCAPE
-// ==============================================
+// ==================================================
 
 function escapeHTML(text){
 
@@ -731,9 +922,9 @@ return div.innerHTML;
 }
 
 
-// ==============================================
+// ==================================================
 // EXCEL IMPORT
-// ==============================================
+// ==================================================
 
 async function importExcel(){
 
@@ -785,16 +976,20 @@ rows.forEach(function(row,index){
 
 if(index===0){
 
-// Header ignore
 return;
 
 }
 
 if(row[0]){
 
-words.push(
-String(row[0]).trim()
-);
+const word =
+String(row[0]).trim();
+
+if(word){
+
+words.push(word);
+
+}
 
 }
 
@@ -809,7 +1004,7 @@ return;
 
 }
 
-progress.innerText =
+progress.innerText=
 "⏳ " +
 words.length +
 " words server पर भेजे जा रहे हैं...";
@@ -840,7 +1035,12 @@ result.added +
 "<br>" +
 
 "Duplicate: " +
-result.duplicate;
+result.duplicate +
+
+"<br>" +
+
+"Failed: " +
+(result.failed || 0);
 
 }
 else{
@@ -864,65 +1064,339 @@ progress.innerText=
 }
 
 
-// ==============================================
-// EXAM VARIABLES
-// ==============================================
+// ==================================================
+// LOAD DICTIONARY LIST
+// ==================================================
 
-let examWords=[];
+async function loadDictionaryList(){
 
-let examQuestions=[];
+const box =
+document.getElementById("dictionaryList");
 
-let currentQuestion=0;
-
-let examScore=0;
-
-let examAnswered=false;
-
-
-// ==============================================
-// START EXAM
-// ==============================================
-
-async function startExam(){
-
-const examBox =
-document.getElementById("examBox");
-
-examBox.classList.remove("hidden");
-
-document
-.getElementById("examResult")
-.innerText="";
-
-document
-.getElementById("correctAnswer")
-.classList.add("hidden");
+box.innerHTML="Loading...";
 
 try{
 
 const result =
 await apiGet({
 
-action:"randomWords",
-
-limit:10
+action:"allWords"
 
 });
 
+if(!result.success){
+
+box.innerHTML=
+"<div class='empty'>Dictionary load error.</div>";
+
+return;
+
+}
+
+if(!result.words ||
+result.words.length===0){
+
+box.innerHTML=
+"<div class='empty'>Dictionary में अभी कोई word नहीं है।</div>";
+
+return;
+
+}
+
+window.dictionaryListData =
+result.words;
+
+renderDictionaryList(
+result.words
+);
+
+}
+catch(error){
+
+console.error(error);
+
+box.innerHTML=
+"<div class='empty'>Server connection error.</div>";
+
+}
+
+}
+
+
+// ==================================================
+// RENDER DICTIONARY LIST
+// ==================================================
+
+function renderDictionaryList(words){
+
+const box =
+document.getElementById("dictionaryList");
+
+if(!words.length){
+
+box.innerHTML=
+"<div class='empty'>कोई word नहीं मिला।</div>";
+
+return;
+
+}
+
+let html =
+
+"<table class='dictionaryTable'>" +
+
+"<tr>" +
+
+"<th>#</th>" +
+
+"<th>English Word</th>" +
+
+"<th>Hindi Meaning</th>" +
+
+"<th>Action</th>" +
+
+"</tr>";
+
+words.forEach(function(item,index){
+
+html +=
+
+"<tr>" +
+
+"<td>" +
+(index+1) +
+"</td>" +
+
+"<td class='wordCell'>" +
+escapeHTML(item.word) +
+"</td>" +
+
+"<td class='meaningCell'>" +
+escapeHTML(item.meaning) +
+"</td>" +
+
+"<td>" +
+
+"<button " +
+
+"class='red deleteBtn' " +
+
+"onclick='deleteWord(\"" +
+escapeJS(item.word) +
+"\")'>" +
+
+"🗑 Delete" +
+
+"</button>" +
+
+"</td>" +
+
+"</tr>";
+
+});
+
+html += "</table>";
+
+box.innerHTML=html;
+
+}
+
+
+// ==================================================
+// ESCAPE JS STRING
+// ==================================================
+
+function escapeJS(text){
+
+return String(text || "")
+.replace(/\\/g,"\\\\")
+.replace(/"/g,'\\"')
+.replace(/'/g,"\\'");
+
+}
+
+
+// ==================================================
+// FILTER DICTIONARY
+// ==================================================
+
+function filterDictionaryList(){
+
+const search =
+document
+.getElementById("listSearch")
+.value
+.trim()
+.toLowerCase();
+
+const data =
+window.dictionaryListData || [];
+
+const filtered =
+data.filter(function(item){
+
+return String(item.word || "")
+.toLowerCase()
+.includes(search);
+
+});
+
+renderDictionaryList(filtered);
+
+}
+
+
+// ==================================================
+// DELETE WORD
+// ==================================================
+
+async function deleteWord(word){
+
+const confirmDelete =
+confirm(
+'क्या आप "' +
+word +
+'" को Dictionary से delete करना चाहते हैं?'
+);
+
+if(!confirmDelete){
+
+return;
+
+}
+
+try{
+
+const result =
+await apiPost({
+
+action:"deleteWord",
+
+word:word
+
+});
+
+if(result.success){
+
+alert(
+"✅ Word successfully deleted."
+);
+
+loadDictionaryList();
+
+}
+else{
+
+alert(
+"❌ " +
+(result.message || "Delete failed.")
+);
+
+}
+
+}
+catch(error){
+
+console.error(error);
+
+alert(
+"❌ Server connection error."
+);
+
+}
+
+}
+
+
+// ==================================================
+// START EXAM
+// ==================================================
+
+async function startExam(){
+
+if(examTimer){
+
+clearInterval(examTimer);
+
+examTimer=null;
+
+}
+
+const countInput =
+prompt(
+"कितने questions का paper चाहिए?\n\nउदाहरण: 10"
+);
+
+if(countInput === null){
+
+return;
+
+}
+
+const count =
+parseInt(countInput,10);
+
 if(
-!result.success ||
-!result.words ||
-result.words.length===0
+!Number.isInteger(count) ||
+count < 1
 ){
 
 alert(
-"Dictionary में पर्याप्त words नहीं हैं।"
+"कृपया 1 या उससे अधिक questions की संख्या दें।"
 );
 
 return;
 
 }
 
+try{
+
+const result =
+await apiGet({
+
+action:"examWords",
+
+limit:count
+
+});
+
+if(!result.success){
+
+alert(
+result.message ||
+"Exam words प्राप्त नहीं हुए।"
+);
+
+return;
+
+}
+
+if(
+!result.words ||
+result.words.length===0
+){
+
+alert(
+"Dictionary में कोई word उपलब्ध नहीं है।"
+);
+
+return;
+
+}
+
+if(result.words.length < count){
+
+alert(
+"इस exam cycle में केवल " +
+result.words.length +
+" नए words उपलब्ध हैं।\n\n" +
+
+"बाकी words अगले cycle में मिलेंगे।"
+);
+
+}
+
+// Actual available count
 examWords =
 result.words;
 
@@ -934,29 +1408,42 @@ examScore=0;
 
 examAnswered=false;
 
-generateAllQuestions();
+examFinished=false;
 
-}
-catch(error){
+examTotalSeconds =
+examWords.length * 30;
 
-alert(
-"Exam server से connect नहीं हो पाया।"
-);
+examRemainingSeconds =
+examTotalSeconds;
 
-}
+document
+.getElementById("examBox")
+.classList.remove("hidden");
 
-}
+document
+.getElementById("examResult")
+.innerText="";
 
+document
+.getElementById("nextButton")
+.classList.add("hidden");
 
-// ==============================================
-// GENERATE QUESTIONS
-// ==============================================
+document
+.getElementById("submitExamButton")
+.classList.remove("hidden");
 
-async function generateAllQuestions(){
+updateTimerDisplay();
 
-document.getElementById("examQuestion")
+startTimer();
+
+document
+.getElementById("examQuestion")
 .innerText=
 "Questions तैयार किए जा रहे हैं...";
+
+document
+.getElementById("options")
+.innerHTML="";
 
 for(
 let i=0;
@@ -975,6 +1462,9 @@ word:examWords[i]
 
 if(result.success){
 
+result.word =
+examWords[i];
+
 examQuestions.push(result);
 
 }
@@ -982,6 +1472,8 @@ examQuestions.push(result);
 }
 
 if(examQuestions.length===0){
+
+clearExamTimer();
 
 alert(
 "Questions generate नहीं हो सके।"
@@ -994,11 +1486,143 @@ return;
 showQuestion();
 
 }
+catch(error){
+
+console.error(error);
+
+alert(
+"Exam server से connect नहीं हो पाया।"
+);
+
+}
+
+}
 
 
-// ==============================================
+// ==================================================
+// TIMER
+// ==================================================
+
+function startTimer(){
+
+examStartTime =
+Date.now();
+
+if(examTimer){
+
+clearInterval(examTimer);
+
+}
+
+examTimer =
+setInterval(function(){
+
+examRemainingSeconds--;
+
+if(examRemainingSeconds <= 0){
+
+examRemainingSeconds=0;
+
+updateTimerDisplay();
+
+clearExamTimer();
+
+alert(
+"⏰ Time Up!\nExam automatically submit किया जा रहा है।"
+);
+
+finishExam(false);
+
+return;
+
+}
+
+updateTimerDisplay();
+
+},1000);
+
+}
+
+
+// ==================================================
+// CLEAR TIMER
+// ==================================================
+
+function clearExamTimer(){
+
+if(examTimer){
+
+clearInterval(examTimer);
+
+examTimer=null;
+
+}
+
+}
+
+
+// ==================================================
+// TIMER DISPLAY
+// ==================================================
+
+function updateTimerDisplay(){
+
+const total =
+formatTime(examTotalSeconds);
+
+const remaining =
+formatTime(examRemainingSeconds);
+
+const box =
+document.getElementById("timerBox");
+
+box.innerText=
+"⏱ Total: " +
+total +
+" | Remaining: " +
+remaining;
+
+if(examRemainingSeconds <= 30){
+
+box.classList.add("timerDanger");
+
+}
+else{
+
+box.classList.remove("timerDanger");
+
+}
+
+}
+
+
+// ==================================================
+// FORMAT TIME
+// ==================================================
+
+function formatTime(seconds){
+
+seconds =
+Math.max(0,seconds);
+
+const minutes =
+Math.floor(seconds/60);
+
+const sec =
+seconds % 60;
+
+return (
+String(minutes).padStart(2,"0") +
+":" +
+String(sec).padStart(2,"0")
+);
+
+}
+
+
+// ==================================================
 // SHOW QUESTION
-// ==============================================
+// ==================================================
 
 function showQuestion(){
 
@@ -1007,7 +1631,7 @@ currentQuestion >=
 examQuestions.length
 ){
 
-finishExam();
+finishExam(false);
 
 return;
 
@@ -1018,14 +1642,16 @@ examAnswered=false;
 const question =
 examQuestions[currentQuestion];
 
-document.getElementById("examCounter")
+document
+.getElementById("examCounter")
 .innerText=
 "Question " +
 (currentQuestion+1) +
 " / " +
 examQuestions.length;
 
-document.getElementById("examQuestion")
+document
+.getElementById("examQuestion")
 .innerText=
 question.question;
 
@@ -1069,9 +1695,9 @@ document
 }
 
 
-// ==============================================
+// ==================================================
 // SELECT ANSWER
-// ==============================================
+// ==================================================
 
 function selectAnswer(index){
 
@@ -1137,16 +1763,23 @@ option.classList.add(
 
 });
 
+if(
+currentQuestion <
+examQuestions.length - 1
+){
+
 document
 .getElementById("nextButton")
 .classList.remove("hidden");
 
 }
 
+}
 
-// ==============================================
+
+// ==================================================
 // NEXT QUESTION
-// ==============================================
+// ==================================================
 
 function nextQuestion(){
 
@@ -1157,38 +1790,59 @@ showQuestion();
 }
 
 
-// ==============================================
+// ==================================================
 // FINISH EXAM
-// ==============================================
+// ==================================================
 
-function finishExam(){
+async function finishExam(manualSubmit){
+
+if(examFinished){
+
+return;
+
+}
+
+examFinished=true;
+
+clearExamTimer();
 
 const total =
 examQuestions.length;
+
+if(total === 0){
+
+return;
+
+}
 
 const percentage =
 Math.round(
 (examScore / total) * 100
 );
 
-document.getElementById("examQuestion")
+document
+.getElementById("examQuestion")
 .innerText=
 "🎉 Exam Complete";
 
-document.getElementById("options")
+document
+.getElementById("options")
 .innerHTML="";
 
-document.getElementById("examCounter")
+document
+.getElementById("examCounter")
 .innerText=
 "Result";
 
-document.getElementById("examResult")
+document
+.getElementById("examResult")
 .innerHTML=
 
 "Score: " +
 examScore +
 " / " +
 total +
+
 "<br><br>" +
 
 "Percentage: " +
@@ -1199,10 +1853,101 @@ document
 .getElementById("nextButton")
 .classList.add("hidden");
 
+document
+.getElementById("submitExamButton")
+.classList.add("hidden");
+
+
+// ------------------------------------------
+// SAVE USED WORDS TO SERVER
+// ------------------------------------------
+
+const usedWords =
+examQuestions.map(function(q){
+
+return q.word;
+
+});
+
+try{
+
+const result =
+await apiPost({
+
+action:"saveExam",
+
+words:usedWords,
+
+score:examScore,
+
+total:total,
+
+percentage:percentage,
+
+examDate:new Date().toISOString()
+
+});
+
+if(result.success){
+
+document
+.getElementById("examResult")
+.innerHTML +=
+
+"<br><br>" +
+
+"✅ Exam record server पर save हो गया।" +
+
+"<br>" +
+
+"Used Words: " +
+usedWords.length;
+
 }
+else{
+
+document
+.getElementById("examResult")
+.innerHTML +=
+
+"<br><br>" +
+
+"⚠️ Exam result save नहीं हो पाया: " +
+(result.message || "");
+
+}
+
+}
+catch(error){
+
+console.error(error);
+
+document
+.getElementById("examResult")
+.innerHTML +=
+
+"<br><br>" +
+
+"⚠️ Server पर exam record save नहीं हो पाया।";
+
+}
+
+}
+
+
+// ==================================================
+// INITIAL LOAD
+// ==================================================
+
+window.addEventListener(
+"load",
+function(){
+
+});
 
 </script>
 
 </body>
 
 </html>
+```
