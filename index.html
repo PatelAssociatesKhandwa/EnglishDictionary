@@ -313,13 +313,6 @@ label{
   margin:8px 0 15px;
 }
 
-
-/*
-  IMPORTANT:
-  Exam answer colors only.
-  No Wrong Answer / Correct Answer text.
-*/
-
 .answer-option{
   width:100%;
   padding:12px;
@@ -451,9 +444,7 @@ Exam
 </div>
 
 
-<!-- =====================================================
-     SEARCH
-===================================================== -->
+<!-- SEARCH -->
 
 <section
   id="searchTab"
@@ -495,9 +486,7 @@ Search
 </section>
 
 
-<!-- =====================================================
-     DICTIONARY
-===================================================== -->
+<!-- DICTIONARY -->
 
 <section
   id="dictionaryTab"
@@ -531,9 +520,7 @@ Refresh Dictionary
 </section>
 
 
-<!-- =====================================================
-     IMPORT
-===================================================== -->
+<!-- IMPORT -->
 
 <section
   id="importTab"
@@ -577,9 +564,7 @@ Import Words
 </section>
 
 
-<!-- =====================================================
-     EXAM
-===================================================== -->
+<!-- EXAM -->
 
 <section
   id="examTab"
@@ -593,7 +578,7 @@ Import Words
 >
 
 <h2>
-IBBI Exam Vocabulary Test
+Vocabulary Test
 </h2>
 
 <label>
@@ -1078,7 +1063,7 @@ async function searchWord(){
   result.innerHTML =
     `
       <div class="card loading">
-        Generating IBBI exam-based meaning and examples...
+        Generating meaning and examples...
       </div>
     `;
 
@@ -1516,7 +1501,7 @@ async function loadDictionary(){
 
 
 /* =====================================================
-   DICTIONARY WORD DETAILS
+   DICTIONARY DETAILS
 ===================================================== */
 
 async function toggleWordDetails(
@@ -1547,7 +1532,7 @@ async function toggleWordDetails(
   details.innerHTML =
     `
       <div class="loading">
-        Generating IBBI exam-based details...
+        Generating details...
       </div>
     `;
 
@@ -1839,7 +1824,6 @@ async function importExcel(){
     const unique =
       [];
 
-
     const seen =
       new Set();
 
@@ -1872,13 +1856,17 @@ async function importExcel(){
     );
 
 
-    let added = 0;
+    let added =
+      0;
 
-    let updated = 0;
+    let updated =
+      0;
 
-    let alreadyAvailable = 0;
+    let alreadyAvailable =
+      0;
 
-    let failed = 0;
+    let failed =
+      0;
 
 
     const chunkSize =
@@ -2066,7 +2054,7 @@ async function startExam(){
 
   showMessage(
     "examSetupMessage",
-    "Preparing IBBI exam...",
+    "Preparing Exam...",
     "success"
   );
 
@@ -2198,10 +2186,6 @@ function renderExam(){
           record.meaning || ""
         ).trim();
 
-
-      /*
-       * Create options from meanings
-       */
 
       const distractors =
         examRecords
@@ -2346,10 +2330,6 @@ function selectExamAnswer(
 
 ){
 
-  /*
-   * Prevent second click
-   */
-
   if(
     examAnswers[
       questionIndex
@@ -2374,10 +2354,6 @@ function selectExamAnswer(
       );
 
 
-  /*
-   * Disable all options.
-   */
-
   buttons.forEach(
     function(button){
 
@@ -2393,7 +2369,7 @@ function selectExamAnswer(
 
 
   /*
-   * Correct answer
+   * Correct = GREEN
    */
 
   if(
@@ -2403,10 +2379,6 @@ function selectExamAnswer(
       .toLowerCase()
   ){
 
-    /*
-     * ONLY GREEN
-     */
-
     clickedButton.classList.add(
       "correct"
     );
@@ -2415,25 +2387,16 @@ function selectExamAnswer(
 
 
   /*
-   * Wrong answer
+   * Wrong = RED
+   * Correct option = GREEN
    */
 
   else{
-
-    /*
-     * Selected answer = RED
-     */
 
     clickedButton.classList.add(
       "wrong"
     );
 
-
-    /*
-     * Correct option = GREEN
-     *
-     * No text is displayed.
-     */
 
     buttons.forEach(
       function(button){
@@ -2456,49 +2419,6 @@ function selectExamAnswer(
     );
 
   }
-
-}
-
-
-/* =====================================================
-   SHUFFLE
-===================================================== */
-
-function shuffleArray(array){
-
-  const arr =
-    [...array];
-
-
-  for(
-    let i =
-      arr.length - 1;
-
-    i > 0;
-
-    i--
-  ){
-
-    const j =
-      Math.floor(
-        Math.random() *
-        (i + 1)
-      );
-
-
-    const temp =
-      arr[i];
-
-    arr[i] =
-      arr[j];
-
-    arr[j] =
-      temp;
-
-  }
-
-
-  return arr;
 
 }
 
@@ -2549,7 +2469,7 @@ function startExamTimer(){
 
 
 /* =====================================================
-   UPDATE TIMER
+   TIMER DISPLAY
 ===================================================== */
 
 function updateExamTimer(){
@@ -2821,7 +2741,7 @@ function showExamResult(
 
 
 /* =====================================================
-   RESET EXAM
+   RESET
 ===================================================== */
 
 function resetExam(){
