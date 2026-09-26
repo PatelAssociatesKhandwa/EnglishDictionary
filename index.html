@@ -1,2180 +1,2659 @@
-/*******************************************************
- * PATEL ASSOCIATES
- * English → Hindi Personal Dictionary
- *******************************************************/
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
+
+<title>
+PATEL ASSOCIATES - English Hindi Dictionary
+</title>
 
 
-/* =====================================================
-   CONFIGURATION
-===================================================== */
+<style>
 
-const DICTIONARY_SHEET = "Dictionary";
-const EXAM_HISTORY_SHEET = "ExamHistory";
+*{
+  box-sizing:border-box;
+}
 
-const DICTIONARY_HEADERS = [
-  "id",
-  "word",
-  "meaning",
-  "pronunciation",
-  "sentence1",
-  "sentence1Hindi",
-  "sentence2",
-  "sentence2Hindi",
-  "sentence3",
-  "sentence3Hindi",
-  "sentence4",
-  "sentence4Hindi",
-  "sentence5",
-  "sentence5Hindi",
-  "createdAt"
-];
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#f4f7fb;
+  color:#222;
+}
 
-const EXAM_HEADERS = [
-  "id",
-  "examId",
-  "word",
-  "usedAt"
-];
+header{
+  background:#0b5ed7;
+  color:white;
+  text-align:center;
+  padding:18px 10px;
+}
 
+header h1{
+  margin:0;
+  font-size:25px;
+}
 
-/* =====================================================
-   WEB APP
-===================================================== */
+header p{
+  margin:5px 0 0;
+  font-size:14px;
+}
 
-function doGet(e) {
+.container{
+  max-width:1000px;
+  margin:auto;
+  padding:15px;
+}
 
-  try {
+.server-status{
+  padding:9px;
+  margin-bottom:12px;
+  border-radius:8px;
+  text-align:center;
+  font-size:14px;
+  background:#fff3cd;
+  color:#856404;
+}
 
-    const action =
-      e &&
-      e.parameter &&
-      e.parameter.action
-        ? e.parameter.action
-        : "health";
+.tabs{
+  display:flex;
+  gap:5px;
+  overflow-x:auto;
+  margin-bottom:15px;
+}
 
-    switch (action) {
+.tab-btn{
+  flex:1;
+  min-width:125px;
+  padding:12px 8px;
+  border:none;
+  border-radius:8px;
+  background:#ddd;
+  font-weight:bold;
+  cursor:pointer;
+}
 
-      case "health":
-        return jsonResponse({
-          success: true,
-          message:
-            "PATEL ASSOCIATES Dictionary API is running."
-        });
+.tab-btn.active{
+  background:#0b5ed7;
+  color:white;
+}
 
-      case "search":
-        return jsonResponse(
-          searchWord(
-            e.parameter.word || ""
-          )
-        );
+.tab-content{
+  display:none;
+}
 
-      case "allWords":
-        return jsonResponse(
-          getAllWords()
-        );
+.tab-content.active{
+  display:block;
+}
 
-      case "examData":
-        return jsonResponse(
-          getExamData(
-            Number(e.parameter.count || 10)
-          )
-        );
+.card{
+  background:white;
+  padding:18px;
+  margin-bottom:15px;
+  border-radius:12px;
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
 
-      case "saveExam":
-        return jsonResponse(
-          saveExamData(
-            e.parameter.answers || "[]"
-          )
-        );
+h2{
+  color:#0b5ed7;
+  margin-top:0;
+}
 
-      case "deleteWord":
-        return jsonResponse(
-          deleteWord(
-            e.parameter.word || ""
-          )
-        );
+input,
+select{
+  width:100%;
+  padding:12px;
+  border:1px solid #ccc;
+  border-radius:8px;
+  font-size:16px;
+}
 
-      case "importWords":
-        return jsonResponse(
-          importWords(
-            e.parameter.words || "[]"
-          )
-        );
+label{
+  display:block;
+  margin:10px 0 5px;
+  font-weight:bold;
+}
 
-      case "saveWord":
-        return jsonResponse(
-          saveSingleWord(
-            e.parameter.word || ""
-          )
-        );
+.primary{
+  width:100%;
+  padding:12px;
+  margin-top:12px;
+  border:none;
+  border-radius:8px;
+  background:#0b5ed7;
+  color:white;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
+}
 
-      default:
+.primary:disabled{
+  background:#999;
+}
 
-        return jsonResponse({
-          success: false,
-          message:
-            "Unknown action: " + action
-        });
-    }
+.save-word-btn{
+  display:inline-block;
+  width:auto;
+  padding:7px 12px;
+  margin-top:12px;
+  border:none;
+  border-radius:6px;
+  background:#198754;
+  color:white;
+  font-size:13px;
+  font-weight:bold;
+  cursor:pointer;
+}
 
-  } catch (error) {
+.save-word-btn:disabled{
+  background:#999;
+  cursor:not-allowed;
+}
 
-    return jsonResponse({
-      success: false,
-      message:
-        error.message ||
-        String(error)
-    });
-  }
+.exam-summary-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  margin:18px 0;
+}
+
+.exam-summary-item{
+  background:#f5f8fc;
+  border:1px solid #e1e6ef;
+  border-radius:10px;
+  padding:12px;
+}
+
+.exam-summary-label{
+  color:#666;
+  font-size:13px;
+}
+
+.exam-summary-value{
+  margin-top:4px;
+  font-size:21px;
+  font-weight:bold;
+  color:#0b5ed7;
+}
+
+.exam-chart-wrap{
+  max-width:360px;
+  margin:20px auto;
+  position:relative;
 }
 
 
-/* =====================================================
-   POST COMPATIBILITY
-===================================================== */
 
-function doPost(e) {
-  return doGet(e);
+.exam-result-dashboard{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:28px;
+  margin:20px auto 10px;
+  flex-wrap:wrap;
+}
+
+.exam-pie-box{
+  width:220px;
+  max-width:220px;
+  flex:0 0 220px;
+}
+
+.exam-stats-box{
+  width:260px;
+  max-width:100%;
+  display:grid;
+  gap:8px;
+}
+
+.exam-stat-card{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:9px 12px;
+  border-radius:9px;
+  color:white;
+  font-weight:bold;
+  box-shadow:0 2px 6px rgba(0,0,0,.08);
+}
+
+.exam-stat-card .label{
+  font-size:13px;
+}
+
+.exam-stat-card .value{
+  font-size:18px;
+}
+
+.exam-stat-total{background:#0b5ed7;}
+.exam-stat-attempted{background:#6f42c1;}
+.exam-stat-correct{background:#198754;}
+.exam-stat-incorrect{background:#dc3545;}
+.exam-stat-unattempted{background:#fd7e14;}
+
+@media(max-width:600px){
+  .exam-result-dashboard{
+    gap:16px;
+  }
+  .exam-pie-box{
+    width:200px;
+    flex-basis:200px;
+  }
+  .exam-stats-box{
+    width:100%;
+  }
+}
+
+.exam-chart-title{
+  text-align:center;
+  font-size:17px;
+  font-weight:bold;
+  color:#0b5ed7;
+  margin:20px 0 8px;
+}
+
+@media(max-width:600px){
+  .exam-summary-grid{
+    grid-template-columns:1fr 1fr;
+  }
+}
+
+.message{
+  margin-top:12px;
+  padding:10px;
+  border-radius:8px;
+  display:none;
+}
+
+.message.success{
+  display:block;
+  background:#d1e7dd;
+  color:#0f5132;
+}
+
+.message.error{
+  display:block;
+  background:#f8d7da;
+  color:#842029;
+}
+
+.loading{
+  text-align:center;
+  padding:20px;
+  color:#666;
 }
 
 
-/* =====================================================
-   JSON RESPONSE
-===================================================== */
+/* SEARCH */
 
-function jsonResponse(obj) {
+.word-title{
+  font-size:27px;
+  font-weight:bold;
+  color:#0b5ed7;
+}
 
-  return ContentService
-    .createTextOutput(
-      JSON.stringify(obj)
-    )
-    .setMimeType(
-      ContentService.MimeType.JSON
-    );
+.meaning{
+  font-size:21px;
+  font-weight:bold;
+  margin-top:8px;
+}
+
+.pronunciation{
+  color:#666;
+  margin-top:5px;
+}
+
+.example{
+  margin-top:10px;
+  padding:11px;
+  background:#f5f8fc;
+  border-left:4px solid #0b5ed7;
+  border-radius:6px;
+}
+
+.example .english{
+  font-weight:bold;
+}
+
+.example .hindi{
+  margin-top:5px;
 }
 
 
-/* =====================================================
-   SPREADSHEET
-===================================================== */
+/* DICTIONARY */
 
-function getSpreadsheet() {
+.word-item{
+  background:white;
+  border:1px solid #ddd;
+  border-radius:8px;
+  margin-bottom:8px;
+  overflow:hidden;
+}
 
-  const properties =
-    PropertiesService
-      .getScriptProperties();
+.word-button{
+  width:100%;
+  border:none;
+  background:white;
+  padding:14px;
+  text-align:left;
+  font-size:17px;
+  font-weight:bold;
+  cursor:pointer;
+}
 
-  const spreadsheetId =
-    properties.getProperty(
-      "SPREADSHEET_ID"
-    );
+.word-button:hover{
+  background:#f1f6ff;
+}
 
-  if (spreadsheetId) {
+.word-details{
+  display:none;
+  padding:14px;
+  border-top:1px solid #ddd;
+  background:#fafcff;
+}
 
-    return SpreadsheetApp.openById(
-      spreadsheetId
-    );
-  }
+.word-details.show{
+  display:block;
+}
 
-  const active =
-    SpreadsheetApp.getActiveSpreadsheet();
+.details-meaning{
+  color:#0b5ed7;
+  font-size:20px;
+  font-weight:bold;
+}
 
-  if (active) {
-    return active;
-  }
+.details-pronunciation{
+  color:#666;
+  margin:5px 0 12px;
+}
 
-  throw new Error(
-    "Spreadsheet not found. Set SPREADSHEET_ID in Script Properties."
-  );
+.detail-example{
+  background:white;
+  border-left:3px solid #0b5ed7;
+  padding:10px;
+  margin:8px 0;
+  border-radius:5px;
+}
+
+.detail-example .en{
+  font-weight:bold;
+}
+
+.detail-example .hi{
+  margin-top:5px;
+}
+
+.delete-btn{
+  margin-top:10px;
+  padding:8px 12px;
+  border:none;
+  border-radius:6px;
+  background:#dc3545;
+  color:white;
+  cursor:pointer;
 }
 
 
-/* =====================================================
-   ENSURE SHEETS
-===================================================== */
+/* EXAM */
 
-function ensureSheets() {
+.exam-timer{
+  position:sticky;
+  top:0;
+  z-index:10;
+  background:white;
+  padding:12px;
+  border-radius:10px;
+  margin-bottom:15px;
+  box-shadow:0 2px 8px rgba(0,0,0,.1);
+  display:flex;
+  justify-content:space-between;
+  font-weight:bold;
+}
 
-  const ss =
-    getSpreadsheet();
+.timer-danger{
+  color:#dc3545;
+}
 
-  let dictionary =
-    ss.getSheetByName(
-      DICTIONARY_SHEET
-    );
+.exam-question{
+  background:white;
+  padding:16px;
+  border-radius:12px;
+  margin-bottom:15px;
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
 
-  if (!dictionary) {
+.question-number{
+  color:#666;
+  font-size:14px;
+}
 
-    dictionary =
-      ss.insertSheet(
-        DICTIONARY_SHEET
-      );
-  }
-
-  if (
-    dictionary.getLastRow() === 0
-  ) {
-
-    dictionary
-      .getRange(
-        1,
-        1,
-        1,
-        DICTIONARY_HEADERS.length
-      )
-      .setValues([
-        DICTIONARY_HEADERS
-      ]);
-  }
-
-  let examHistory =
-    ss.getSheetByName(
-      EXAM_HISTORY_SHEET
-    );
-
-  if (!examHistory) {
-
-    examHistory =
-      ss.insertSheet(
-        EXAM_HISTORY_SHEET
-      );
-  }
-
-  if (
-    examHistory.getLastRow() === 0
-  ) {
-
-    examHistory
-      .getRange(
-        1,
-        1,
-        1,
-        EXAM_HEADERS.length
-      )
-      .setValues([
-        EXAM_HEADERS
-      ]);
-  }
-
-  return {
-    dictionary:
-      dictionary,
-
-    examHistory:
-      examHistory
-  };
+.question-word{
+  color:#0b5ed7;
+  font-size:24px;
+  font-weight:bold;
+  margin:8px 0 15px;
 }
 
 
-/* =====================================================
-   NORMALIZE WORD
-===================================================== */
+/*
+  IMPORTANT:
+  Exam answer colors only.
+  No Wrong Answer / Correct Answer text.
+*/
 
-function normalizeWord(word) {
-
-  return String(word || "")
-    .trim()
-    .replace(/\s+/g, " ")
-    .toLowerCase();
+.answer-option{
+  width:100%;
+  padding:12px;
+  margin:6px 0;
+  border:2px solid #ddd;
+  border-radius:8px;
+  background:white;
+  text-align:left;
+  font-size:16px;
+  cursor:pointer;
 }
 
-
-/* =====================================================
-   DISPLAY WORD
-===================================================== */
-
-function cleanDisplayWord(word) {
-
-  return String(word || "")
-    .trim()
-    .replace(/\s+/g, " ");
+.answer-option.correct{
+  background:#d1e7dd;
+  border-color:#198754;
+  color:#0f5132;
 }
 
-
-/* =====================================================
-   COMPLETE RECORD
-===================================================== */
-
-function isCompleteRecord(row) {
-
-  if (!row) {
-    return false;
-  }
-
-  const meaning =
-    String(row[2] || "").trim();
-
-  const sentence1 =
-    String(row[4] || "").trim();
-
-  const sentence1Hindi =
-    String(row[5] || "").trim();
-
-  const sentence2 =
-    String(row[6] || "").trim();
-
-  const sentence2Hindi =
-    String(row[7] || "").trim();
-
-  return (
-    meaning &&
-    sentence1 &&
-    sentence1Hindi &&
-    sentence2 &&
-    sentence2Hindi
-  );
+.answer-option.wrong{
+  background:#f8d7da;
+  border-color:#dc3545;
+  color:#842029;
 }
 
-
-/* =====================================================
-   FIND WORD ROW
-===================================================== */
-
-function findWordRow(
-  dictionary,
-  normalizedWord
-) {
-
-  const lastRow =
-    dictionary.getLastRow();
-
-  if (lastRow < 2) {
-    return null;
-  }
-
-  const values =
-    dictionary
-      .getRange(
-        2,
-        1,
-        lastRow - 1,
-        DICTIONARY_HEADERS.length
-      )
-      .getValues();
-
-  for (
-    let i = 0;
-    i < values.length;
-    i++
-  ) {
-
-    const current =
-      normalizeWord(
-        values[i][1]
-      );
-
-    if (
-      current === normalizedWord
-    ) {
-
-      return {
-        row:
-          i + 2,
-
-        values:
-          values[i]
-      };
-    }
-  }
-
-  return null;
+.answer-option.disabled{
+  cursor:not-allowed;
 }
 
-
-/* =====================================================
-   SEARCH WORD
-===================================================== */
-
-function searchWord(word) {
-
-  const displayWord =
-    cleanDisplayWord(word);
-
-  if (!displayWord) {
-
-    return {
-      success: false,
-      message:
-        "Please enter an English word."
-    };
-  }
-
-  const sheets =
-    ensureSheets();
-
-  const dictionary =
-    sheets.dictionary;
-
-  const normalized =
-    normalizeWord(
-      displayWord
-    );
-
-  const found =
-    findWordRow(
-      dictionary,
-      normalized
-    );
-
-  /* ---------------------------------------------------
-     Existing saved word
-  --------------------------------------------------- */
-
-  if (found) {
-
-    return {
-      success: true,
-      saved: true,
-      record:
-        formatRecord(
-          found.values
-        )
-    };
-
-  }
-
-  /* ---------------------------------------------------
-     New word:
-     Generate only for display.
-     DO NOT save automatically.
-  --------------------------------------------------- */
-
-  const data =
-    generateWordData(
-      displayWord
-    );
-
-  const temporaryRow =
-    createDataRow(
-      "",
-      displayWord,
-      data
-    );
-
-  return {
-    success: true,
-    saved: false,
-    record:
-      formatRecord(
-        temporaryRow
-      )
-  };
+.exam-result{
+  background:white;
+  padding:20px;
+  text-align:center;
+  border-radius:12px;
 }
 
+.score{
+  font-size:34px;
+  font-weight:bold;
+  color:#0b5ed7;
+}
+
+.hidden{
+  display:none !important;
+}
+
+@media(max-width:600px){
+
+  header h1{
+    font-size:22px;
+  }
+
+  .container{
+    padding:10px;
+  }
+
+  .card{
+    padding:14px;
+  }
+
+  .tab-btn{
+    min-width:110px;
+    font-size:13px;
+  }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+<h1>
+PATEL ASSOCIATES
+</h1>
+
+<p>
+English → Hindi Personal Dictionary
+</p>
+
+</header>
+
+
+<div class="container">
+
+
+<div
+  id="serverStatus"
+  class="server-status"
+>
+Connecting to server...
+</div>
+
+
+<div class="tabs">
+
+<button
+  class="tab-btn active"
+  onclick="openTab('searchTab',this)"
+>
+Search English Word
+</button>
+
+<button
+  class="tab-btn"
+  onclick="openTab('examTab',this)"
+>
+Exam
+</button>
+
+<button
+  class="tab-btn"
+  onclick="openTab('dictionaryTab',this)"
+>
+Dictionary List
+</button>
+
+<button
+  class="tab-btn"
+  onclick="openTab('importTab',this)"
+>
+Excel Import
+</button>
+
+</div>
+
+
+<!-- =====================================================
+     SEARCH
+===================================================== -->
+
+<section
+  id="searchTab"
+  class="tab-content active"
+>
+
+<div class="card">
+
+<h2>
+Search English Word
+</h2>
+
+<input
+  type="text"
+  id="searchInput"
+  placeholder="Enter English word..."
+>
+
+<button
+  id="searchBtn"
+  class="primary"
+  onclick="searchWord()"
+>
+Search
+</button>
+
+<div
+  id="searchMessage"
+  class="message"
+></div>
+
+</div>
+
+
+<div
+  id="searchResult"
+></div>
+
+</section>
+
+
+<!-- =====================================================
+     DICTIONARY
+===================================================== -->
+
+<section
+  id="dictionaryTab"
+  class="tab-content"
+>
+
+<div class="card">
+
+<h2>
+Dictionary List
+</h2>
+
+<button
+  class="primary"
+  onclick="loadDictionary()"
+>
+Refresh Dictionary
+</button>
+
+<div
+  id="dictionaryMessage"
+  class="message"
+></div>
+
+<div
+  id="dictionaryList"
+></div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     IMPORT
+===================================================== -->
+
+<section
+  id="importTab"
+  class="tab-content"
+>
+
+<div class="card">
+
+<h2>
+Excel Import
+</h2>
+
+<p>
+Excel / CSV की पहली column में English words रखें।
+</p>
+
+<input
+  type="file"
+  id="excelFile"
+  accept=".xlsx,.xls,.csv"
+>
+
+<button
+  class="primary"
+  onclick="importExcel()"
+>
+Import Words
+</button>
+
+<div
+  id="importMessage"
+  class="message"
+></div>
+
+<div
+  id="importResult"
+></div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     EXAM
+===================================================== -->
+
+<section
+  id="examTab"
+  class="tab-content"
+>
+
+
+<div
+  id="examSetup"
+  class="card"
+>
+
+<h2>
+Exam Vocabulary Test
+</h2>
+
+<label>
+Number of Questions
+</label>
+
+<input
+  type="number"
+  id="questionCount"
+  min="1"
+  value="10"
+>
+
+<label>
+Total Time (Minutes)
+</label>
+
+<input
+  type="number"
+  id="examMinutes"
+  min="1"
+  value="10"
+>
+
+<button
+  class="primary"
+  onclick="startExam()"
+>
+Start Exam
+</button>
+
+<div
+  id="examSetupMessage"
+  class="message"
+></div>
+
+</div>
+
+
+<div
+  id="examArea"
+  class="hidden"
+>
+
+
+<div class="exam-timer">
+
+<span>
+Total Time:
+<span id="totalTimeDisplay">
+00:00
+</span>
+</span>
+
+<span>
+Remaining:
+<span id="remainingTimeDisplay">
+00:00
+</span>
+</span>
+
+</div>
+
+
+<div
+  id="examQuestions"
+></div>
+
+
+<button
+  id="submitExamBtn"
+  class="primary"
+  onclick="submitExam()"
+>
+Submit Exam
+</button>
+
+
+</div>
+
+
+<div
+  id="examResult"
+  class="hidden"
+></div>
+
+
+</section>
+
+
+</div>
+
+
+<script
+src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"
+></script>
+
+<script
+src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"
+></script>
+
+<script
+src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"
+></script>
+
+
+<script>
+
 
 /* =====================================================
-   FORMAT RECORD
+   API URL
 ===================================================== */
 
-function formatRecord(row) {
+const API_URL =
+"https://script.google.com/macros/s/AKfycbznhwqwtBWBqUbUA-FVfOYNYAJkFUaCEcfwwTagpWfW7yk0tsCWYJYfZB4gBErt7aQX/exec";
 
-  return {
 
-    id:
-      row[0] || "",
+/* =====================================================
+   GLOBALS
+===================================================== */
 
-    word:
-      row[1] || "",
+let examRecords = [];
 
-    meaning:
-      row[2] || "",
+let examAnswers = {};
 
-    pronunciation:
-      row[3] || "",
+let examTimer = null;
 
-    sentences: [
+let examTotalSeconds = 0;
 
-      {
-        english:
-          row[4] || "",
+let examRemainingSeconds = 0;
 
-        hindi:
-          row[5] || ""
+let examSubmitted = false;
+
+
+/* =====================================================
+   API
+===================================================== */
+
+async function apiGet(params){
+
+  const url =
+    API_URL +
+    "?" +
+    new URLSearchParams(params).toString() +
+    "&_=" +
+    Date.now();
+
+
+  const controller =
+    new AbortController();
+
+
+  const timeout =
+    setTimeout(
+      function(){
+        controller.abort();
       },
-
-      {
-        english:
-          row[6] || "",
-
-        hindi:
-          row[7] || ""
-      }
-
-    ]
-  };
-}
-
-
-/* =====================================================
-   CREATE DATA ROW
-===================================================== */
-
-function createDataRow(
-  id,
-  word,
-  data,
-  createdAt
-) {
-
-  const sentences =
-    data.sentences || [];
-
-  const getSentence =
-    function(index) {
-
-      return sentences[index] || {
-        english: "",
-        hindi: ""
-      };
-    };
-
-  const s1 =
-    getSentence(0);
-
-  const s2 =
-    getSentence(1);
-
-  const s3 =
-    getSentence(2);
-
-  const s4 =
-    getSentence(3);
-
-  const s5 =
-    getSentence(4);
-
-  return [
-
-    id,
-
-    word,
-
-    data.meaning || "",
-
-    data.pronunciation || "",
-
-    s1.english || "",
-    s1.hindi || "",
-
-    s2.english || "",
-    s2.hindi || "",
-
-    s3.english || "",
-    s3.hindi || "",
-
-    s4.english || "",
-    s4.hindi || "",
-
-    s5.english || "",
-    s5.hindi || "",
-
-    createdAt ||
-      new Date()
-
-  ];
-}
-
-
-/* =====================================================
-   BLANK ROW
-===================================================== */
-
-function createBlankRow(
-  id,
-  word
-) {
-
-  return [
-
-    id,
-    word,
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    new Date()
-
-  ];
-}
-
-
-/* =====================================================
-   SAVE SINGLE WORD
-===================================================== */
-
-function saveSingleWord(word) {
-
-  const displayWord =
-    cleanDisplayWord(word);
-
-  if (!displayWord) {
-
-    return {
-      success: false,
-      message:
-        "Please enter an English word."
-    };
-  }
-
-  const sheets =
-    ensureSheets();
-
-  const dictionary =
-    sheets.dictionary;
-
-  const normalized =
-    normalizeWord(
-      displayWord
+      30000
     );
 
-  let found =
-    findWordRow(
-      dictionary,
-      normalized
-    );
 
-  /* ---------------------------------------------------
-     Already saved
-  --------------------------------------------------- */
+  try{
 
-  if (found) {
+    const response =
+      await fetch(
+        url,
+        {
+          method:"GET",
+          cache:"no-store",
+          redirect:"follow",
+          signal:
+            controller.signal
+        }
+      );
 
-    if(
-      isCompleteRecord(
-        found.values
-      )
-    ){
 
-      return {
-        success: true,
-        saved: true,
-        record:
-          formatRecord(
-            found.values
-          )
-      };
+    if(!response.ok){
+
+      throw new Error(
+        "HTTP Error " +
+        response.status
+      );
 
     }
+
+
+    const text =
+      await response.text();
+
+
+    let data;
+
+
+    try{
+
+      data =
+        JSON.parse(text);
+
+    }catch(error){
+
+      throw new Error(
+        "Server returned invalid response."
+      );
+
+    }
+
+
+    return data;
+
+
+  }finally{
+
+    clearTimeout(
+      timeout
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   SERVER CHECK
+===================================================== */
+
+async function checkServer(){
+
+  const status =
+    document.getElementById(
+      "serverStatus"
+    );
+
+
+  try{
 
     const data =
-      generateWordData(
-        displayWord
-      );
-
-    const updated =
-      createDataRow(
-        found.values[0] ||
-          generateDictionaryId(),
-
-        found.values[1] ||
-          displayWord,
-
-        data,
-
-        found.values[14] ||
-          new Date()
-      );
-
-    dictionary
-      .getRange(
-        found.row,
-        1,
-        1,
-        DICTIONARY_HEADERS.length
-      )
-      .setValues([
-        updated
-      ]);
-
-    return {
-      success: true,
-      saved: true,
-      record:
-        formatRecord(
-          updated
-        )
-    };
-  }
-
-  /* ---------------------------------------------------
-     New word: generate and save
-  --------------------------------------------------- */
-
-  const data =
-    generateWordData(
-      displayWord
-    );
-
-  const row =
-    createDataRow(
-      generateDictionaryId(),
-      displayWord,
-      data
-    );
-
-  dictionary.appendRow(
-    row
-  );
-
-  return {
-    success: true,
-    saved: true,
-    record:
-      formatRecord(
-        row
-      )
-  };
-}
-
-
-/* =====================================================
-   GENERATE DICTIONARY ID
-===================================================== */
-
-function generateDictionaryId() {
-
-  return (
-    "DICT-" +
-    Utilities.getUuid()
-  );
-}
-
-
-/* =====================================================
-   GENERATE WORD DATA
-===================================================== */
-
-function generateWordData(word) {
-
-  /*
-   * Valuation-related words use REAL online-source
-   * sentences. Generic AI example sentences are NOT used
-   * for these words.
-   */
-  if (isValuationTerm(word)) {
-    return generateValuationWordData(word);
-  }
-
-  /* Existing AI flow for normal dictionary words. */
-  try {
-    const result = generateWithGemini(word);
-
-    if (
-      result &&
-      result.meaning &&
-      result.sentences &&
-      result.sentences.length >= 2
-    ) {
-      return result;
-    }
-  } catch (error) {
-    console.log("Gemini error: " + error.message);
-  }
-
-  return generateWithTranslation(word);
-}
-
-
-/* =====================================================
-   VALUATION WORD CHECK
-===================================================== */
-
-function isValuationTerm(word) {
-
-  const value = normalizeWord(word);
-
-  const terms = [
-    "valuation", "valuer", "valuers", "valued", "valuing",
-    "appraisal", "appraiser", "property valuation",
-    "land valuation", "building valuation", "land and building",
-    "market value", "fair value", "forced sale value",
-    "distressed value", "rental value", "capitalization rate",
-    "capitalisation rate", "discount rate", "discounted cash flow",
-    "depreciation", "obsolescence", "replacement cost",
-    "reproduction cost", "salvage value", "scrap value",
-    "residual value", "highest and best use", "comparable property",
-    "comparable properties", "guideline value", "circle rate",
-    "stamp duty", "registration", "far", "fsi", "tdr",
-    "plinth area", "carpet area", "floor area", "super built-up area",
-    "rental income", "yield", "valuation report", "registered valuer",
-    "asset valuation", "encumbrance", "freehold", "leasehold",
-    "development potential"
-  ];
-
-  return terms.indexOf(value) !== -1;
-}
-
-
-/* =====================================================
-   VALUATION DATA = GEMINI MEANING + ONLINE SENTENCES
-===================================================== */
-
-function generateValuationWordData(word) {
-
-  const meta = generateValuationMeaningWithGemini(word);
-
-  const sentences = getOnlineValuationSentences(word, 5);
-
-  if (sentences.length < 2) {
-    throw new Error(
-      "इस valuation word के लिए पर्याप्त वास्तविक online-source sentences नहीं मिले। AI-generated example sentences नहीं बनाए गए।"
-    );
-  }
-
-  return {
-    meaning: meta.meaning,
-    pronunciation: meta.pronunciation,
-    sentences: sentences
-  };
-}
-
-
-/* =====================================================
-   VALUATION MEANING / PRONUNCIATION ONLY
-===================================================== */
-
-function generateValuationMeaningWithGemini(word) {
-
-  const apiKey = PropertiesService
-    .getScriptProperties()
-    .getProperty("GEMINI_API_KEY");
-
-  if (!apiKey) {
-    throw new Error("GEMINI_API_KEY not found.");
-  }
-
-  const prompt = `
-You are an English-to-Hindi dictionary assistant for Land and Building Valuation study.
-
-English word/term: "${word}"
-
-Return ONLY valid JSON with:
-{
-  "meaning": "clear Hindi meaning",
-  "pronunciation": "Hindi pronunciation"
-}
-
-Do not provide examples or sentences.
-Do not use markdown.
-`;
-
-  const url =
-    "https://generativelanguage.googleapis.com/v1beta/models/" +
-    "gemini-2.5-flash:generateContent?key=" +
-    encodeURIComponent(apiKey);
-
-  const payload = {
-    contents: [{ parts: [{ text: prompt }] }],
-    generationConfig: {
-      temperature: 0.2,
-      responseMimeType: "application/json"
-    }
-  };
-
-  const response = UrlFetchApp.fetch(url, {
-    method: "post",
-    contentType: "application/json",
-    payload: JSON.stringify(payload),
-    muteHttpExceptions: true
-  });
-
-  const code = response.getResponseCode();
-  const text = response.getContentText();
-
-  if (code < 200 || code >= 300) {
-    throw new Error("Gemini HTTP " + code + ": " + text);
-  }
-
-  const json = JSON.parse(text);
-  const generated = json && json.candidates && json.candidates[0] &&
-    json.candidates[0].content && json.candidates[0].content.parts &&
-    json.candidates[0].content.parts[0] &&
-    json.candidates[0].content.parts[0].text;
-
-  if (!generated) {
-    throw new Error("Gemini returned empty response.");
-  }
-
-  const result = JSON.parse(cleanJsonText(generated));
-
-  if (!result.meaning) {
-    throw new Error("Gemini returned no Hindi meaning.");
-  }
-
-  return {
-    meaning: String(result.meaning || "").trim(),
-    pronunciation: String(result.pronunciation || "").trim()
-  };
-}
-
-
-/* =====================================================
-   ONLINE SOURCE SENTENCES - GOOGLE BOOKS
-===================================================== */
-
-function getOnlineValuationSentences(word, requiredCount) {
-
-  const queries = [
-    '"' + word + '" valuation',
-    '"' + word + '" "land and building"',
-    '"' + word + '" property valuation',
-    '"' + word + '" real estate valuation',
-    '"' + word + '" appraisal'
-  ];
-
-  const results = [];
-  const seen = {};
-
-  for (let q = 0; q < queries.length; q++) {
-
-    if (results.length >= requiredCount) {
-      break;
-    }
-
-    try {
-      const url =
-        "https://www.googleapis.com/books/v1/volumes?maxResults=10&langRestrict=en&q=" +
-        encodeURIComponent(queries[q]);
-
-      const response = UrlFetchApp.fetch(url, {
-        method: "get",
-        muteHttpExceptions: true
+      await apiGet({
+        action:"health"
       });
 
-      if (response.getResponseCode() !== 200) {
-        continue;
-      }
 
-      const data = JSON.parse(response.getContentText());
-      const items = Array.isArray(data.items) ? data.items : [];
+    if(data.success){
 
-      for (let i = 0; i < items.length; i++) {
+      status.textContent =
+        "● Server Connected";
 
-        if (results.length >= requiredCount) {
-          break;
-        }
+      status.style.background =
+        "#d1e7dd";
 
-        const snippet = items[i] && items[i].searchInfo
-          ? items[i].searchInfo.textSnippet
-          : "";
+      status.style.color =
+        "#0f5132";
 
-        const sentences = extractOnlineSentences(snippet, word);
+    }else{
 
-        for (let j = 0; j < sentences.length; j++) {
-
-          if (results.length >= requiredCount) {
-            break;
-          }
-
-          const sentence = cleanOnlineSnippet(sentences[j]);
-          const key = normalizeWord(sentence);
-
-          if (!sentence || seen[key]) {
-            continue;
-          }
-
-          seen[key] = true;
-
-          results.push({
-            english: sentence,
-            hindi: translateText(sentence)
-          });
-        }
-      }
-
-    } catch (error) {
-      console.log("Google Books error: " + error.message);
-    }
-  }
-
-  return results.slice(0, requiredCount);
-}
-
-
-/* =====================================================
-   EXTRACT REAL SENTENCE FROM ONLINE SNIPPET
-===================================================== */
-
-function extractOnlineSentences(text, word) {
-
-  let value = String(text || "");
-
-  value = value
-    .replace(/<[^>]+>/g, " ")
-    .replace(/&nbsp;/gi, " ")
-    .replace(/&amp;/gi, "&")
-    .replace(/&quot;/gi, '"')
-    .replace(/&#39;/gi, "'")
-    .replace(/&#x27;/gi, "'")
-    .replace(/\s+/g, " ")
-    .trim();
-
-  if (!value) {
-    return [];
-  }
-
-  const pieces = value.split(/(?<=[.!?])\s+/);
-  const target = normalizeWord(word);
-  const result = [];
-
-  pieces.forEach(function(piece) {
-
-    let sentence = cleanOnlineSnippet(piece);
-    if (!sentence) {
-      return;
-    }
-
-    const normalizedSentence = normalizeWord(sentence);
-
-    if (normalizedSentence.indexOf(target) === -1) {
-      return;
-    }
-
-    if (!/[.!?]$/.test(sentence)) {
-      return;
-    }
-
-    result.push(sentence);
-  });
-
-  return result;
-}
-
-
-/* =====================================================
-   CLEAN ONLINE SNIPPET
-===================================================== */
-
-function cleanOnlineSnippet(text) {
-
-  let value = String(text || "")
-    .replace(/\s+/g, " ")
-    .trim();
-
-  value = value.replace(/^\.\.\.\s*/, "");
-  value = value.replace(/\s*\.\.\.$/, "");
-
-  if (value.length > 280) {
-    return "";
-  }
-
-  if (value.length < 20) {
-    return "";
-  }
-
-  return value;
-}
-
-
-/* =====================================================
-   GEMINI GENERATION
-===================================================== */
-
-function generateWithGemini(word) {
-
-  const apiKey =
-    PropertiesService
-      .getScriptProperties()
-      .getProperty(
-        "GEMINI_API_KEY"
+      throw new Error(
+        data.message
       );
 
-  if (!apiKey) {
+    }
 
-    throw new Error(
-      "GEMINI_API_KEY not found."
-    );
+
+  }catch(error){
+
+    status.textContent =
+      "● Server Connection Error: " +
+      error.message;
+
+    status.style.background =
+      "#f8d7da";
+
+    status.style.color =
+      "#842029";
+
   }
 
-
-  /*
-   * IMPORTANT:
-   * LAND & BUILDING VALUATION
-   * EXAM-BASED PROMPT
-   */
-
-  const prompt = `
-
-You are an expert teacher preparing vocabulary
-for Land and Building Valuation and professional professional valuation examination preparation.
-
-English word:
-"${word}"
-
-Create an English-to-Hindi vocabulary entry.
-
-The examples MUST be useful for Land & Building Valuation
-and professional professional valuation examination preparation.
-
-Use technical contexts such as, where appropriate:
-
-- Land and Building Valuation
-- Market Value
-- Fair Value
-- Distressed Value
-- Forced Sale Value
-- Comparable Sales Method
-- Income Capitalization Method
-- Cost Approach
-- Land Valuation
-- Building Valuation
-- Rental Value
-- Capitalization Rate
-- Discount Rate
-- Discounted Cash Flow
-- FAR / FSI
-- TDR
-- Guideline Value
-- Circle Rate
-- Stamp Duty
-- Registration
-- Depreciation
-- Obsolescence
-- Physical Depreciation
-- Functional Obsolescence
-- Economic Obsolescence
-- Replacement Cost
-- Reproduction Cost
-- Salvage Value
-- Scrap Value
-- Residual Value
-- Highest and Best Use
-- Encumbrance
-- Title
-- Lease
-- Mortgage
-- Freehold
-- Leasehold
-- Comparable Property
-- Development Potential
-- Location
-- Zoning
-- Building Bye-laws
-- Plinth Area
-- Carpet Area
-- Floor Area
-- Super Built-up Area
-- Property Tax
-- Rental Income
-- Yield
-- Capitalization
-- Valuation Report
-- Valuer
-- Asset Valuation
-- IBC / Insolvency
-- CIRP
-- TPA
-- Registered Valuer
-
-Rules:
-
-1. Give a clear Hindi meaning.
-2. Give Hindi pronunciation.
-3. Give exactly 5 English example sentences.
-4. Each English sentence must be followed by its accurate Hindi translation.
-5. EVERY English example sentence MUST contain the exact English word/phrase provided above, in a grammatically natural form.
-6. The sentences must explain or demonstrate the searched word itself; do not merely mention unrelated valuation concepts.
-7. At least 3 sentences should be directly related to Land & Building Valuation or professional valuation examination preparation.
-8. Sentences should be practical and exam-oriented.
-9. Do not create meaningless generic sentences.
-8. Do not use difficult vocabulary unnecessarily.
-9. Keep Hindi translations natural and technically accurate.
-10. Return ONLY valid JSON.
-11. Do not use markdown.
-12. Do not use code fences.
-
-Required JSON:
-
-{
-  "meaning": "Hindi meaning",
-  "pronunciation": "Hindi pronunciation",
-  "sentences": [
-    {
-      "english": "English sentence",
-      "hindi": "Hindi translation"
-    },
-    {
-      "english": "English sentence",
-      "hindi": "Hindi translation"
-    },
-    {
-      "english": "English sentence",
-      "hindi": "Hindi translation"
-    },
-    {
-      "english": "English sentence",
-      "hindi": "Hindi translation"
-    },
-    {
-      "english": "English sentence",
-      "hindi": "Hindi translation"
-    }
-  ]
 }
-`;
 
 
-  const url =
-    "https://generativelanguage.googleapis.com/v1beta/models/" +
-    "gemini-2.5-flash:generateContent?key=" +
-    encodeURIComponent(apiKey);
+/* =====================================================
+   TAB
+===================================================== */
 
+function openTab(
+  tabId,
+  button
+){
 
-  const payload = {
+  document
+    .querySelectorAll(
+      ".tab-content"
+    )
+    .forEach(
+      function(el){
 
-    contents: [
-
-      {
-        parts: [
-
-          {
-            text: prompt
-          }
-
-        ]
-      }
-
-    ],
-
-    generationConfig: {
-
-      temperature: 0.3,
-
-      responseMimeType:
-        "application/json"
-
-    }
-
-  };
-
-
-  const response =
-    UrlFetchApp.fetch(
-      url,
-      {
-        method: "post",
-
-        contentType:
-          "application/json",
-
-        payload:
-          JSON.stringify(payload),
-
-        muteHttpExceptions:
-          true
+        el.classList.remove(
+          "active"
+        );
 
       }
     );
 
 
-  const code =
-    response.getResponseCode();
+  document
+    .querySelectorAll(
+      ".tab-btn"
+    )
+    .forEach(
+      function(el){
 
-  const text =
-    response.getContentText();
+        el.classList.remove(
+          "active"
+        );
 
-
-  if (code < 200 || code >= 300) {
-
-    throw new Error(
-      "Gemini HTTP " +
-      code +
-      ": " +
-      text
+      }
     );
+
+
+  document
+    .getElementById(
+      tabId
+    )
+    .classList.add(
+      "active"
+    );
+
+
+  button.classList.add(
+    "active"
+  );
+
+
+  if(
+    tabId ===
+    "dictionaryTab"
+  ){
+
+    loadDictionary();
+
+  }
+
+}
+
+
+/* =====================================================
+   MESSAGE
+===================================================== */
+
+function showMessage(
+  id,
+  message,
+  type
+){
+
+  const el =
+    document.getElementById(
+      id
+    );
+
+
+  el.textContent =
+    message;
+
+
+  el.className =
+    "message " +
+    type;
+
+}
+
+
+/* =====================================================
+   ESCAPE HTML
+===================================================== */
+
+function escapeHtml(value){
+
+  if(
+    value === null ||
+    value === undefined
+  ){
+
+    return "";
+
   }
 
 
-  const json =
-    JSON.parse(text);
+  return String(value)
 
+    .replace(
+      /&/g,
+      "&amp;"
+    )
 
-  const generated =
-    json &&
-    json.candidates &&
-    json.candidates[0] &&
-    json.candidates[0].content &&
-    json.candidates[0].content.parts &&
-    json.candidates[0].content.parts[0] &&
-    json.candidates[0].content.parts[0].text;
+    .replace(
+      /</g,
+      "&lt;"
+    )
 
+    .replace(
+      />/g,
+      "&gt;"
+    )
 
-  if (!generated) {
+    .replace(
+      /"/g,
+      "&quot;"
+    )
 
-    throw new Error(
-      "Gemini returned empty response."
+    .replace(
+      /'/g,
+      "&#039;"
     );
-  }
+
+}
 
 
-  const clean =
-    cleanJsonText(
-      generated
+/* =====================================================
+   ESCAPE JS
+===================================================== */
+
+function escapeJs(value){
+
+  return String(
+    value || ""
+  )
+
+  .replace(
+    /\\/g,
+    "\\\\"
+  )
+
+  .replace(
+    /'/g,
+    "\\'"
+  )
+
+  .replace(
+    /"/g,
+    '\\"'
+  );
+
+}
+
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+async function searchWord(){
+
+  const input =
+    document.getElementById(
+      "searchInput"
+    );
+
+
+  const btn =
+    document.getElementById(
+      "searchBtn"
     );
 
 
   const result =
-    JSON.parse(
-      clean
+    document.getElementById(
+      "searchResult"
     );
 
 
-  if (
-    !result.meaning ||
-    !Array.isArray(
-      result.sentences
-    )
-  ) {
+  const word =
+    input.value.trim();
 
-    throw new Error(
-      "Invalid Gemini dictionary data."
+
+  if(!word){
+
+    showMessage(
+      "searchMessage",
+      "Please enter an English word.",
+      "error"
     );
+
+    return;
+
   }
 
 
-  return {
-
-    meaning:
-      String(
-        result.meaning || ""
-      ).trim(),
-
-    pronunciation:
-      String(
-        result.pronunciation || ""
-      ).trim(),
-
-    sentences:
-      result.sentences
-        .slice(0, 5)
-        .map(
-          function(item) {
-
-            return {
-
-              english:
-                String(
-                  item.english || ""
-                ).trim(),
-
-              hindi:
-                String(
-                  item.hindi || ""
-                ).trim()
-
-            };
-
-          }
-        )
-        .filter(
-          function(item) {
-
-            return (
-              item.english &&
-              item.hindi
-            );
-
-          }
-        )
-
-  };
-}
+  btn.disabled =
+    true;
 
 
-/* =====================================================
-   CLEAN JSON
-===================================================== */
+  result.innerHTML =
+    `
+      <div class="card loading">
+        Generating meaning and examples...
+      </div>
+    `;
 
-function cleanJsonText(text) {
 
-  let value =
-    String(text || "")
-      .trim();
+  try{
 
-  if (
-    value.startsWith("```")
-  ) {
+    const data =
+      await apiGet({
 
-    value =
-      value.replace(
-        /^```(?:json)?\s*/i,
-        ""
+        action:"search",
+
+        word:word
+
+      });
+
+
+    if(!data.success){
+
+      throw new Error(
+        data.message ||
+        "Search failed."
       );
 
-    value =
-      value.replace(
-        /\s*```$/,
-        ""
-      );
-
-  }
-
-  return value.trim();
-}
-
-
-/* =====================================================
-   FALLBACK TRANSLATION
-===================================================== */
-
-function generateWithTranslation(word) {
-
-  const meaning =
-    translateText(
-      word
-    );
-
-  const safeWord =
-    String(word || "").trim();
-
-  /*
-   * Fallback sentences deliberately contain the searched
-   * English word so the examples remain related to the
-   * searched term even when Gemini is unavailable.
-   */
-  const sentences = [
-
-    {
-      english:
-        `In land and building valuation, the term "${safeWord}" should be understood before applying it in a valuation report.`,
-      hindi:
-        translateText(
-          `In land and building valuation, the term "${safeWord}" should be understood before applying it in a valuation report.`
-        )
-    },
-
-    {
-      english:
-        `The valuer considers "${safeWord}" carefully when analysing the value of a property.`,
-      hindi:
-        translateText(
-          `The valuer considers "${safeWord}" carefully when analysing the value of a property.`
-        )
-    },
-
-    {
-      english:
-        `Comparable properties may help the valuer explain the relevance of "${safeWord}" in a valuation analysis.`,
-      hindi:
-        translateText(
-          `Comparable properties may help the valuer explain the relevance of "${safeWord}" in a valuation analysis.`
-        )
-    },
-
-    {
-      english:
-        `A valuation report should clearly state how "${safeWord}" has been considered in the adopted method of valuation.`,
-      hindi:
-        translateText(
-          `A valuation report should clearly state how "${safeWord}" has been considered in the adopted method of valuation.`
-        )
-    },
-
-    {
-      english:
-        `For examination preparation, remember that "${safeWord}" should be applied according to its proper valuation context.`,
-      hindi:
-        translateText(
-          `For examination preparation, remember that "${safeWord}" should be applied according to its proper valuation context.`
-        )
     }
 
-  ];
 
-  return {
-
-    meaning:
-      meaning,
-
-    pronunciation:
-      "",
-
-    sentences:
-      sentences
-
-  };
-}
-
-
-/* =====================================================
-   TRANSLATION
-===================================================== */
-
-function translateText(text) {
-
-  try {
-
-    return LanguageApp.translate(
-      String(text || ""),
-      "en",
-      "hi"
+    renderSearchResult(
+      data.record
     );
 
-  } catch (error) {
 
-    return "";
+    showMessage(
+      "searchMessage",
+      "Word loaded successfully.",
+      "success"
+    );
+
+
+  }catch(error){
+
+    result.innerHTML =
+      "";
+
+
+    showMessage(
+      "searchMessage",
+      error.message,
+      "error"
+    );
+
+
+  }finally{
+
+    btn.disabled =
+      false;
+
   }
+
+}
+
+/* =====================================================
+   SAVE SEARCHED WORD
+===================================================== */
+
+async function saveSearchedWord(word){
+
+  const btn =
+    document.getElementById(
+      "saveWordBtn"
+    );
+
+  if(!btn){
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = "Saving...";
+
+  try{
+
+    const data =
+      await apiGet({
+        action:"saveWord",
+        word:word
+      });
+
+    if(!data.success){
+
+      throw new Error(
+        data.message ||
+        "Unable to save word."
+      );
+
+    }
+
+    btn.textContent = "Saved";
+    btn.disabled = true;
+
+    showMessage(
+      "searchMessage",
+      "Word saved to Dictionary.",
+      "success"
+    );
+
+  }catch(error){
+
+    btn.disabled = false;
+    btn.textContent = "Save Word";
+
+    showMessage(
+      "searchMessage",
+      error.message,
+      "error"
+    );
+
+  }
+
 }
 
 
 /* =====================================================
-   GET ALL WORDS
+   SENTENCES
 ===================================================== */
 
-function getAllWords() {
+function getSentences(record){
 
-  const sheets =
-    ensureSheets();
+  if(
+    Array.isArray(
+      record.sentences
+    )
+  ){
 
-  const dictionary =
-    sheets.dictionary;
+    return record.sentences
+      .map(
+        function(s){
 
-  cleanupDuplicateWords();
+          return {
 
-  const lastRow =
-    dictionary.getLastRow();
+            english:
+              s.english ||
+              "",
 
-  if (lastRow < 2) {
+            hindi:
+              s.hindi ||
+              ""
 
-    return {
-      success: true,
-      words: []
-    };
+          };
+
+        }
+      )
+      .filter(
+        function(s){
+
+          return (
+            s.english ||
+            s.hindi
+          );
+
+        }
+      );
+
   }
 
 
-  const values =
-    dictionary
-      .getRange(
-        2,
-        1,
-        lastRow - 1,
-        DICTIONARY_HEADERS.length
-      )
-      .getValues();
+  const result =
+    [];
 
 
-  const result = [];
+  for(
+    let i=1;
+    i<=5;
+    i++
+  ){
 
-  const seen =
-    new Set();
+    const en =
+      record[
+        "sentence" +
+        i
+      ];
 
 
-  values.forEach(
-    function(row) {
+    const hi =
+      record[
+        "sentence" +
+        i +
+        "Hindi"
+      ];
 
-      const word =
-        cleanDisplayWord(
-          row[1]
-        );
 
-      const normalized =
-        normalizeWord(
-          word
-        );
+    if(
+      en ||
+      hi
+    ){
 
-      if (
-        word &&
-        !seen.has(normalized)
-      ) {
+      result.push({
 
-        seen.add(
-          normalized
-        );
+        english:
+          en || "",
 
-        result.push({
+        hindi:
+          hi || ""
 
-          id:
-            row[0] || "",
+      });
 
-          word:
-            word
+    }
 
-        });
+  }
+
+
+  return result;
+
+}
+
+
+/* =====================================================
+   SEARCH RESULT
+===================================================== */
+
+function renderSearchResult(
+  record
+){
+
+  const result =
+    document.getElementById(
+      "searchResult"
+    );
+
+
+  let html = `
+
+    <div class="card">
+
+      <div class="word-title">
+        ${escapeHtml(
+          record.word
+        )}
+      </div>
+
+      <div class="meaning">
+        ${escapeHtml(
+          record.meaning
+        )}
+      </div>
+
+      <div class="pronunciation">
+        ${escapeHtml(
+          record.pronunciation
+        )}
+      </div>
+
+      ${record.saved ? `
+        <div class="saved-label">✓ Saved in Dictionary</div>
+      ` : `
+        <button
+          id="saveWordBtn"
+          class="save-word-btn"
+          onclick="saveSearchedWord('${escapeJs(record.word)}')"
+        >
+          Save Word
+        </button>
+      `}
+
+  `;
+
+
+  getSentences(record)
+    .slice(0,2)
+    .forEach(
+      function(sentence,index){
+
+        html += `
+
+          <div class="example">
+
+            <div class="english">
+              ${index+1}.
+              ${escapeHtml(
+                sentence.english
+              )}
+            </div>
+
+            <div class="hindi">
+              ${escapeHtml(
+                sentence.hindi
+              )}
+            </div>
+
+          </div>
+
+        `;
 
       }
-
-    }
-  );
+    );
 
 
-  result.sort(
-    function(a,b) {
-
-      return a.word
-        .localeCompare(
-          b.word
-        );
-
-    }
-  );
+  html += `
+    </div>
+  `;
 
 
-  return {
+  result.innerHTML =
+    html;
 
-    success: true,
-
-    words:
-      result
-
-  };
 }
 
 
 /* =====================================================
-   CLEAN DUPLICATES
+   DICTIONARY
 ===================================================== */
 
-function cleanupDuplicateWords() {
+async function loadDictionary(){
 
-  const lock =
-    LockService
-      .getScriptLock();
+  const list =
+    document.getElementById(
+      "dictionaryList"
+    );
 
-  lock.waitLock(
-    10000
-  );
 
-  try {
+  list.innerHTML =
+    `
+      <div class="loading">
+        Loading dictionary...
+      </div>
+    `;
 
-    const sheets =
-      ensureSheets();
 
-    const dictionary =
-      sheets.dictionary;
+  try{
 
-    const lastRow =
-      dictionary.getLastRow();
+    const data =
+      await apiGet({
 
-    if (lastRow < 3) {
-      return;
+        action:
+          "allWords"
+
+      });
+
+
+    if(!data.success){
+
+      throw new Error(
+        data.message
+      );
+
     }
 
 
-    const values =
-      dictionary
-        .getRange(
-          2,
-          1,
-          lastRow - 1,
-          DICTIONARY_HEADERS.length
-        )
-        .getValues();
+    const words =
+      Array.isArray(
+        data.words
+      )
+      ? data.words
+      : [];
 
 
-    const map =
-      new Map();
+    if(
+      words.length === 0
+    ){
 
-    const rowsToDelete =
+      list.innerHTML =
+        `
+          <div class="loading">
+            No words found.
+          </div>
+        `;
+
+      return;
+
+    }
+
+
+    const unique =
+      [];
+
+    const seen =
+      new Set();
+
+
+    words.forEach(
+      function(item){
+
+        const word =
+          String(
+            item.word || ""
+          )
+          .trim();
+
+
+        const key =
+          word
+            .toLowerCase()
+            .replace(
+              /\s+/g,
+              " "
+            );
+
+
+        if(
+          word &&
+          !seen.has(key)
+        ){
+
+          seen.add(key);
+
+
+          unique.push({
+
+            id:
+              item.id,
+
+            word:
+              word
+
+          });
+
+        }
+
+      }
+    );
+
+
+    list.innerHTML =
+      "";
+
+
+    unique.forEach(
+      function(item){
+
+        const wrapper =
+          document.createElement(
+            "div"
+          );
+
+
+        wrapper.className =
+          "word-item";
+
+
+        const button =
+          document.createElement(
+            "button"
+          );
+
+
+        button.className =
+          "word-button";
+
+
+        button.textContent =
+          item.word;
+
+
+        const details =
+          document.createElement(
+            "div"
+          );
+
+
+        details.className =
+          "word-details";
+
+
+        button.onclick =
+          function(){
+
+            toggleWordDetails(
+              item.word,
+              details
+            );
+
+          };
+
+
+        wrapper.appendChild(
+          button
+        );
+
+
+        wrapper.appendChild(
+          details
+        );
+
+
+        list.appendChild(
+          wrapper
+        );
+
+      }
+    );
+
+
+  }catch(error){
+
+    list.innerHTML =
+      "";
+
+
+    showMessage(
+      "dictionaryMessage",
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   DICTIONARY WORD DETAILS
+===================================================== */
+
+async function toggleWordDetails(
+  word,
+  details
+){
+
+  if(
+    details.classList.contains(
+      "show"
+    )
+  ){
+
+    details.classList.remove(
+      "show"
+    );
+
+    return;
+
+  }
+
+
+  details.classList.add(
+    "show"
+  );
+
+
+  details.innerHTML =
+    `
+      <div class="loading">
+        Generating meaning and examples...
+      </div>
+    `;
+
+
+  try{
+
+    const data =
+      await apiGet({
+
+        action:
+          "search",
+
+        word:
+          word
+
+      });
+
+
+    if(!data.success){
+
+      throw new Error(
+        data.message
+      );
+
+    }
+
+
+    const record =
+      data.record;
+
+
+    let html = `
+
+      <div class="details-meaning">
+        ${escapeHtml(
+          record.meaning
+        )}
+      </div>
+
+      <div class="details-pronunciation">
+        ${escapeHtml(
+          record.pronunciation
+        )}
+      </div>
+
+    `;
+
+
+    getSentences(record)
+      .slice(0,2)
+      .forEach(
+        function(sentence,index){
+
+          html += `
+
+            <div class="detail-example">
+
+              <div class="en">
+                ${index+1}.
+                ${escapeHtml(
+                  sentence.english
+                )}
+              </div>
+
+              <div class="hi">
+                ${escapeHtml(
+                  sentence.hindi
+                )}
+              </div>
+
+            </div>
+
+          `;
+
+        }
+      );
+
+
+    html += `
+
+      <button
+        class="delete-btn"
+        onclick="deleteDictionaryWord(
+          '${escapeJs(word)}',
+          this
+        )"
+      >
+        Delete Word
+      </button>
+
+    `;
+
+
+    details.innerHTML =
+      html;
+
+
+  }catch(error){
+
+    details.innerHTML =
+      `
+        <div
+          class="message error"
+          style="display:block"
+        >
+          ${escapeHtml(
+            error.message
+          )}
+        </div>
+      `;
+
+  }
+
+}
+
+
+/* =====================================================
+   DELETE
+===================================================== */
+
+async function deleteDictionaryWord(
+  word,
+  button
+){
+
+  if(
+    !confirm(
+      'Delete "' +
+      word +
+      '"?'
+    )
+  ){
+
+    return;
+
+  }
+
+
+  button.disabled =
+    true;
+
+
+  try{
+
+    const data =
+      await apiGet({
+
+        action:
+          "deleteWord",
+
+        word:
+          word
+
+      });
+
+
+    if(!data.success){
+
+      throw new Error(
+        data.message
+      );
+
+    }
+
+
+    loadDictionary();
+
+
+  }catch(error){
+
+    button.disabled =
+      false;
+
+
+    showMessage(
+      "dictionaryMessage",
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   EXCEL IMPORT
+===================================================== */
+
+async function importExcel(){
+
+  const fileInput =
+    document.getElementById(
+      "excelFile"
+    );
+
+
+  const file =
+    fileInput.files[0];
+
+
+  if(!file){
+
+    showMessage(
+      "importMessage",
+      "Please select Excel/CSV file.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  try{
+
+    const buffer =
+      await file.arrayBuffer();
+
+
+    const workbook =
+      XLSX.read(
+        buffer,
+        {
+          type:"array"
+        }
+      );
+
+
+    const sheet =
+      workbook.Sheets[
+        workbook.SheetNames[0]
+      ];
+
+
+    const rows =
+      XLSX.utils.sheet_to_json(
+        sheet,
+        {
+          header:1,
+          defval:""
+        }
+      );
+
+
+    const words =
       [];
 
 
-    for (
-      let i = 0;
-      i < values.length;
-      i++
-    ) {
+    rows.forEach(
+      function(row){
 
-      const row =
-        values[i];
+        if(
+          row &&
+          row.length
+        ){
 
-      const word =
-        normalizeWord(
-          row[1]
-        );
-
-      if (!word) {
-        continue;
-      }
+          const word =
+            String(
+              row[0] || ""
+            ).trim();
 
 
-      const actualRow =
-        i + 2;
+          if(word){
 
+            words.push(
+              word
+            );
 
-      if (
-        !map.has(word)
-      ) {
-
-        map.set(
-          word,
-          {
-            row:
-              actualRow,
-
-            values:
-              row
           }
-        );
-
-      } else {
-
-        const existing =
-          map.get(word);
-
-
-        /*
-         * Prefer complete record.
-         */
-
-        const existingComplete =
-          isCompleteRecord(
-            existing.values
-          );
-
-        const currentComplete =
-          isCompleteRecord(
-            row
-          );
-
-
-        if (
-          !existingComplete &&
-          currentComplete
-        ) {
-
-          rowsToDelete.push(
-            existing.row
-          );
-
-          map.set(
-            word,
-            {
-              row:
-                actualRow,
-
-              values:
-                row
-            }
-          );
-
-        } else {
-
-          rowsToDelete.push(
-            actualRow
-          );
 
         }
 
       }
+    );
+
+
+    if(
+      words.length === 0
+    ){
+
+      throw new Error(
+        "No words found in first column."
+      );
 
     }
 
 
-    rowsToDelete
-      .sort(
-        function(a,b) {
-          return b-a;
+    const unique =
+      [];
+
+
+    const seen =
+      new Set();
+
+
+    words.forEach(
+      function(word){
+
+        const key =
+          word
+            .toLowerCase()
+            .replace(
+              /\s+/g,
+              " "
+            );
+
+
+        if(
+          !seen.has(key)
+        ){
+
+          seen.add(key);
+
+          unique.push(
+            word
+          );
+
         }
-      );
-
-
-    rowsToDelete.forEach(
-      function(rowNumber) {
-
-        dictionary.deleteRow(
-          rowNumber
-        );
 
       }
     );
 
 
-  } finally {
+    let added = 0;
 
-    lock.releaseLock();
+    let updated = 0;
 
-  }
-}
+    let alreadyAvailable = 0;
 
-
-/* =====================================================
-   DELETE WORD
-===================================================== */
-
-function deleteWord(word) {
-
-  const normalized =
-    normalizeWord(
-      word
-    );
-
-  if (!normalized) {
-
-    return {
-      success: false,
-      message:
-        "Word is required."
-    };
-  }
+    let failed = 0;
 
 
-  const sheets =
-    ensureSheets();
-
-  const dictionary =
-    sheets.dictionary;
+    const chunkSize =
+      40;
 
 
-  const found =
-    findWordRow(
-      dictionary,
-      normalized
-    );
+    for(
+      let i=0;
+      i<unique.length;
+      i+=chunkSize
+    ){
+
+      const chunk =
+        unique.slice(
+          i,
+          i+chunkSize
+        );
 
 
-  if (!found) {
-
-    return {
-      success: false,
-      message:
-        "Word not found."
-    };
-  }
-
-
-  dictionary.deleteRow(
-    found.row
-  );
-
-
-  return {
-
-    success: true,
-
-    message:
-      "Word deleted successfully."
-
-  };
-}
-
-
-/* =====================================================
-   IMPORT WORDS
-===================================================== */
-
-function importWords(wordsJson) {
-
-  let words;
-
-  try {
-
-    words =
-      JSON.parse(
-        wordsJson
+      showMessage(
+        "importMessage",
+        "Importing " +
+        Math.min(
+          i+chunk.length,
+          unique.length
+        ) +
+        " / " +
+        unique.length,
+        "success"
       );
 
-  } catch (error) {
 
-    return {
+      const data =
+        await apiGet({
 
-      success: false,
+          action:
+            "importWords",
 
-      message:
-        "Invalid words data.",
-
-      added: 0,
-      updated: 0,
-      alreadyAvailable: 0,
-      failed: 0
-
-    };
-  }
-
-
-  if (
-    !Array.isArray(words)
-  ) {
-
-    return {
-
-      success: false,
-
-      message:
-        "Words must be an array.",
-
-      added: 0,
-      updated: 0,
-      alreadyAvailable: 0,
-      failed: 0
-
-    };
-  }
-
-
-  const sheets =
-    ensureSheets();
-
-  const dictionary =
-    sheets.dictionary;
-
-
-  cleanupDuplicateWords();
-
-
-  let added = 0;
-  let updated = 0;
-  let alreadyAvailable = 0;
-  let failed = 0;
-
-
-  /*
-   * Fast import:
-   * Do NOT generate Gemini data here.
-   * Meaning/examples will be generated
-   * when the word is searched/clicked.
-   */
-
-  words.forEach(
-    function(rawWord) {
-
-      try {
-
-        const word =
-          cleanDisplayWord(
-            rawWord
-          );
-
-        if (!word) {
-          return;
-        }
-
-
-        const normalized =
-          normalizeWord(
-            word
-          );
-
-
-        const found =
-          findWordRow(
-            dictionary,
-            normalized
-          );
-
-
-        if (found) {
-
-          if (
-            isCompleteRecord(
-              found.values
+          words:
+            JSON.stringify(
+              chunk
             )
-          ) {
-
-            alreadyAvailable++;
-
-          } else {
-
-            updated++;
-
-          }
-
-          return;
-        }
-
-
-        const row =
-          createBlankRow(
-            generateDictionaryId(),
-            word
-          );
-
-
-        dictionary.appendRow(
-          row
-        );
-
-
-        added++;
-
-
-      } catch (error) {
-
-        failed++;
-
-      }
-
-    }
-  );
-
-
-  return {
-
-    success: true,
-
-    added:
-      Number(added),
-
-    updated:
-      Number(updated),
-
-    alreadyAvailable:
-      Number(alreadyAvailable),
-
-    failed:
-      Number(failed)
-
-  };
-}
-
-
-/* =====================================================
-   EXAM DATA
-===================================================== */
-
-function getExamData(
-  requestedCount
-) {
-
-  const count =
-    Math.max(
-      1,
-      Number(
-        requestedCount || 10
-      )
-    );
-
-
-  const sheets =
-    ensureSheets();
-
-  const dictionary =
-    sheets.dictionary;
-
-  const examHistory =
-    sheets.examHistory;
-
-
-  cleanupDuplicateWords();
-
-
-  let lastRow =
-    dictionary.getLastRow();
-
-
-  if (lastRow < 2) {
-
-    return {
-
-      success: false,
-
-      message:
-        "Dictionary is empty."
-
-    };
-  }
-
-
-  let values =
-    dictionary
-      .getRange(
-        2,
-        1,
-        lastRow - 1,
-        DICTIONARY_HEADERS.length
-      )
-      .getValues();
-
-
-  /*
-   * Get all dictionary rows.
-   */
-
-  let items =
-    [];
-
-
-  values.forEach(
-    function(row,index) {
-
-      const word =
-        cleanDisplayWord(
-          row[1]
-        );
-
-      if (word) {
-
-        items.push({
-
-          row:
-            index + 2,
-
-          values:
-            row,
-
-          word:
-            word
 
         });
 
+
+      if(data.success){
+
+        added +=
+          Number(
+            data.added || 0
+          );
+
+        updated +=
+          Number(
+            data.updated || 0
+          );
+
+        alreadyAvailable +=
+          Number(
+            data.alreadyAvailable || 0
+          );
+
+        failed +=
+          Number(
+            data.failed || 0
+          );
+
+      }else{
+
+        failed +=
+          chunk.length;
+
       }
+
+    }
+
+
+    document.getElementById(
+      "importResult"
+    ).innerHTML = `
+
+      <div class="card">
+
+        <b>
+          Import Complete
+        </b>
+
+        <p>
+          Added:
+          <b>${added}</b>
+        </p>
+
+        <p>
+          Updated:
+          <b>${updated}</b>
+        </p>
+
+        <p>
+          Already Available:
+          <b>${alreadyAvailable}</b>
+        </p>
+
+        <p>
+          Failed:
+          <b>${failed}</b>
+        </p>
+
+      </div>
+
+    `;
+
+
+    showMessage(
+      "importMessage",
+      "Excel import completed.",
+      "success"
+    );
+
+
+  }catch(error){
+
+    showMessage(
+      "importMessage",
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   START EXAM
+===================================================== */
+
+async function startExam(){
+
+  const count =
+    Number(
+      document.getElementById(
+        "questionCount"
+      ).value
+    );
+
+
+  const minutes =
+    Number(
+      document.getElementById(
+        "examMinutes"
+      ).value
+    );
+
+
+  if(
+    count < 1
+  ){
+
+    showMessage(
+      "examSetupMessage",
+      "Enter valid question count.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  if(
+    minutes < 1
+  ){
+
+    showMessage(
+      "examSetupMessage",
+      "Enter valid exam time.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  showMessage(
+    "examSetupMessage",
+    "Preparing  exam...",
+    "success"
+  );
+
+
+  try{
+
+    const data =
+      await apiGet({
+
+        action:
+          "examData",
+
+        count:
+          count
+
+      });
+
+
+    if(!data.success){
+
+      throw new Error(
+        data.message
+      );
+
+    }
+
+
+    examRecords =
+      data.records || [];
+
+
+    if(
+      examRecords.length === 0
+    ){
+
+      throw new Error(
+        "No dictionary words available."
+      );
+
+    }
+
+
+    examAnswers =
+      {};
+
+
+    examSubmitted =
+      false;
+
+
+    examTotalSeconds =
+      minutes * 60;
+
+
+    examRemainingSeconds =
+      examTotalSeconds;
+
+
+    document.getElementById(
+      "examSetup"
+    ).classList.add(
+      "hidden"
+    );
+
+
+    document.getElementById(
+      "examResult"
+    ).classList.add(
+      "hidden"
+    );
+
+
+    document.getElementById(
+      "examArea"
+    ).classList.remove(
+      "hidden"
+    );
+
+
+    renderExam();
+
+    startExamTimer();
+
+
+  }catch(error){
+
+    showMessage(
+      "examSetupMessage",
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   RENDER EXAM
+===================================================== */
+
+function renderExam(){
+
+  const container =
+    document.getElementById(
+      "examQuestions"
+    );
+
+
+  container.innerHTML =
+    "";
+
+
+  examRecords.forEach(
+    function(record,index){
+
+      const question =
+        document.createElement(
+          "div"
+        );
+
+
+      question.className =
+        "exam-question";
+
+
+      const correct =
+        String(
+          record.meaning || ""
+        ).trim();
+
+
+      /*
+       * Create options from meanings
+       */
+
+      const distractors =
+        examRecords
+
+          .filter(
+            function(_,i){
+              return i !== index;
+            }
+          )
+
+          .map(
+            function(r){
+
+              return String(
+                r.meaning || ""
+              ).trim();
+
+            }
+          )
+
+          .filter(
+            function(value){
+
+              return (
+                value &&
+                value.toLowerCase()
+                !==
+                correct.toLowerCase()
+              );
+
+            }
+          );
+
+
+      const options =
+        shuffleArray([
+
+          correct,
+
+          ...distractors.slice(
+            0,
+            3
+          )
+
+        ]);
+
+
+      question.innerHTML = `
+
+        <div class="question-number">
+          Question ${index+1}
+          of ${examRecords.length}
+        </div>
+
+        <div class="question-word">
+          ${escapeHtml(
+            record.word
+          )}
+        </div>
+
+        <div class="options"></div>
+
+      `;
+
+
+      const optionsContainer =
+        question.querySelector(
+          ".options"
+        );
+
+
+      options.forEach(
+        function(option){
+
+          const button =
+            document.createElement(
+              "button"
+            );
+
+
+          button.className =
+            "answer-option";
+
+
+          button.textContent =
+            option;
+
+
+          button.onclick =
+            function(){
+
+              selectExamAnswer(
+
+                index,
+
+                option,
+
+                correct,
+
+                optionsContainer,
+
+                button
+
+              );
+
+            };
+
+
+          optionsContainer.appendChild(
+            button
+          );
+
+        }
+      );
+
+
+      container.appendChild(
+        question
+      );
+
+    }
+  );
+
+}
+
+
+/* =====================================================
+   ANSWER CLICK
+===================================================== */
+
+function selectExamAnswer(
+
+  questionIndex,
+
+  selectedAnswer,
+
+  correctAnswer,
+
+  optionsContainer,
+
+  clickedButton
+
+){
+
+  /*
+   * Prevent second click
+   */
+
+  if(
+    examAnswers[
+      questionIndex
+    ] !== undefined
+  ){
+
+    return;
+
+  }
+
+
+  examAnswers[
+    questionIndex
+  ] =
+    selectedAnswer;
+
+
+  const buttons =
+    optionsContainer
+      .querySelectorAll(
+        ".answer-option"
+      );
+
+
+  /*
+   * Disable all options.
+   */
+
+  buttons.forEach(
+    function(button){
+
+      button.disabled =
+        true;
+
+      button.classList.add(
+        "disabled"
+      );
 
     }
   );
 
 
-  if (
-    items.length === 0
-  ) {
+  /*
+   * Correct answer
+   */
 
-    return {
+  if(
+    selectedAnswer
+      .toLowerCase() ===
+    correctAnswer
+      .toLowerCase()
+  ){
 
-      success: false,
+    /*
+     * ONLY GREEN
+     */
 
-      message:
-        "Dictionary is empty."
+    clickedButton.classList.add(
+      "correct"
+    );
 
-    };
   }
 
 
   /*
-   * Read exam history.
+   * Wrong answer
    */
 
-  const usedSet =
-    new Set();
+  else{
+
+    /*
+     * Selected answer = RED
+     */
+
+    clickedButton.classList.add(
+      "wrong"
+    );
 
 
-  const historyLastRow =
-    examHistory.getLastRow();
+    /*
+     * Correct option = GREEN
+     *
+     * No text is displayed.
+     */
 
+    buttons.forEach(
+      function(button){
 
-  if (
-    historyLastRow >= 2
-  ) {
+        if(
+          button.textContent
+            .trim()
+            .toLowerCase() ===
+          correctAnswer
+            .toLowerCase()
+        ){
 
-    const history =
-      examHistory
-        .getRange(
-          2,
-          1,
-          historyLastRow - 1,
-          EXAM_HEADERS.length
-        )
-        .getValues();
-
-
-    history.forEach(
-      function(row) {
-
-        const word =
-          normalizeWord(
-            row[2]
-          );
-
-        if (word) {
-
-          usedSet.add(
-            word
+          button.classList.add(
+            "correct"
           );
 
         }
@@ -2184,167 +2663,27 @@ function getExamData(
 
   }
 
-
-  /*
-   * Words not used in current cycle.
-   */
-
-  let unused =
-    items.filter(
-      function(item) {
-
-        return !usedSet.has(
-          normalizeWord(
-            item.word
-          )
-        );
-
-      }
-    );
-
-
-  /*
-   * If every word has already been used,
-   * start a new cycle.
-   */
-
-  if (
-    unused.length === 0
-  ) {
-
-    unused =
-      items;
-
-    /*
-     * Reset cycle by clearing history.
-     */
-
-    if (
-      historyLastRow >= 2
-    ) {
-
-      examHistory
-        .deleteRows(
-          2,
-          historyLastRow - 1
-        );
-
-    }
-
-  }
-
-
-  shuffleArray(
-    unused
-  );
-
-
-  const selected =
-    unused.slice(
-      0,
-      Math.min(
-        count,
-        unused.length
-      )
-    );
-
-
-  /*
-   * Generate missing data only for
-   * selected exam words.
-   */
-
-  const result =
-    [];
-
-
-  selected.forEach(
-    function(item) {
-
-      let row =
-        item.values;
-
-
-      if (
-        !isCompleteRecord(
-          row
-        )
-      ) {
-
-        const data =
-          generateWordData(
-            item.word
-          );
-
-
-        const updated =
-          createDataRow(
-            row[0] ||
-              generateDictionaryId(),
-
-            row[1] ||
-              item.word,
-
-            data,
-
-            row[14] ||
-              new Date()
-          );
-
-
-        dictionary
-          .getRange(
-            item.row,
-            1,
-            1,
-            DICTIONARY_HEADERS.length
-          )
-          .setValues([
-            updated
-          ]);
-
-
-        row =
-          updated;
-
-      }
-
-
-      result.push(
-        formatRecord(
-          row
-        )
-      );
-
-    }
-  );
-
-
-  return {
-
-    success: true,
-
-    records:
-      result
-
-  };
 }
 
 
 /* =====================================================
-   SHUFFLE ARRAY
+   SHUFFLE
 ===================================================== */
 
-function shuffleArray(array) {
+function shuffleArray(array){
 
-  for (
+  const arr =
+    [...array];
+
+
+  for(
     let i =
-      array.length - 1;
+      arr.length - 1;
 
     i > 0;
 
     i--
-  ) {
+  ){
 
     const j =
       Math.floor(
@@ -2354,102 +2693,206 @@ function shuffleArray(array) {
 
 
     const temp =
-      array[i];
+      arr[i];
 
-    array[i] =
-      array[j];
+    arr[i] =
+      arr[j];
 
-    array[j] =
+    arr[j] =
       temp;
 
   }
 
-  return array;
+
+  return arr;
+
 }
 
 
 /* =====================================================
-   SAVE EXAM
+   TIMER
 ===================================================== */
 
-function saveExamData(
-  answersJson
-) {
+function startExamTimer(){
 
-  let answers;
+  clearInterval(
+    examTimer
+  );
 
-  try {
 
-    answers =
-      JSON.parse(
-        answersJson
-      );
+  updateExamTimer();
 
-  } catch (error) {
 
-    return {
+  examTimer =
+    setInterval(
+      function(){
 
-      success: false,
+        if(
+          examRemainingSeconds <= 0
+        ){
 
-      message:
-        "Invalid exam data."
+          clearInterval(
+            examTimer
+          );
 
-    };
+
+          autoSubmitExam();
+
+          return;
+
+        }
+
+
+        examRemainingSeconds--;
+
+        updateExamTimer();
+
+      },
+      1000
+    );
+
+}
+
+
+/* =====================================================
+   UPDATE TIMER
+===================================================== */
+
+function updateExamTimer(){
+
+  document.getElementById(
+    "totalTimeDisplay"
+  ).textContent =
+    formatTime(
+      examTotalSeconds
+    );
+
+
+  const remaining =
+    document.getElementById(
+      "remainingTimeDisplay"
+    );
+
+
+  remaining.textContent =
+    formatTime(
+      examRemainingSeconds
+    );
+
+
+  if(
+    examRemainingSeconds <= 60
+  ){
+
+    remaining.classList.add(
+      "timer-danger"
+    );
+
+  }else{
+
+    remaining.classList.remove(
+      "timer-danger"
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   FORMAT TIME
+===================================================== */
+
+function formatTime(
+  seconds
+){
+
+  const min =
+    Math.floor(
+      seconds / 60
+    );
+
+
+  const sec =
+    seconds % 60;
+
+
+  return String(min)
+    .padStart(2,"0") +
+    ":" +
+    String(sec)
+      .padStart(2,"0");
+
+}
+
+
+/* =====================================================
+   SUBMIT EXAM
+===================================================== */
+
+async function submitExam(){
+
+  if(
+    examSubmitted
+  ){
+
+    return;
+
   }
 
 
-  if (
-    !Array.isArray(answers)
-  ) {
-
-    return {
-
-      success: false,
-
-      message:
-        "Exam data must be an array."
-
-    };
-  }
+  examSubmitted =
+    true;
 
 
-  const sheets =
-    ensureSheets();
-
-  const examHistory =
-    sheets.examHistory;
+  clearInterval(
+    examTimer
+  );
 
 
-  const examId =
-    "EXAM-" +
-    Utilities.getUuid();
+  const answers =
+    examRecords.map(
+      function(record,index){
+
+        return {
+
+          word:
+            record.word,
+
+          answer:
+            examAnswers[index] ||
+            "",
+
+          correctAnswer:
+            record.meaning ||
+            ""
+
+        };
+
+      }
+    );
 
 
-  const rows =
-    [];
+  let correctCount =
+    0;
 
 
   answers.forEach(
-    function(item) {
+    function(item){
 
-      if (
-        item &&
-        item.word
-      ) {
+      if(
 
-        rows.push([
+        item.answer &&
 
-          Utilities.getUuid(),
+        item.answer
+          .toLowerCase() ===
 
-          examId,
+        item.correctAnswer
+          .toLowerCase()
 
-          cleanDisplayWord(
-            item.word
-          ),
+      ){
 
-          new Date()
-
-        ]);
+        correctCount++;
 
       }
 
@@ -2457,50 +2900,346 @@ function saveExamData(
   );
 
 
-  if (
-    rows.length > 0
-  ) {
+  try{
 
-    examHistory
-      .getRange(
-        examHistory.getLastRow() + 1,
-        1,
-        rows.length,
-        EXAM_HEADERS.length
-      )
-      .setValues(
-        rows
-      );
+    await apiGet({
+
+      action:
+        "saveExam",
+
+      answers:
+        JSON.stringify(
+          answers
+        )
+
+    });
+
+  }catch(error){
+
+    console.error(
+      error
+    );
 
   }
 
 
-  return {
+  const total =
+    examRecords.length;
 
-    success: true,
+  const attempted =
+    answers.filter(
+      function(item){
+        return Boolean(
+          item.answer
+        );
+      }
+    ).length;
 
-    examId:
-      examId,
+  const incorrect =
+    Math.max(
+      0,
+      attempted - correctCount
+    );
 
-    saved:
-      rows.length
+  const unanswered =
+    Math.max(
+      0,
+      total - attempted
+    );
 
-  };
+  const elapsedSeconds =
+    Math.max(
+      0,
+      examTotalSeconds -
+      examRemainingSeconds
+    );
+
+  const percentage =
+    attempted
+      ? Math.round(
+          (
+            correctCount /
+            attempted
+          ) * 100
+        )
+      : 0;
+
+  showExamResult(
+    correctCount,
+    incorrect,
+    attempted,
+    unanswered,
+    total,
+    percentage,
+    elapsedSeconds
+  );
+
 }
 
 
 /* =====================================================
-   HEALTH TEST FUNCTION
+   AUTO SUBMIT
 ===================================================== */
 
-function TEST_CONNECTION() {
+function autoSubmitExam(){
 
-  return {
+  if(
+    examSubmitted
+  ){
 
-    success: true,
+    return;
 
-    message:
-      "PATEL ASSOCIATES Dictionary API is running."
+  }
 
-  };
+
+  submitExam();
+
 }
+
+
+/* =====================================================
+   RESULT
+===================================================== */
+
+function showExamResult(
+  correct,
+  incorrect,
+  attempted,
+  unanswered,
+  total,
+  percentage,
+  elapsedSeconds
+){
+
+  document.getElementById(
+    "examArea"
+  ).classList.add("hidden");
+
+  const result =
+    document.getElementById("examResult");
+
+  result.classList.remove("hidden");
+
+  result.innerHTML = `
+
+    <div class="exam-result">
+
+      <h2>Exam Result</h2>
+
+      <div class="score">
+        ${correct} / ${total}
+      </div>
+
+      <div class="exam-result-dashboard">
+
+        <div class="exam-pie-box">
+          <canvas id="examPieChart" width="220" height="220"></canvas>
+        </div>
+
+        <div class="exam-stats-box">
+
+          <div class="exam-stat-card exam-stat-total">
+            <span class="label">Total Questions</span>
+            <span class="value">${total}</span>
+          </div>
+
+          <div class="exam-stat-card exam-stat-attempted">
+            <span class="label">Attempted</span>
+            <span class="value">${attempted}</span>
+          </div>
+
+          <div class="exam-stat-card exam-stat-correct">
+            <span class="label">Correct</span>
+            <span class="value">${correct}</span>
+          </div>
+
+          <div class="exam-stat-card exam-stat-incorrect">
+            <span class="label">Incorrect</span>
+            <span class="value">${incorrect}</span>
+          </div>
+
+          <div class="exam-stat-card exam-stat-unattempted">
+            <span class="label">Unattempted</span>
+            <span class="value">${unanswered}</span>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="exam-summary-grid">
+
+        <div class="exam-summary-item">
+          <div class="exam-summary-label">Time Taken</div>
+          <div class="exam-summary-value">${formatTime(elapsedSeconds)}</div>
+        </div>
+
+        <div class="exam-summary-item">
+          <div class="exam-summary-label">Accuracy</div>
+          <div class="exam-summary-value">${percentage}%</div>
+        </div>
+
+      </div>
+
+      <button
+        class="primary"
+        onclick="resetExam()"
+      >
+        Start New Exam
+      </button>
+
+    </div>
+
+  `;
+
+  if(typeof Chart !== "undefined"){
+
+    const pieCanvas =
+      document.getElementById("examPieChart");
+
+    if(typeof ChartDataLabels !== "undefined"){
+      Chart.register(ChartDataLabels);
+    }
+
+    new Chart(
+      pieCanvas,
+      {
+        type:"pie",
+        data:{
+          labels:[
+            "Correct",
+            "Incorrect",
+            "Unattempted"
+          ],
+          datasets:[
+            {
+              data:[
+                correct,
+                incorrect,
+                unanswered
+              ]
+            }
+          ]
+        },
+        options:{
+          responsive:true,
+          maintainAspectRatio:true,
+          plugins:{
+            legend:{
+              position:"bottom",
+              labels:{
+                boxWidth:12,
+                font:{size:11}
+              }
+            },
+            title:{
+              display:true,
+              text:"Exam Performance",
+              font:{size:14}
+            },
+            datalabels:{
+              display:true,
+              formatter:function(value, context){
+                const totalValue =
+                  context.chart.data.datasets[0].data
+                    .reduce(function(a,b){ return a + b; }, 0);
+                if(!totalValue){
+                  return "0%";
+                }
+                return Math.round((value / totalValue) * 100) + "%";
+              },
+              font:{
+                weight:"bold",
+                size:12
+              }
+            }
+          }
+        }
+      }
+    );
+  }
+}
+
+
+/* =====================================================
+   RESET EXAM
+===================================================== */
+
+function resetExam(){
+
+  clearInterval(
+    examTimer
+  );
+
+
+  examRecords =
+    [];
+
+
+  examAnswers =
+    {};
+
+
+  examSubmitted =
+    false;
+
+
+  document.getElementById(
+    "examArea"
+  ).classList.add(
+    "hidden"
+  );
+
+
+  document.getElementById(
+    "examResult"
+  ).classList.add(
+    "hidden"
+  );
+
+
+  document.getElementById(
+    "examSetup"
+  ).classList.remove(
+    "hidden"
+  );
+
+}
+
+
+/* =====================================================
+   ENTER KEY
+===================================================== */
+
+document
+  .getElementById(
+    "searchInput"
+  )
+  .addEventListener(
+    "keydown",
+    function(event){
+
+      if(
+        event.key === "Enter"
+      ){
+
+        searchWord();
+
+      }
+
+    }
+  );
+
+
+/* =====================================================
+   START
+===================================================== */
+
+checkServer();
+
+</script>
+
+
+</body>
+
+</html>
