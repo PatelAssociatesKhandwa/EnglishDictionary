@@ -400,6 +400,44 @@ label{
 }
 
 
+/* EXAM SETUP QUICK OPTIONS */
+
+.quick-options-label{
+  margin-top:8px;
+  color:#666;
+  font-size:13px;
+  font-weight:bold;
+}
+
+.quick-options{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  margin:7px 0 12px;
+}
+
+.quick-option-btn{
+  width:auto;
+  min-width:48px;
+  padding:8px 10px;
+  border:1px solid #b9c7dd;
+  border-radius:7px;
+  background:#f5f8fc;
+  color:#0b5ed7;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.quick-option-btn:hover{
+  background:#e7f0ff;
+}
+
+.quick-option-btn.selected{
+  background:#0b5ed7;
+  color:white;
+  border-color:#0b5ed7;
+}
+
 /* EXAM */
 
 .exam-timer{
@@ -732,7 +770,22 @@ Number of Questions
   id="questionCount"
   min="1"
   value="10"
+  oninput="clearQuickSelectionOnManualEntry('questionCount')"
 >
+
+<div class="quick-options-label">10 का पहाड़ा — Quick Questions</div>
+<div class="quick-options" id="questionQuickOptions">
+  <button type="button" class="quick-option-btn selected" onclick="setExamQuickValue('questionCount',10,this)">10</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('questionCount',20,this)">20</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('questionCount',30,this)">30</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('questionCount',40,this)">40</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('questionCount',50,this)">50</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('questionCount',60,this)">60</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('questionCount',70,this)">70</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('questionCount',80,this)">80</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('questionCount',90,this)">90</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('questionCount',100,this)">100</button>
+</div>
 
 <label>
 Total Time (Minutes)
@@ -742,8 +795,25 @@ Total Time (Minutes)
   type="number"
   id="examMinutes"
   min="1"
-  value="10"
+  value="5"
+  oninput="clearQuickSelectionOnManualEntry('examMinutes')"
 >
+
+<div class="quick-options-label">5 का पहाड़ा — Quick Time (Minutes)</div>
+<div class="quick-options" id="timeQuickOptions">
+  <button type="button" class="quick-option-btn selected" onclick="setExamQuickValue('examMinutes',5,this)">5</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('examMinutes',10,this)">10</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('examMinutes',15,this)">15</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('examMinutes',20,this)">20</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('examMinutes',25,this)">25</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('examMinutes',30,this)">30</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('examMinutes',35,this)">35</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('examMinutes',40,this)">40</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('examMinutes',45,this)">45</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('examMinutes',50,this)">50</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('examMinutes',55,this)">55</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('examMinutes',60,this)">60</button>
+</div>
 
 <button
   class="primary"
@@ -2217,6 +2287,43 @@ async function importExcel(){
 
 }
 
+
+/* =====================================================
+   EXAM QUICK OPTION
+===================================================== */
+
+function setExamQuickValue(inputId, value, button){
+
+  const input = document.getElementById(inputId);
+  if (!input) return;
+
+  input.value = value;
+
+  const container = button && button.parentElement;
+  if (container) {
+    container.querySelectorAll(".quick-option-btn").forEach(function(btn){
+      btn.classList.remove("selected");
+    });
+  }
+
+  if (button) {
+    button.classList.add("selected");
+  }
+}
+
+function clearQuickSelectionOnManualEntry(inputId){
+  const input = document.getElementById(inputId);
+  if (!input) return;
+
+  const value = Number(input.value);
+  const containerId = inputId === "questionCount" ? "questionQuickOptions" : "timeQuickOptions";
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  container.querySelectorAll(".quick-option-btn").forEach(function(btn){
+    btn.classList.toggle("selected", Number(btn.textContent.trim()) === value);
+  });
+}
 
 /* =====================================================
    START EXAM
