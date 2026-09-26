@@ -1,3 +1,3002 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
+
+<title>
+PATEL ASSOCIATES - English Hindi Dictionary
+</title>
+
+
+<style>
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#f4f7fb;
+  color:#222;
+}
+
+header{
+  background:#0b5ed7;
+  color:white;
+  text-align:center;
+  padding:18px 10px;
+}
+
+header h1{
+  margin:0;
+  font-size:25px;
+}
+
+header p{
+  margin:5px 0 0;
+  font-size:14px;
+}
+
+.container{
+  max-width:1000px;
+  margin:auto;
+  padding:15px;
+}
+
+.server-status{
+  padding:9px;
+  margin-bottom:12px;
+  border-radius:8px;
+  text-align:center;
+  font-size:14px;
+  background:#fff3cd;
+  color:#856404;
+}
+
+.tabs{
+  display:flex;
+  gap:5px;
+  overflow-x:auto;
+  margin-bottom:15px;
+}
+
+.tab-btn{
+  flex:1;
+  min-width:125px;
+  padding:12px 8px;
+  border:none;
+  border-radius:8px;
+  background:#ddd;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.tab-btn.active{
+  background:#0b5ed7;
+  color:white;
+}
+
+.tab-content{
+  display:none;
+}
+
+.tab-content.active{
+  display:block;
+}
+
+.card{
+  background:white;
+  padding:18px;
+  margin-bottom:15px;
+  border-radius:12px;
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+h2{
+  color:#0b5ed7;
+  margin-top:0;
+}
+
+input,
+select{
+  width:100%;
+  padding:12px;
+  border:1px solid #ccc;
+  border-radius:8px;
+  font-size:16px;
+}
+
+label{
+  display:block;
+  margin:10px 0 5px;
+  font-weight:bold;
+}
+
+.primary{
+  width:100%;
+  padding:12px;
+  margin-top:12px;
+  border:none;
+  border-radius:8px;
+  background:#0b5ed7;
+  color:white;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.primary:disabled{
+  background:#999;
+}
+
+.save-word-btn{
+  display:inline-block;
+  width:auto;
+  padding:7px 12px;
+  margin-top:12px;
+  border:none;
+  border-radius:6px;
+  background:#198754;
+  color:white;
+  font-size:13px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.save-word-btn:disabled{
+  background:#999;
+  cursor:not-allowed;
+}
+
+.exam-summary-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  margin:18px 0;
+}
+
+.exam-summary-item{
+  background:#f5f8fc;
+  border:1px solid #e1e6ef;
+  border-radius:10px;
+  padding:12px;
+}
+
+.exam-summary-label{
+  color:#666;
+  font-size:13px;
+}
+
+.exam-summary-value{
+  margin-top:4px;
+  font-size:21px;
+  font-weight:bold;
+  color:#0b5ed7;
+}
+
+.exam-chart-wrap{
+  max-width:360px;
+  margin:20px auto;
+  position:relative;
+}
+
+
+
+.exam-result-dashboard{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:28px;
+  margin:20px auto 10px;
+  flex-wrap:wrap;
+}
+
+.exam-pie-box{
+  width:220px;
+  max-width:220px;
+  flex:0 0 220px;
+}
+
+.exam-stats-box{
+  width:260px;
+  max-width:100%;
+  display:grid;
+  gap:8px;
+}
+
+.exam-stat-card{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:9px 12px;
+  border-radius:9px;
+  color:white;
+  font-weight:bold;
+  box-shadow:0 2px 6px rgba(0,0,0,.08);
+}
+
+.exam-stat-card .label{
+  font-size:13px;
+}
+
+.exam-stat-card .value{
+  font-size:18px;
+}
+
+.exam-stat-total{background:#0b5ed7;}
+.exam-stat-attempted{background:#6f42c1;}
+.exam-stat-correct{background:#198754;}
+.exam-stat-incorrect{background:#dc3545;}
+.exam-stat-unattempted{background:#fd7e14;}
+
+@media(max-width:600px){
+  .exam-result-dashboard{
+    gap:16px;
+  }
+  .exam-pie-box{
+    width:200px;
+    flex-basis:200px;
+  }
+  .exam-stats-box{
+    width:100%;
+  }
+}
+
+.exam-chart-title{
+  text-align:center;
+  font-size:17px;
+  font-weight:bold;
+  color:#0b5ed7;
+  margin:20px 0 8px;
+}
+
+@media(max-width:600px){
+  .exam-summary-grid{
+    grid-template-columns:1fr 1fr;
+  }
+}
+
+.message{
+  margin-top:12px;
+  padding:10px;
+  border-radius:8px;
+  display:none;
+}
+
+.message.success{
+  display:block;
+  background:#d1e7dd;
+  color:#0f5132;
+}
+
+.message.error{
+  display:block;
+  background:#f8d7da;
+  color:#842029;
+}
+
+.loading{
+  text-align:center;
+  padding:20px;
+  color:#666;
+}
+
+
+/* SEARCH */
+
+.word-title{
+  font-size:27px;
+  font-weight:bold;
+  color:#0b5ed7;
+}
+
+.meaning{
+  font-size:21px;
+  font-weight:bold;
+  margin-top:8px;
+}
+
+.pronunciation{
+  color:#666;
+  margin-top:5px;
+}
+
+.example{
+  margin-top:10px;
+  padding:11px;
+  background:#f5f8fc;
+  border-left:4px solid #0b5ed7;
+  border-radius:6px;
+}
+
+.example .english{
+  font-weight:bold;
+}
+
+.example .hindi{
+  margin-top:5px;
+}
+
+
+/* DICTIONARY */
+
+.word-item{
+  background:white;
+  border:1px solid #ddd;
+  border-radius:8px;
+  margin-bottom:8px;
+  overflow:hidden;
+}
+
+.word-button{
+  width:100%;
+  border:none;
+  background:white;
+  padding:14px;
+  text-align:left;
+  font-size:17px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.word-button:hover{
+  background:#f1f6ff;
+}
+
+.word-details{
+  display:none;
+  padding:14px;
+  border-top:1px solid #ddd;
+  background:#fafcff;
+}
+
+.word-details.show{
+  display:block;
+}
+
+.details-meaning{
+  color:#0b5ed7;
+  font-size:20px;
+  font-weight:bold;
+}
+
+.details-pronunciation{
+  color:#666;
+  margin:5px 0 12px;
+}
+
+.detail-example{
+  background:white;
+  border-left:3px solid #0b5ed7;
+  padding:10px;
+  margin:8px 0;
+  border-radius:5px;
+}
+
+.detail-example .en{
+  font-weight:bold;
+}
+
+.detail-example .hi{
+  margin-top:5px;
+}
+
+.delete-btn{
+  margin-top:10px;
+  padding:8px 12px;
+  border:none;
+  border-radius:6px;
+  background:#dc3545;
+  color:white;
+  cursor:pointer;
+}
+
+
+/* EXAM */
+
+.exam-timer{
+  position:sticky;
+  top:0;
+  z-index:10;
+  background:white;
+  padding:12px;
+  border-radius:10px;
+  margin-bottom:15px;
+  box-shadow:0 2px 8px rgba(0,0,0,.1);
+  display:flex;
+  justify-content:space-between;
+  font-weight:bold;
+}
+
+.timer-danger{
+  color:#dc3545;
+}
+
+.exam-question{
+  background:white;
+  padding:16px;
+  border-radius:12px;
+  margin-bottom:15px;
+  box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.question-number{
+  color:#666;
+  font-size:14px;
+}
+
+.question-word{
+  color:#0b5ed7;
+  font-size:24px;
+  font-weight:bold;
+  margin:8px 0 15px;
+}
+
+
+/*
+  IMPORTANT:
+  Exam answer colors only.
+  No Wrong Answer / Correct Answer text.
+*/
+
+.answer-option{
+  width:100%;
+  padding:12px;
+  margin:6px 0;
+  border:2px solid #ddd;
+  border-radius:8px;
+  background:white;
+  text-align:left;
+  font-size:16px;
+  cursor:pointer;
+}
+
+.answer-option.correct{
+  background:#d1e7dd;
+  border-color:#198754;
+  color:#0f5132;
+}
+
+.answer-option.wrong{
+  background:#f8d7da;
+  border-color:#dc3545;
+  color:#842029;
+}
+
+.answer-option.disabled{
+  cursor:not-allowed;
+}
+
+.exam-result{
+  background:white;
+  padding:20px;
+  text-align:center;
+  border-radius:12px;
+}
+
+.score{
+  font-size:34px;
+  font-weight:bold;
+  color:#0b5ed7;
+}
+
+.hidden{
+  display:none !important;
+}
+
+@media(max-width:600px){
+
+  header h1{
+    font-size:22px;
+  }
+
+  .container{
+    padding:10px;
+  }
+
+  .card{
+    padding:14px;
+  }
+
+  .tab-btn{
+    min-width:110px;
+    font-size:13px;
+  }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+<h1>
+PATEL ASSOCIATES
+</h1>
+
+<p>
+English → Hindi Personal Dictionary
+</p>
+
+</header>
+
+
+<div class="container">
+
+
+<div
+  id="serverStatus"
+  class="server-status"
+>
+Connecting to server...
+</div>
+
+
+<div class="tabs">
+
+<button
+  class="tab-btn active"
+  onclick="openTab('searchTab',this)"
+>
+Search English Word
+</button>
+
+<button
+  class="tab-btn"
+  onclick="openTab('examTab',this)"
+>
+Exam
+</button>
+
+<button
+  class="tab-btn"
+  onclick="openTab('dictionaryTab',this)"
+>
+Dictionary List
+</button>
+
+<button
+  class="tab-btn"
+  onclick="openTab('importTab',this)"
+>
+Excel Import
+</button>
+
+</div>
+
+
+<!-- =====================================================
+     SEARCH
+===================================================== -->
+
+<section
+  id="searchTab"
+  class="tab-content active"
+>
+
+<div class="card">
+
+<h2>
+Search English Word
+</h2>
+
+<input
+  type="text"
+  id="searchInput"
+  placeholder="Enter English word..."
+>
+
+<button
+  id="searchBtn"
+  class="primary"
+  onclick="searchWord()"
+>
+Search
+</button>
+
+<div
+  id="searchMessage"
+  class="message"
+></div>
+
+</div>
+
+
+<div
+  id="searchResult"
+></div>
+
+</section>
+
+
+<!-- =====================================================
+     DICTIONARY
+===================================================== -->
+
+<section
+  id="dictionaryTab"
+  class="tab-content"
+>
+
+<div class="card">
+
+<h2>
+Dictionary List
+</h2>
+
+<button
+  class="primary"
+  onclick="loadDictionary()"
+>
+Refresh Dictionary
+</button>
+
+<div
+  id="dictionaryMessage"
+  class="message"
+></div>
+
+<div
+  id="dictionaryList"
+></div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     IMPORT
+===================================================== -->
+
+<section
+  id="importTab"
+  class="tab-content"
+>
+
+<div class="card">
+
+<h2>
+Excel Import
+</h2>
+
+<p>
+Excel / CSV की पहली column में English words रखें।
+</p>
+
+<input
+  type="file"
+  id="excelFile"
+  accept=".xlsx,.xls,.csv"
+>
+
+<button
+  class="primary"
+  onclick="importExcel()"
+>
+Import Words
+</button>
+
+<div
+  id="importMessage"
+  class="message"
+></div>
+
+<div
+  id="importResult"
+></div>
+
+</div>
+
+</section>
+
+
+<!-- =====================================================
+     EXAM
+===================================================== -->
+
+<section
+  id="examTab"
+  class="tab-content"
+>
+
+
+<div
+  id="examSetup"
+  class="card"
+>
+
+<h2>
+Exam Vocabulary Test
+</h2>
+
+<label>
+Number of Questions
+</label>
+
+<input
+  type="number"
+  id="questionCount"
+  min="1"
+  value="10"
+>
+
+<label>
+Total Time (Minutes)
+</label>
+
+<input
+  type="number"
+  id="examMinutes"
+  min="1"
+  value="10"
+>
+
+<button
+  class="primary"
+  onclick="startExam()"
+>
+Start Exam
+</button>
+
+<div
+  id="examSetupMessage"
+  class="message"
+></div>
+
+</div>
+
+
+<div
+  id="examArea"
+  class="hidden"
+>
+
+
+<div class="exam-timer">
+
+<span>
+Total Time:
+<span id="totalTimeDisplay">
+00:00
+</span>
+</span>
+
+<span>
+Remaining:
+<span id="remainingTimeDisplay">
+00:00
+</span>
+</span>
+
+</div>
+
+
+<div
+  id="examQuestions"
+></div>
+
+
+<button
+  id="submitExamBtn"
+  class="primary"
+  onclick="submitExam()"
+>
+Submit Exam
+</button>
+
+
+</div>
+
+
+<div
+  id="examResult"
+  class="hidden"
+></div>
+
+
+</section>
+
+
+</div>
+
+
+<script
+src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"
+></script>
+
+<script
+src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"
+></script>
+
+<script
+src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"
+></script>
+
+
+<script>
+
+
+/* =====================================================
+   API URL
+===================================================== */
+
+const API_URL =
+"https://script.google.com/macros/s/AKfycbznhwqwtBWBqUbUA-FVfOYNYAJkFUaCEcfwwTagpWfW7yk0tsCWYJYfZB4gBErt7aQX/exec";
+
+
+/* =====================================================
+   GLOBALS
+===================================================== */
+
+let examRecords = [];
+
+let examAnswers = {};
+
+let examTimer = null;
+
+let examTotalSeconds = 0;
+
+let examRemainingSeconds = 0;
+
+let examSubmitted = false;
+
+
+/* =====================================================
+   API
+===================================================== */
+
+async function apiGet(params){
+
+  const url =
+    API_URL +
+    "?" +
+    new URLSearchParams(params).toString() +
+    "&_=" +
+    Date.now();
+
+
+  const controller =
+    new AbortController();
+
+
+  const timeout =
+    setTimeout(
+      function(){
+        controller.abort();
+      },
+      30000
+    );
+
+
+  try{
+
+    const response =
+      await fetch(
+        url,
+        {
+          method:"GET",
+          cache:"no-store",
+          redirect:"follow",
+          signal:
+            controller.signal
+        }
+      );
+
+
+    if(!response.ok){
+
+      throw new Error(
+        "HTTP Error " +
+        response.status
+      );
+
+    }
+
+
+    const text =
+      await response.text();
+
+
+    let data;
+
+
+    try{
+
+      data =
+        JSON.parse(text);
+
+    }catch(error){
+
+      throw new Error(
+        "Server returned invalid response."
+      );
+
+    }
+
+
+    return data;
+
+
+  }finally{
+
+    clearTimeout(
+      timeout
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   SERVER CHECK
+===================================================== */
+
+async function checkServer(){
+
+  const status =
+    document.getElementById(
+      "serverStatus"
+    );
+
+
+  try{
+
+    const data =
+      await apiGet({
+        action:"health"
+      });
+
+
+    if(data.success){
+
+      status.textContent =
+        "● Server Connected";
+
+      status.style.background =
+        "#d1e7dd";
+
+      status.style.color =
+        "#0f5132";
+
+    }else{
+
+      throw new Error(
+        data.message
+      );
+
+    }
+
+
+  }catch(error){
+
+    status.textContent =
+      "● Server Connection Error: " +
+      error.message;
+
+    status.style.background =
+      "#f8d7da";
+
+    status.style.color =
+      "#842029";
+
+  }
+
+}
+
+
+/* =====================================================
+   TAB
+===================================================== */
+
+function openTab(
+  tabId,
+  button
+){
+
+  document
+    .querySelectorAll(
+      ".tab-content"
+    )
+    .forEach(
+      function(el){
+
+        el.classList.remove(
+          "active"
+        );
+
+      }
+    );
+
+
+  document
+    .querySelectorAll(
+      ".tab-btn"
+    )
+    .forEach(
+      function(el){
+
+        el.classList.remove(
+          "active"
+        );
+
+      }
+    );
+
+
+  document
+    .getElementById(
+      tabId
+    )
+    .classList.add(
+      "active"
+    );
+
+
+  button.classList.add(
+    "active"
+  );
+
+
+  if(
+    tabId ===
+    "dictionaryTab"
+  ){
+
+    loadDictionary();
+
+  }
+
+}
+
+
+/* =====================================================
+   MESSAGE
+===================================================== */
+
+function showMessage(
+  id,
+  message,
+  type
+){
+
+  const el =
+    document.getElementById(
+      id
+    );
+
+
+  el.textContent =
+    message;
+
+
+  el.className =
+    "message " +
+    type;
+
+}
+
+
+/* =====================================================
+   ESCAPE HTML
+===================================================== */
+
+function escapeHtml(value){
+
+  if(
+    value === null ||
+    value === undefined
+  ){
+
+    return "";
+
+  }
+
+
+  return String(value)
+
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+
+    .replace(
+      /</g,
+      "&lt;"
+    )
+
+    .replace(
+      />/g,
+      "&gt;"
+    )
+
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
+
+
+/* =====================================================
+   ESCAPE JS
+===================================================== */
+
+function escapeJs(value){
+
+  return String(
+    value || ""
+  )
+
+  .replace(
+    /\\/g,
+    "\\\\"
+  )
+
+  .replace(
+    /'/g,
+    "\\'"
+  )
+
+  .replace(
+    /"/g,
+    '\\"'
+  );
+
+}
+
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+async function searchWord(){
+
+  const input =
+    document.getElementById(
+      "searchInput"
+    );
+
+
+  const btn =
+    document.getElementById(
+      "searchBtn"
+    );
+
+
+  const result =
+    document.getElementById(
+      "searchResult"
+    );
+
+
+  const word =
+    input.value.trim();
+
+
+  if(!word){
+
+    showMessage(
+      "searchMessage",
+      "Please enter an English word.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  btn.disabled =
+    true;
+
+
+  result.innerHTML =
+    `
+      <div class="card loading">
+        Generating meaning and examples...
+      </div>
+    `;
+
+
+  try{
+
+    const data =
+      await apiGet({
+
+        action:"search",
+
+        word:word
+
+      });
+
+
+    if(!data.success){
+
+      throw new Error(
+        data.message ||
+        "Search failed."
+      );
+
+    }
+
+
+    renderSearchResult(
+      data.record
+    );
+
+
+    showMessage(
+      "searchMessage",
+      "Word loaded successfully.",
+      "success"
+    );
+
+
+  }catch(error){
+
+    result.innerHTML =
+      "";
+
+
+    showMessage(
+      "searchMessage",
+      error.message,
+      "error"
+    );
+
+
+  }finally{
+
+    btn.disabled =
+      false;
+
+  }
+
+}
+
+/* =====================================================
+   SAVE SEARCHED WORD
+===================================================== */
+
+async function saveSearchedWord(word){
+
+  const btn =
+    document.getElementById(
+      "saveWordBtn"
+    );
+
+  if(!btn){
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = "Saving...";
+
+  try{
+
+    const data =
+      await apiGet({
+        action:"saveWord",
+        word:word
+      });
+
+    if(!data.success){
+
+      throw new Error(
+        data.message ||
+        "Unable to save word."
+      );
+
+    }
+
+    btn.textContent = "Saved";
+    btn.disabled = true;
+
+    showMessage(
+      "searchMessage",
+      "Word saved to Dictionary.",
+      "success"
+    );
+
+  }catch(error){
+
+    btn.disabled = false;
+    btn.textContent = "Save Word";
+
+    showMessage(
+      "searchMessage",
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   SENTENCES
+===================================================== */
+
+function getSentences(record){
+
+  if(
+    Array.isArray(
+      record.sentences
+    )
+  ){
+
+    return record.sentences
+      .map(
+        function(s){
+
+          return {
+
+            english:
+              s.english ||
+              "",
+
+            hindi:
+              s.hindi ||
+              ""
+
+          };
+
+        }
+      )
+      .filter(
+        function(s){
+
+          return (
+            s.english ||
+            s.hindi
+          );
+
+        }
+      );
+
+  }
+
+
+  const result =
+    [];
+
+
+  for(
+    let i=1;
+    i<=5;
+    i++
+  ){
+
+    const en =
+      record[
+        "sentence" +
+        i
+      ];
+
+
+    const hi =
+      record[
+        "sentence" +
+        i +
+        "Hindi"
+      ];
+
+
+    if(
+      en ||
+      hi
+    ){
+
+      result.push({
+
+        english:
+          en || "",
+
+        hindi:
+          hi || ""
+
+      });
+
+    }
+
+  }
+
+
+  return result;
+
+}
+
+
+/* =====================================================
+   SEARCH RESULT
+===================================================== */
+
+function renderSearchResult(
+  record
+){
+
+  const result =
+    document.getElementById(
+      "searchResult"
+    );
+
+
+  let html = `
+
+    <div class="card">
+
+      <div class="word-title">
+        ${escapeHtml(
+          record.word
+        )}
+      </div>
+
+      <div class="meaning">
+        ${escapeHtml(
+          record.meaning
+        )}
+      </div>
+
+      <div class="pronunciation">
+        ${escapeHtml(
+          record.pronunciation
+        )}
+      </div>
+
+      ${record.saved ? `
+        <div class="saved-label">✓ Saved in Dictionary</div>
+      ` : `
+        <button
+          id="saveWordBtn"
+          class="save-word-btn"
+          onclick="saveSearchedWord('${escapeJs(record.word)}')"
+        >
+          Save Word
+        </button>
+      `}
+
+  `;
+
+
+  getSentences(record)
+    .slice(0,2)
+    .forEach(
+      function(sentence,index){
+
+        html += `
+
+          <div class="example">
+
+            <div class="english">
+              ${index+1}.
+              ${escapeHtml(
+                sentence.english
+              )}
+            </div>
+
+            <div class="hindi">
+              ${escapeHtml(
+                sentence.hindi
+              )}
+            </div>
+
+          </div>
+
+        `;
+
+      }
+    );
+
+
+  html += `
+    </div>
+  `;
+
+
+  result.innerHTML =
+    html;
+
+}
+
+
+/* =====================================================
+   DICTIONARY
+===================================================== */
+
+async function loadDictionary(){
+
+  const list =
+    document.getElementById(
+      "dictionaryList"
+    );
+
+
+  list.innerHTML =
+    `
+      <div class="loading">
+        Loading dictionary...
+      </div>
+    `;
+
+
+  try{
+
+    const data =
+      await apiGet({
+
+        action:
+          "allWords"
+
+      });
+
+
+    if(!data.success){
+
+      throw new Error(
+        data.message
+      );
+
+    }
+
+
+    const words =
+      Array.isArray(
+        data.words
+      )
+      ? data.words
+      : [];
+
+
+    if(
+      words.length === 0
+    ){
+
+      list.innerHTML =
+        `
+          <div class="loading">
+            No words found.
+          </div>
+        `;
+
+      return;
+
+    }
+
+
+    const unique =
+      [];
+
+    const seen =
+      new Set();
+
+
+    words.forEach(
+      function(item){
+
+        const word =
+          String(
+            item.word || ""
+          )
+          .trim();
+
+
+        const key =
+          word
+            .toLowerCase()
+            .replace(
+              /\s+/g,
+              " "
+            );
+
+
+        if(
+          word &&
+          !seen.has(key)
+        ){
+
+          seen.add(key);
+
+
+          unique.push({
+
+            id:
+              item.id,
+
+            word:
+              word
+
+          });
+
+        }
+
+      }
+    );
+
+
+    list.innerHTML =
+      "";
+
+
+    unique.forEach(
+      function(item){
+
+        const wrapper =
+          document.createElement(
+            "div"
+          );
+
+
+        wrapper.className =
+          "word-item";
+
+
+        const button =
+          document.createElement(
+            "button"
+          );
+
+
+        button.className =
+          "word-button";
+
+
+        button.textContent =
+          item.word;
+
+
+        const details =
+          document.createElement(
+            "div"
+          );
+
+
+        details.className =
+          "word-details";
+
+
+        button.onclick =
+          function(){
+
+            toggleWordDetails(
+              item.word,
+              details
+            );
+
+          };
+
+
+        wrapper.appendChild(
+          button
+        );
+
+
+        wrapper.appendChild(
+          details
+        );
+
+
+        list.appendChild(
+          wrapper
+        );
+
+      }
+    );
+
+
+  }catch(error){
+
+    list.innerHTML =
+      "";
+
+
+    showMessage(
+      "dictionaryMessage",
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   DICTIONARY WORD DETAILS
+===================================================== */
+
+async function toggleWordDetails(
+  word,
+  details
+){
+
+  if(
+    details.classList.contains(
+      "show"
+    )
+  ){
+
+    details.classList.remove(
+      "show"
+    );
+
+    return;
+
+  }
+
+
+  details.classList.add(
+    "show"
+  );
+
+
+  details.innerHTML =
+    `
+      <div class="loading">
+        Generating meaning and examples...
+      </div>
+    `;
+
+
+  try{
+
+    const data =
+      await apiGet({
+
+        action:
+          "search",
+
+        word:
+          word
+
+      });
+
+
+    if(!data.success){
+
+      throw new Error(
+        data.message
+      );
+
+    }
+
+
+    const record =
+      data.record;
+
+
+    let html = `
+
+      <div class="details-meaning">
+        ${escapeHtml(
+          record.meaning
+        )}
+      </div>
+
+      <div class="details-pronunciation">
+        ${escapeHtml(
+          record.pronunciation
+        )}
+      </div>
+
+    `;
+
+
+    getSentences(record)
+      .slice(0,2)
+      .forEach(
+        function(sentence,index){
+
+          html += `
+
+            <div class="detail-example">
+
+              <div class="en">
+                ${index+1}.
+                ${escapeHtml(
+                  sentence.english
+                )}
+              </div>
+
+              <div class="hi">
+                ${escapeHtml(
+                  sentence.hindi
+                )}
+              </div>
+
+            </div>
+
+          `;
+
+        }
+      );
+
+
+    html += `
+
+      <button
+        class="delete-btn"
+        onclick="deleteDictionaryWord(
+          '${escapeJs(word)}',
+          this
+        )"
+      >
+        Delete Word
+      </button>
+
+    `;
+
+
+    details.innerHTML =
+      html;
+
+
+  }catch(error){
+
+    details.innerHTML =
+      `
+        <div
+          class="message error"
+          style="display:block"
+        >
+          ${escapeHtml(
+            error.message
+          )}
+        </div>
+      `;
+
+  }
+
+}
+
+
+/* =====================================================
+   DELETE
+===================================================== */
+
+async function deleteDictionaryWord(
+  word,
+  button
+){
+
+  if(
+    !confirm(
+      'Delete "' +
+      word +
+      '"?'
+    )
+  ){
+
+    return;
+
+  }
+
+
+  button.disabled =
+    true;
+
+
+  try{
+
+    const data =
+      await apiGet({
+
+        action:
+          "deleteWord",
+
+        word:
+          word
+
+      });
+
+
+    if(!data.success){
+
+      throw new Error(
+        data.message
+      );
+
+    }
+
+
+    loadDictionary();
+
+
+  }catch(error){
+
+    button.disabled =
+      false;
+
+
+    showMessage(
+      "dictionaryMessage",
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   EXCEL IMPORT
+===================================================== */
+
+async function importExcel(){
+
+  const fileInput =
+    document.getElementById(
+      "excelFile"
+    );
+
+
+  const file =
+    fileInput.files[0];
+
+
+  if(!file){
+
+    showMessage(
+      "importMessage",
+      "Please select Excel/CSV file.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  try{
+
+    const buffer =
+      await file.arrayBuffer();
+
+
+    const workbook =
+      XLSX.read(
+        buffer,
+        {
+          type:"array"
+        }
+      );
+
+
+    const sheet =
+      workbook.Sheets[
+        workbook.SheetNames[0]
+      ];
+
+
+    const rows =
+      XLSX.utils.sheet_to_json(
+        sheet,
+        {
+          header:1,
+          defval:""
+        }
+      );
+
+
+    const words =
+      [];
+
+
+    rows.forEach(
+      function(row){
+
+        if(
+          row &&
+          row.length
+        ){
+
+          const word =
+            String(
+              row[0] || ""
+            ).trim();
+
+
+          if(word){
+
+            words.push(
+              word
+            );
+
+          }
+
+        }
+
+      }
+    );
+
+
+    if(
+      words.length === 0
+    ){
+
+      throw new Error(
+        "No words found in first column."
+      );
+
+    }
+
+
+    const unique =
+      [];
+
+
+    const seen =
+      new Set();
+
+
+    words.forEach(
+      function(word){
+
+        const key =
+          word
+            .toLowerCase()
+            .replace(
+              /\s+/g,
+              " "
+            );
+
+
+        if(
+          !seen.has(key)
+        ){
+
+          seen.add(key);
+
+          unique.push(
+            word
+          );
+
+        }
+
+      }
+    );
+
+
+    let added = 0;
+
+    let updated = 0;
+
+    let alreadyAvailable = 0;
+
+    let failed = 0;
+
+
+    const chunkSize =
+      40;
+
+
+    for(
+      let i=0;
+      i<unique.length;
+      i+=chunkSize
+    ){
+
+      const chunk =
+        unique.slice(
+          i,
+          i+chunkSize
+        );
+
+
+      showMessage(
+        "importMessage",
+        "Importing " +
+        Math.min(
+          i+chunk.length,
+          unique.length
+        ) +
+        " / " +
+        unique.length,
+        "success"
+      );
+
+
+      const data =
+        await apiGet({
+
+          action:
+            "importWords",
+
+          words:
+            JSON.stringify(
+              chunk
+            )
+
+        });
+
+
+      if(data.success){
+
+        added +=
+          Number(
+            data.added || 0
+          );
+
+        updated +=
+          Number(
+            data.updated || 0
+          );
+
+        alreadyAvailable +=
+          Number(
+            data.alreadyAvailable || 0
+          );
+
+        failed +=
+          Number(
+            data.failed || 0
+          );
+
+      }else{
+
+        failed +=
+          chunk.length;
+
+      }
+
+    }
+
+
+    document.getElementById(
+      "importResult"
+    ).innerHTML = `
+
+      <div class="card">
+
+        <b>
+          Import Complete
+        </b>
+
+        <p>
+          Added:
+          <b>${added}</b>
+        </p>
+
+        <p>
+          Updated:
+          <b>${updated}</b>
+        </p>
+
+        <p>
+          Already Available:
+          <b>${alreadyAvailable}</b>
+        </p>
+
+        <p>
+          Failed:
+          <b>${failed}</b>
+        </p>
+
+      </div>
+
+    `;
+
+
+    showMessage(
+      "importMessage",
+      "Excel import completed.",
+      "success"
+    );
+
+
+  }catch(error){
+
+    showMessage(
+      "importMessage",
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   START EXAM
+===================================================== */
+
+async function startExam(){
+
+  const count =
+    Number(
+      document.getElementById(
+        "questionCount"
+      ).value
+    );
+
+
+  const minutes =
+    Number(
+      document.getElementById(
+        "examMinutes"
+      ).value
+    );
+
+
+  if(
+    count < 1
+  ){
+
+    showMessage(
+      "examSetupMessage",
+      "Enter valid question count.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  if(
+    minutes < 1
+  ){
+
+    showMessage(
+      "examSetupMessage",
+      "Enter valid exam time.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  showMessage(
+    "examSetupMessage",
+    "Preparing  exam...",
+    "success"
+  );
+
+
+  try{
+
+    const data =
+      await apiGet({
+
+        action:
+          "examData",
+
+        count:
+          count
+
+      });
+
+
+    if(!data.success){
+
+      throw new Error(
+        data.message
+      );
+
+    }
+
+
+    examRecords =
+      data.records || [];
+
+
+    if(
+      examRecords.length === 0
+    ){
+
+      throw new Error(
+        "No dictionary words available."
+      );
+
+    }
+
+
+    examAnswers =
+      {};
+
+
+    examSubmitted =
+      false;
+
+
+    examTotalSeconds =
+      minutes * 60;
+
+
+    examRemainingSeconds =
+      examTotalSeconds;
+
+
+    document.getElementById(
+      "examSetup"
+    ).classList.add(
+      "hidden"
+    );
+
+
+    document.getElementById(
+      "examResult"
+    ).classList.add(
+      "hidden"
+    );
+
+
+    document.getElementById(
+      "examArea"
+    ).classList.remove(
+      "hidden"
+    );
+
+
+    renderExam();
+
+    startExamTimer();
+
+
+  }catch(error){
+
+    showMessage(
+      "examSetupMessage",
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   RENDER EXAM
+===================================================== */
+
+function renderExam(){
+
+  const container =
+    document.getElementById(
+      "examQuestions"
+    );
+
+
+  container.innerHTML =
+    "";
+
+
+  examRecords.forEach(
+    function(record,index){
+
+      const question =
+        document.createElement(
+          "div"
+        );
+
+
+      question.className =
+        "exam-question";
+
+
+      const correct =
+        String(
+          record.meaning || ""
+        ).trim();
+
+
+      /*
+       * Create options from meanings
+       */
+
+      const distractors =
+        examRecords
+
+          .filter(
+            function(_,i){
+              return i !== index;
+            }
+          )
+
+          .map(
+            function(r){
+
+              return String(
+                r.meaning || ""
+              ).trim();
+
+            }
+          )
+
+          .filter(
+            function(value){
+
+              return (
+                value &&
+                value.toLowerCase()
+                !==
+                correct.toLowerCase()
+              );
+
+            }
+          );
+
+
+      const options =
+        shuffleArray([
+
+          correct,
+
+          ...distractors.slice(
+            0,
+            3
+          )
+
+        ]);
+
+
+      question.innerHTML = `
+
+        <div class="question-number">
+          Question ${index+1}
+          of ${examRecords.length}
+        </div>
+
+        <div class="question-word">
+          ${escapeHtml(
+            record.word
+          )}
+        </div>
+
+        <div class="options"></div>
+
+      `;
+
+
+      const optionsContainer =
+        question.querySelector(
+          ".options"
+        );
+
+
+      options.forEach(
+        function(option){
+
+          const button =
+            document.createElement(
+              "button"
+            );
+
+
+          button.className =
+            "answer-option";
+
+
+          button.textContent =
+            option;
+
+
+          button.onclick =
+            function(){
+
+              selectExamAnswer(
+
+                index,
+
+                option,
+
+                correct,
+
+                optionsContainer,
+
+                button
+
+              );
+
+            };
+
+
+          optionsContainer.appendChild(
+            button
+          );
+
+        }
+      );
+
+
+      container.appendChild(
+        question
+      );
+
+    }
+  );
+
+}
+
+
+/* =====================================================
+   ANSWER CLICK
+===================================================== */
+
+function selectExamAnswer(
+
+  questionIndex,
+
+  selectedAnswer,
+
+  correctAnswer,
+
+  optionsContainer,
+
+  clickedButton
+
+){
+
+  /*
+   * Prevent second click
+   */
+
+  if(
+    examAnswers[
+      questionIndex
+    ] !== undefined
+  ){
+
+    return;
+
+  }
+
+
+  examAnswers[
+    questionIndex
+  ] =
+    selectedAnswer;
+
+
+  const buttons =
+    optionsContainer
+      .querySelectorAll(
+        ".answer-option"
+      );
+
+
+  /*
+   * Disable all options.
+   */
+
+  buttons.forEach(
+    function(button){
+
+      button.disabled =
+        true;
+
+      button.classList.add(
+        "disabled"
+      );
+
+    }
+  );
+
+
+  /*
+   * Correct answer
+   */
+
+  if(
+    selectedAnswer
+      .toLowerCase() ===
+    correctAnswer
+      .toLowerCase()
+  ){
+
+    /*
+     * ONLY GREEN
+     */
+
+    clickedButton.classList.add(
+      "correct"
+    );
+
+  }
+
+
+  /*
+   * Wrong answer
+   */
+
+  else{
+
+    /*
+     * Selected answer = RED
+     */
+
+    clickedButton.classList.add(
+      "wrong"
+    );
+
+
+    /*
+     * Correct option = GREEN
+     *
+     * No text is displayed.
+     */
+
+    buttons.forEach(
+      function(button){
+
+        if(
+          button.textContent
+            .trim()
+            .toLowerCase() ===
+          correctAnswer
+            .toLowerCase()
+        ){
+
+          button.classList.add(
+            "correct"
+          );
+
+        }
+
+      }
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   SHUFFLE
+===================================================== */
+
+function shuffleArray(array){
+
+  const arr =
+    [...array];
+
+
+  for(
+    let i =
+      arr.length - 1;
+
+    i > 0;
+
+    i--
+  ){
+
+    const j =
+      Math.floor(
+        Math.random() *
+        (i + 1)
+      );
+
+
+    const temp =
+      arr[i];
+
+    arr[i] =
+      arr[j];
+
+    arr[j] =
+      temp;
+
+  }
+
+
+  return arr;
+
+}
+
+
+/* =====================================================
+   TIMER
+===================================================== */
+
+function startExamTimer(){
+
+  clearInterval(
+    examTimer
+  );
+
+
+  updateExamTimer();
+
+
+  examTimer =
+    setInterval(
+      function(){
+
+        if(
+          examRemainingSeconds <= 0
+        ){
+
+          clearInterval(
+            examTimer
+          );
+
+
+          autoSubmitExam();
+
+          return;
+
+        }
+
+
+        examRemainingSeconds--;
+
+        updateExamTimer();
+
+      },
+      1000
+    );
+
+}
+
+
+/* =====================================================
+   UPDATE TIMER
+===================================================== */
+
+function updateExamTimer(){
+
+  document.getElementById(
+    "totalTimeDisplay"
+  ).textContent =
+    formatTime(
+      examTotalSeconds
+    );
+
+
+  const remaining =
+    document.getElementById(
+      "remainingTimeDisplay"
+    );
+
+
+  remaining.textContent =
+    formatTime(
+      examRemainingSeconds
+    );
+
+
+  if(
+    examRemainingSeconds <= 60
+  ){
+
+    remaining.classList.add(
+      "timer-danger"
+    );
+
+  }else{
+
+    remaining.classList.remove(
+      "timer-danger"
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   FORMAT TIME
+===================================================== */
+
+function formatTime(
+  seconds
+){
+
+  const min =
+    Math.floor(
+      seconds / 60
+    );
+
+
+  const sec =
+    seconds % 60;
+
+
+  return String(min)
+    .padStart(2,"0") +
+    ":" +
+    String(sec)
+      .padStart(2,"0");
+
+}
+
+
+/* =====================================================
+   SUBMIT EXAM
+===================================================== */
+
+async function submitExam(){
+
+  if(
+    examSubmitted
+  ){
+
+    return;
+
+  }
+
+
+  examSubmitted =
+    true;
+
+
+  clearInterval(
+    examTimer
+  );
+
+
+  const answers =
+    examRecords.map(
+      function(record,index){
+
+        return {
+
+          word:
+            record.word,
+
+          answer:
+            examAnswers[index] ||
+            "",
+
+          correctAnswer:
+            record.meaning ||
+            ""
+
+        };
+
+      }
+    );
+
+
+  let correctCount =
+    0;
+
+
+  answers.forEach(
+    function(item){
+
+      if(
+
+        item.answer &&
+
+        item.answer
+          .toLowerCase() ===
+
+        item.correctAnswer
+          .toLowerCase()
+
+      ){
+
+        correctCount++;
+
+      }
+
+    }
+  );
+
+
+  try{
+
+    await apiGet({
+
+      action:
+        "saveExam",
+
+      answers:
+        JSON.stringify(
+          answers
+        )
+
+    });
+
+  }catch(error){
+
+    console.error(
+      error
+    );
+
+  }
+
+
+  const total =
+    examRecords.length;
+
+  const attempted =
+    answers.filter(
+      function(item){
+        return Boolean(
+          item.answer
+        );
+      }
+    ).length;
+
+  const incorrect =
+    Math.max(
+      0,
+      attempted - correctCount
+    );
+
+  const unanswered =
+    Math.max(
+      0,
+      total - attempted
+    );
+
+  const elapsedSeconds =
+    Math.max(
+      0,
+      examTotalSeconds -
+      examRemainingSeconds
+    );
+
+  const percentage =
+    attempted
+      ? Math.round(
+          (
+            correctCount /
+            attempted
+          ) * 100
+        )
+      : 0;
+
+  showExamResult(
+    correctCount,
+    incorrect,
+    attempted,
+    unanswered,
+    total,
+    percentage,
+    elapsedSeconds
+  );
+
+}
+
+
+/* =====================================================
+   AUTO SUBMIT
+===================================================== */
+
+function autoSubmitExam(){
+
+  if(
+    examSubmitted
+  ){
+
+    return;
+
+  }
+
+
+  submitExam();
+
+}
+
+
 /* =====================================================
    RESULT
 ===================================================== */
@@ -14,246 +3013,73 @@ function showExamResult(
 
   document.getElementById(
     "examArea"
-  ).classList.add(
-    "hidden"
-  );
-
+  ).classList.add("hidden");
 
   const result =
-    document.getElementById(
-      "examResult"
-    );
+    document.getElementById("examResult");
 
-
-  result.classList.remove(
-    "hidden"
-  );
-
+  result.classList.remove("hidden");
 
   result.innerHTML = `
 
-    <div
-      class="exam-result"
-      style="
-        padding:20px;
-      "
-    >
+    <div class="exam-result">
 
-      <h2>
-        Exam Result
-      </h2>
+      <h2>Exam Result</h2>
 
-
-      <div
-        class="score"
-        style="
-          margin-bottom:18px;
-        "
-      >
+      <div class="score">
         ${correct} / ${total}
       </div>
 
+      <div class="exam-result-dashboard">
 
-      <!-- =========================================
-           PIE + SUMMARY
-      ========================================== -->
-
-      <div
-        style="
-          display:flex;
-          align-items:center;
-          justify-content:center;
-          gap:28px;
-          flex-wrap:wrap;
-          margin:10px 0 22px 0;
-        "
-      >
-
-
-        <!-- PIE CHART -->
-
-        <div
-          style="
-            width:220px;
-            height:220px;
-            position:relative;
-            flex:0 0 220px;
-          "
-        >
-
-          <canvas
-            id="examPieChart"
-          ></canvas>
-
+        <div class="exam-pie-box">
+          <canvas id="examPieChart" width="220" height="220"></canvas>
         </div>
 
+        <div class="exam-stats-box">
 
-        <!-- COLOURED SUMMARY -->
-
-        <div
-          style="
-            display:flex;
-            flex-direction:column;
-            gap:9px;
-            min-width:220px;
-            text-align:left;
-          "
-        >
-
-          <div
-            style="
-              padding:9px 12px;
-              border-radius:8px;
-              background:#eef2f7;
-              border-left:5px solid #0b5ed7;
-            "
-          >
-            <strong>Total Questions</strong>
-            <span
-              style="
-                float:right;
-                font-weight:bold;
-                color:#0b5ed7;
-              "
-            >
-              ${total}
-            </span>
+          <div class="exam-stat-card exam-stat-total">
+            <span class="label">Total Questions</span>
+            <span class="value">${total}</span>
           </div>
 
-
-          <div
-            style="
-              padding:9px 12px;
-              border-radius:8px;
-              background:#e7f1ff;
-              border-left:5px solid #0d6efd;
-            "
-          >
-            <strong>Attempted</strong>
-            <span
-              style="
-                float:right;
-                font-weight:bold;
-                color:#0d6efd;
-              "
-            >
-              ${attempted}
-            </span>
+          <div class="exam-stat-card exam-stat-attempted">
+            <span class="label">Attempted</span>
+            <span class="value">${attempted}</span>
           </div>
 
-
-          <div
-            style="
-              padding:9px 12px;
-              border-radius:8px;
-              background:#e8f5e9;
-              border-left:5px solid #198754;
-            "
-          >
-            <strong>Correct</strong>
-            <span
-              style="
-                float:right;
-                font-weight:bold;
-                color:#198754;
-              "
-            >
-              ${correct}
-            </span>
+          <div class="exam-stat-card exam-stat-correct">
+            <span class="label">Correct</span>
+            <span class="value">${correct}</span>
           </div>
 
-
-          <div
-            style="
-              padding:9px 12px;
-              border-radius:8px;
-              background:#fdebec;
-              border-left:5px solid #dc3545;
-            "
-          >
-            <strong>Incorrect</strong>
-            <span
-              style="
-                float:right;
-                font-weight:bold;
-                color:#dc3545;
-              "
-            >
-              ${incorrect}
-            </span>
+          <div class="exam-stat-card exam-stat-incorrect">
+            <span class="label">Incorrect</span>
+            <span class="value">${incorrect}</span>
           </div>
 
-
-          <div
-            style="
-              padding:9px 12px;
-              border-radius:8px;
-              background:#fff4d6;
-              border-left:5px solid #fd7e14;
-            "
-          >
-            <strong>Unattempted</strong>
-            <span
-              style="
-                float:right;
-                font-weight:bold;
-                color:#fd7e14;
-              "
-            >
-              ${unanswered}
-            </span>
+          <div class="exam-stat-card exam-stat-unattempted">
+            <span class="label">Unattempted</span>
+            <span class="value">${unanswered}</span>
           </div>
 
         </div>
 
       </div>
 
+      <div class="exam-summary-grid">
 
-      <!-- =========================================
-           OTHER DETAILS
-      ========================================== -->
-
-      <div
-        class="exam-summary-grid"
-      >
-
-        <div
-          class="exam-summary-item"
-        >
-          <div
-            class="exam-summary-label"
-          >
-            Time Taken
-          </div>
-
-          <div
-            class="exam-summary-value"
-          >
-            ${formatTime(
-              elapsedSeconds
-            )}
-          </div>
+        <div class="exam-summary-item">
+          <div class="exam-summary-label">Time Taken</div>
+          <div class="exam-summary-value">${formatTime(elapsedSeconds)}</div>
         </div>
 
-
-        <div
-          class="exam-summary-item"
-        >
-          <div
-            class="exam-summary-label"
-          >
-            Accuracy
-          </div>
-
-          <div
-            class="exam-summary-value"
-          >
-            ${percentage}%
-          </div>
+        <div class="exam-summary-item">
+          <div class="exam-summary-label">Accuracy</div>
+          <div class="exam-summary-value">${percentage}%</div>
         </div>
 
       </div>
-
 
       <button
         class="primary"
@@ -266,162 +3092,154 @@ function showExamResult(
 
   `;
 
-
-  /* =========================================
-     PIE CHART ONLY
-  ========================================== */
-
-  if(
-    typeof Chart !== "undefined"
-  ){
+  if(typeof Chart !== "undefined"){
 
     const pieCanvas =
-      document.getElementById(
-        "examPieChart"
-      );
+      document.getElementById("examPieChart");
 
-
-    if(
-      typeof ChartDataLabels !== "undefined"
-    ){
-
-      Chart.register(
-        ChartDataLabels
-      );
-
+    if(typeof ChartDataLabels !== "undefined"){
+      Chart.register(ChartDataLabels);
     }
-
 
     new Chart(
       pieCanvas,
       {
-
-        type:
-          "pie",
-
+        type:"pie",
         data:{
-
           labels:[
             "Correct",
             "Incorrect",
             "Unattempted"
           ],
-
           datasets:[
-
             {
-
               data:[
                 correct,
                 incorrect,
                 unanswered
               ]
-
             }
-
           ]
-
         },
-
         options:{
-
-          responsive:
-            true,
-
-          maintainAspectRatio:
-            false,
-
+          responsive:true,
+          maintainAspectRatio:true,
           plugins:{
-
             legend:{
-
-              display:
-                false
-
+              position:"bottom",
+              labels:{
+                boxWidth:12,
+                font:{size:11}
+              }
             },
-
             title:{
-
-              display:
-                true,
-
-              text:
-                "Performance",
-
-              font:{
-                size:14
-              }
-
+              display:true,
+              text:"Exam Performance",
+              font:{size:14}
             },
-
             datalabels:{
-
-              display:
-                true,
-
-              formatter:
-                function(
-                  value,
-                  context
-                ){
-
-                  const totalValue =
-                    context
-                      .chart
-                      .data
-                      .datasets[0]
-                      .data
-                      .reduce(
-                        function(
-                          a,
-                          b
-                        ){
-
-                          return a + b;
-
-                        },
-                        0
-                      );
-
-
-                  if(
-                    !totalValue
-                  ){
-
-                    return "0%";
-
-                  }
-
-
-                  return Math.round(
-                    (
-                      value /
-                      totalValue
-                    ) * 100
-                  ) + "%";
-
-                },
-
+              display:true,
+              formatter:function(value, context){
+                const totalValue =
+                  context.chart.data.datasets[0].data
+                    .reduce(function(a,b){ return a + b; }, 0);
+                if(!totalValue){
+                  return "0%";
+                }
+                return Math.round((value / totalValue) * 100) + "%";
+              },
               font:{
-
-                weight:
-                  "bold",
-
-                size:
-                  12
-
+                weight:"bold",
+                size:12
               }
-
             }
-
           }
-
         }
+      }
+    );
+  }
+}
+
+
+/* =====================================================
+   RESET EXAM
+===================================================== */
+
+function resetExam(){
+
+  clearInterval(
+    examTimer
+  );
+
+
+  examRecords =
+    [];
+
+
+  examAnswers =
+    {};
+
+
+  examSubmitted =
+    false;
+
+
+  document.getElementById(
+    "examArea"
+  ).classList.add(
+    "hidden"
+  );
+
+
+  document.getElementById(
+    "examResult"
+  ).classList.add(
+    "hidden"
+  );
+
+
+  document.getElementById(
+    "examSetup"
+  ).classList.remove(
+    "hidden"
+  );
+
+}
+
+
+/* =====================================================
+   ENTER KEY
+===================================================== */
+
+document
+  .getElementById(
+    "searchInput"
+  )
+  .addEventListener(
+    "keydown",
+    function(event){
+
+      if(
+        event.key === "Enter"
+      ){
+
+        searchWord();
 
       }
 
-    );
+    }
+  );
 
-  }
 
-}
+/* =====================================================
+   START
+===================================================== */
+
+checkServer();
+
+</script>
+
+
+</body>
+
+</html>
