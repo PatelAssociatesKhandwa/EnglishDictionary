@@ -14,7 +14,6 @@
 PATEL ASSOCIATES - English Hindi Dictionary
 </title>
 
-
 <style>
 
 *{
@@ -135,13 +134,14 @@ label{
 
 .primary:disabled{
   background:#999;
+  cursor:not-allowed;
 }
 
 .save-word-btn{
   display:inline-block;
   width:auto;
-  padding:7px 12px;
-  margin-top:12px;
+  padding:8px 14px;
+  margin-top:15px;
   border:none;
   border-radius:6px;
   background:#198754;
@@ -156,112 +156,15 @@ label{
   cursor:not-allowed;
 }
 
-.exam-summary-grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:10px;
-  margin:18px 0;
-}
-
-.exam-summary-item{
-  background:#f5f8fc;
-  border:1px solid #e1e6ef;
-  border-radius:10px;
-  padding:12px;
-}
-
-.exam-summary-label{
-  color:#666;
+.saved-label{
+  display:inline-block;
+  margin-top:15px;
+  padding:7px 12px;
+  border-radius:6px;
+  background:#d1e7dd;
+  color:#0f5132;
   font-size:13px;
-}
-
-.exam-summary-value{
-  margin-top:4px;
-  font-size:21px;
   font-weight:bold;
-  color:#0b5ed7;
-}
-
-.exam-chart-wrap{
-  max-width:360px;
-  margin:20px auto;
-  position:relative;
-}
-
-
-
-.exam-result-dashboard{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:28px;
-  margin:20px auto 10px;
-  flex-wrap:wrap;
-}
-
-.exam-pie-box{
-  width:220px;
-  max-width:220px;
-  flex:0 0 220px;
-}
-
-.exam-stats-box{
-  width:260px;
-  max-width:100%;
-  display:grid;
-  gap:8px;
-}
-
-.exam-stat-card{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:9px 12px;
-  border-radius:9px;
-  color:white;
-  font-weight:bold;
-  box-shadow:0 2px 6px rgba(0,0,0,.08);
-}
-
-.exam-stat-card .label{
-  font-size:13px;
-}
-
-.exam-stat-card .value{
-  font-size:18px;
-}
-
-.exam-stat-total{background:#0b5ed7;}
-.exam-stat-attempted{background:#6f42c1;}
-.exam-stat-correct{background:#198754;}
-.exam-stat-incorrect{background:#dc3545;}
-.exam-stat-unattempted{background:#fd7e14;}
-
-@media(max-width:600px){
-  .exam-result-dashboard{
-    gap:16px;
-  }
-  .exam-pie-box{
-    width:200px;
-    flex-basis:200px;
-  }
-  .exam-stats-box{
-    width:100%;
-  }
-}
-
-.exam-chart-title{
-  text-align:center;
-  font-size:17px;
-  font-weight:bold;
-  color:#0b5ed7;
-  margin:20px 0 8px;
-}
-
-@media(max-width:600px){
-  .exam-summary-grid{
-    grid-template-columns:1fr 1fr;
-  }
 }
 
 .message{
@@ -290,43 +193,46 @@ label{
 }
 
 
-/* SEARCH */
+/* =====================================================
+   SEARCH
+===================================================== */
 
 .word-title{
   font-size:27px;
   font-weight:bold;
   color:#0b5ed7;
-}
-
-.meaning{
-  font-size:21px;
-  font-weight:bold;
-  margin-top:8px;
+  margin-bottom:12px;
 }
 
 .pronunciation{
   color:#666;
-  margin-top:5px;
+  margin:5px 0 18px;
+  font-size:15px;
 }
 
-.example{
-  margin-top:10px;
-  padding:11px;
-  background:#f5f8fc;
-  border-left:4px solid #0b5ed7;
-  border-radius:6px;
-}
-
-.example .english{
+.meanings-title{
+  font-size:18px;
   font-weight:bold;
+  color:#333;
+  margin-bottom:8px;
 }
 
-.example .hindi{
-  margin-top:5px;
+.meanings-list{
+  margin:0;
+  padding-left:25px;
+}
+
+.meanings-list li{
+  font-size:19px;
+  font-weight:bold;
+  margin:8px 0;
+  line-height:1.45;
 }
 
 
-/* DICTIONARY */
+/* =====================================================
+   DICTIONARY
+===================================================== */
 
 .word-item{
   background:white;
@@ -362,35 +268,32 @@ label{
   display:block;
 }
 
-.details-meaning{
-  color:#0b5ed7;
-  font-size:20px;
-  font-weight:bold;
-}
-
 .details-pronunciation{
   color:#666;
-  margin:5px 0 12px;
+  margin:5px 0 15px;
 }
 
-.detail-example{
-  background:white;
-  border-left:3px solid #0b5ed7;
-  padding:10px;
-  margin:8px 0;
-  border-radius:5px;
-}
-
-.detail-example .en{
+.details-meanings-title{
   font-weight:bold;
+  font-size:17px;
+  margin-bottom:8px;
 }
 
-.detail-example .hi{
-  margin-top:5px;
+.details-meanings-list{
+  margin:0;
+  padding-left:25px;
+}
+
+.details-meanings-list li{
+  color:#0b5ed7;
+  font-size:18px;
+  font-weight:bold;
+  margin:7px 0;
+  line-height:1.4;
 }
 
 .delete-btn{
-  margin-top:10px;
+  margin-top:15px;
   padding:8px 12px;
   border:none;
   border-radius:6px;
@@ -400,7 +303,9 @@ label{
 }
 
 
-/* EXAM */
+/* =====================================================
+   EXAM
+===================================================== */
 
 .exam-timer{
   position:sticky;
@@ -439,13 +344,6 @@ label{
   font-weight:bold;
   margin:8px 0 15px;
 }
-
-
-/*
-  IMPORTANT:
-  Exam answer colors only.
-  No Wrong Answer / Correct Answer text.
-*/
 
 .answer-option{
   width:100%;
@@ -488,6 +386,107 @@ label{
   color:#0b5ed7;
 }
 
+.exam-summary-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  margin:18px 0;
+}
+
+.exam-summary-item{
+  background:#f5f8fc;
+  border:1px solid #e1e6ef;
+  border-radius:10px;
+  padding:12px;
+}
+
+.exam-summary-label{
+  color:#666;
+  font-size:13px;
+}
+
+.exam-summary-value{
+  margin-top:4px;
+  font-size:21px;
+  font-weight:bold;
+  color:#0b5ed7;
+}
+
+.exam-result-dashboard{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:28px;
+  margin:20px auto 10px;
+  flex-wrap:wrap;
+}
+
+.exam-pie-box{
+  width:220px;
+  max-width:220px;
+  flex:0 0 220px;
+}
+
+.exam-stats-box{
+  width:260px;
+  max-width:100%;
+  display:grid;
+  gap:8px;
+}
+
+.exam-stat-card{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:9px 12px;
+  border-radius:9px;
+  color:white;
+  font-weight:bold;
+  box-shadow:0 2px 6px rgba(0,0,0,.08);
+}
+
+.exam-stat-card .label{
+  font-size:13px;
+}
+
+.exam-stat-card .value{
+  font-size:18px;
+}
+
+.exam-stat-total{
+  background:#0b5ed7;
+}
+
+.exam-stat-attempted{
+  background:#6f42c1;
+}
+
+.exam-stat-correct{
+  background:#198754;
+}
+
+.exam-stat-incorrect{
+  background:#dc3545;
+}
+
+.exam-stat-unattempted{
+  background:#fd7e14;
+}
+
+
+/* =====================================================
+   IMPORT
+===================================================== */
+
+#importResult{
+  margin-top:15px;
+}
+
+
+/* =====================================================
+   COMMON
+===================================================== */
+
 .hidden{
   display:none !important;
 }
@@ -509,6 +508,31 @@ label{
   .tab-btn{
     min-width:110px;
     font-size:13px;
+  }
+
+  .word-title{
+    font-size:24px;
+  }
+
+  .meanings-list li{
+    font-size:18px;
+  }
+
+  .exam-result-dashboard{
+    gap:16px;
+  }
+
+  .exam-pie-box{
+    width:200px;
+    flex-basis:200px;
+  }
+
+  .exam-stats-box{
+    width:100%;
+  }
+
+  .exam-summary-grid{
+    grid-template-columns:1fr 1fr;
   }
 
 }
@@ -835,7 +859,7 @@ src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-p
 ===================================================== */
 
 const API_URL =
-"https://script.google.com/macros/s/AKfycbznhwqwtBWBqUbUA-FVfOYNYAJkFUaCEcfwwTagpWfW7yk0tsCWYJYfZB4gBErt7aQX/exec";
+"https://script.google.com/macros/s/AKfycbznhwqwtBWBqUbUA-FVfOYNYAJkFUaCEcfwwTagpWfW7yk0tsCWYJfZB4gBErt7aQX/exec";
 
 
 /* =====================================================
@@ -856,7 +880,7 @@ let examSubmitted = false;
 
 
 /* =====================================================
-   API
+   API GET
 ===================================================== */
 
 async function apiGet(params){
@@ -876,7 +900,9 @@ async function apiGet(params){
   const timeout =
     setTimeout(
       function(){
+
         controller.abort();
+
       },
       30000
     );
@@ -891,8 +917,7 @@ async function apiGet(params){
           method:"GET",
           cache:"no-store",
           redirect:"follow",
-          signal:
-            controller.signal
+          signal:controller.signal
         }
       );
 
@@ -943,7 +968,92 @@ async function apiGet(params){
 
 
 /* =====================================================
+   API POST
+   URL-ENCODED
+===================================================== */
+
+async function apiPost(params){
+
+  const controller =
+    new AbortController();
+
+
+  const timeout =
+    setTimeout(
+      function(){
+
+        controller.abort();
+
+      },
+      60000
+    );
+
+
+  try{
+
+    const body =
+      new URLSearchParams(
+        params
+      ).toString();
+
+
+    const response =
+      await fetch(
+        API_URL,
+        {
+          method:"POST",
+          headers:{
+            "Content-Type":
+              "application/x-www-form-urlencoded;charset=UTF-8"
+          },
+          body:body,
+          redirect:"follow",
+          signal:controller.signal
+        }
+      );
+
+
+    if(!response.ok){
+
+      throw new Error(
+        "HTTP Error " +
+        response.status
+      );
+
+    }
+
+
+    const text =
+      await response.text();
+
+
+    try{
+
+      return JSON.parse(text);
+
+    }catch(error){
+
+      throw new Error(
+        "Server returned invalid response."
+      );
+
+    }
+
+
+  }finally{
+
+    clearTimeout(
+      timeout
+    );
+
+  }
+
+}
+
+
+/* =====================================================
    SERVER CHECK
+   FIXED
 ===================================================== */
 
 async function checkServer(){
@@ -962,7 +1072,24 @@ async function checkServer(){
       });
 
 
-    if(data.success){
+    /*
+     * IMPORTANT:
+     *
+     * Code.gs returns:
+     *
+     * {
+     *   ok:true,
+     *   message:"API is working."
+     * }
+     *
+     * इसलिए data.success नहीं,
+     * data.ok check करना है.
+     */
+
+    if(
+      data &&
+      data.ok === true
+    ){
 
       status.textContent =
         "● Server Connected";
@@ -976,7 +1103,10 @@ async function checkServer(){
     }else{
 
       throw new Error(
+        data &&
         data.message
+          ? data.message
+          : "Server health check failed."
       );
 
     }
@@ -986,7 +1116,10 @@ async function checkServer(){
 
     status.textContent =
       "● Server Connection Error: " +
-      error.message;
+      (
+        error.message ||
+        "Unknown error"
+      );
 
     status.style.background =
       "#f8d7da";
@@ -1166,6 +1299,124 @@ function escapeJs(value){
 
 
 /* =====================================================
+   GET MEANINGS
+   Supports:
+   - record.meanings[]
+   - record.meaning
+===================================================== */
+
+function getMeanings(record){
+
+  let meanings = [];
+
+
+  /*
+   * Preferred format:
+   *
+   * meanings: [
+   *   "जाना",
+   *   "चलना",
+   *   "होना"
+   * ]
+   */
+
+  if(
+    Array.isArray(
+      record.meanings
+    )
+  ){
+
+    meanings =
+      record.meanings;
+
+  }
+
+
+  /*
+   * Fallback:
+   * old meaning field
+   */
+
+  if(
+    meanings.length === 0 &&
+    record.meaning
+  ){
+
+    meanings =
+      String(
+        record.meaning
+      )
+      .split(/\n|;|\|/)
+      .map(
+        function(item){
+
+          return item.trim();
+
+        }
+      )
+      .filter(
+        function(item){
+
+          return item;
+
+        }
+      );
+
+  }
+
+
+  /*
+   * Final cleanup
+   */
+
+  const result = [];
+
+  const seen = new Set();
+
+
+  meanings.forEach(
+    function(item){
+
+      const value =
+        String(
+          item || ""
+        )
+        .trim();
+
+
+      if(!value){
+
+        return;
+
+      }
+
+
+      const key =
+        value.toLowerCase();
+
+
+      if(
+        !seen.has(key)
+      ){
+
+        seen.add(key);
+
+        result.push(
+          value
+        );
+
+      }
+
+    }
+  );
+
+
+  return result;
+
+}
+
+
+/* =====================================================
    SEARCH
 ===================================================== */
 
@@ -1213,7 +1464,7 @@ async function searchWord(){
   result.innerHTML =
     `
       <div class="card loading">
-        Generating meaning and examples...
+        Loading meanings...
       </div>
     `;
 
@@ -1230,11 +1481,16 @@ async function searchWord(){
       });
 
 
-    if(!data.success){
+    if(
+      !data ||
+      data.success !== true
+    ){
 
       throw new Error(
-        data.message ||
-        "Search failed."
+        data &&
+        data.message
+          ? data.message
+          : "Search failed."
       );
 
     }
@@ -1260,7 +1516,8 @@ async function searchWord(){
 
     showMessage(
       "searchMessage",
-      error.message,
+      error.message ||
+      "Search failed.",
       "error"
     );
 
@@ -1274,43 +1531,81 @@ async function searchWord(){
 
 }
 
+
 /* =====================================================
    SAVE SEARCHED WORD
 ===================================================== */
 
-async function saveSearchedWord(word){
+async function saveSearchedWord(
+  word
+){
 
   const btn =
     document.getElementById(
       "saveWordBtn"
     );
 
+
   if(!btn){
+
     return;
+
   }
 
-  btn.disabled = true;
-  btn.textContent = "Saving...";
+
+  btn.disabled =
+    true;
+
+  btn.textContent =
+    "Saving...";
+
 
   try{
 
+    /*
+     * Use POST so complete current record
+     * can be saved without another Gemini call.
+     */
+
+    const recordJson =
+      JSON.stringify(
+        window.currentSearchRecord || {}
+      );
+
+
     const data =
-      await apiGet({
+      await apiPost({
+
         action:"saveWord",
-        word:word
+
+        word:word,
+
+        record:recordJson
+
       });
 
-    if(!data.success){
+
+    if(
+      !data ||
+      data.success !== true
+    ){
 
       throw new Error(
-        data.message ||
-        "Unable to save word."
+        data &&
+        data.message
+          ? data.message
+          : "Unable to save word."
       );
 
     }
 
-    btn.textContent = "Saved";
-    btn.disabled = true;
+
+    btn.textContent =
+      "Saved";
+
+    btn.disabled =
+      true;
+
 
     showMessage(
       "searchMessage",
@@ -1318,14 +1613,20 @@ async function saveSearchedWord(word){
       "success"
     );
 
+
   }catch(error){
 
-    btn.disabled = false;
-    btn.textContent = "Save Word";
+    btn.disabled =
+      false;
+
+    btn.textContent =
+      "Save Word";
+
 
     showMessage(
       "searchMessage",
-      error.message,
+      error.message ||
+      "Unable to save word.",
       "error"
     );
 
@@ -1335,101 +1636,8 @@ async function saveSearchedWord(word){
 
 
 /* =====================================================
-   SENTENCES
-===================================================== */
-
-function getSentences(record){
-
-  if(
-    Array.isArray(
-      record.sentences
-    )
-  ){
-
-    return record.sentences
-      .map(
-        function(s){
-
-          return {
-
-            english:
-              s.english ||
-              "",
-
-            hindi:
-              s.hindi ||
-              ""
-
-          };
-
-        }
-      )
-      .filter(
-        function(s){
-
-          return (
-            s.english ||
-            s.hindi
-          );
-
-        }
-      );
-
-  }
-
-
-  const result =
-    [];
-
-
-  for(
-    let i=1;
-    i<=5;
-    i++
-  ){
-
-    const en =
-      record[
-        "sentence" +
-        i
-      ];
-
-
-    const hi =
-      record[
-        "sentence" +
-        i +
-        "Hindi"
-      ];
-
-
-    if(
-      en ||
-      hi
-    ){
-
-      result.push({
-
-        english:
-          en || "",
-
-        hindi:
-          hi || ""
-
-      });
-
-    }
-
-  }
-
-
-  return result;
-
-}
-
-
-/* =====================================================
    SEARCH RESULT
+   NO SENTENCES
 ===================================================== */
 
 function renderSearchResult(
@@ -1442,6 +1650,53 @@ function renderSearchResult(
     );
 
 
+  window.currentSearchRecord =
+    record;
+
+
+  const meanings =
+    getMeanings(
+      record
+    );
+
+
+  let meaningsHtml =
+    "";
+
+
+  if(
+    meanings.length > 0
+  ){
+
+    meaningsHtml =
+      meanings
+        .map(
+          function(meaning){
+
+            return `
+              <li>
+                ${escapeHtml(
+                  meaning
+                )}
+              </li>
+            `;
+
+          }
+        )
+        .join("");
+
+  }else{
+
+    meaningsHtml =
+      `
+        <li>
+          Meaning not available.
+        </li>
+      `;
+
+  }
+
+
   let html = `
 
     <div class="card">
@@ -1452,65 +1707,57 @@ function renderSearchResult(
         )}
       </div>
 
-      <div class="meaning">
-        ${escapeHtml(
-          record.meaning
-        )}
-      </div>
-
       <div class="pronunciation">
+        <b>Pronunciation:</b>
         ${escapeHtml(
-          record.pronunciation
+          record.pronunciation || ""
         )}
       </div>
 
-      ${record.saved ? `
-        <div class="saved-label">✓ Saved in Dictionary</div>
-      ` : `
-        <button
-          id="saveWordBtn"
-          class="save-word-btn"
-          onclick="saveSearchedWord('${escapeJs(record.word)}')"
-        >
-          Save Word
-        </button>
-      `}
+      <div class="meanings-title">
+        Hindi Meanings:
+      </div>
+
+      <ol class="meanings-list">
+        ${meaningsHtml}
+      </ol>
 
   `;
 
 
-  getSentences(record)
-    .slice(0,2)
-    .forEach(
-      function(sentence,index){
+  if(
+    record.saved
+  ){
 
-        html += `
+    html += `
 
-          <div class="example">
+      <div class="saved-label">
+        ✓ Saved in Dictionary
+      </div>
 
-            <div class="english">
-              ${index+1}.
-              ${escapeHtml(
-                sentence.english
-              )}
-            </div>
+    `;
 
-            <div class="hindi">
-              ${escapeHtml(
-                sentence.hindi
-              )}
-            </div>
+  }else{
 
-          </div>
+    html += `
 
-        `;
+      <button
+        id="saveWordBtn"
+        class="save-word-btn"
+        onclick="saveSearchedWord('${escapeJs(record.word)}')"
+      >
+        Save Word
+      </button>
 
-      }
-    );
+    `;
+
+  }
 
 
   html += `
+
     </div>
+
   `;
 
 
@@ -1551,10 +1798,16 @@ async function loadDictionary(){
       });
 
 
-    if(!data.success){
+    if(
+      !data ||
+      data.success !== true
+    ){
 
       throw new Error(
+        data &&
         data.message
+          ? data.message
+          : "Unable to load dictionary."
       );
 
     }
@@ -1712,7 +1965,8 @@ async function loadDictionary(){
 
     showMessage(
       "dictionaryMessage",
-      error.message,
+      error.message ||
+      "Unable to load dictionary.",
       "error"
     );
 
@@ -1723,6 +1977,7 @@ async function loadDictionary(){
 
 /* =====================================================
    DICTIONARY WORD DETAILS
+   NO SENTENCES
 ===================================================== */
 
 async function toggleWordDetails(
@@ -1753,7 +2008,7 @@ async function toggleWordDetails(
   details.innerHTML =
     `
       <div class="loading">
-        Generating meaning and examples...
+        Loading meanings...
       </div>
     `;
 
@@ -1772,10 +2027,16 @@ async function toggleWordDetails(
       });
 
 
-    if(!data.success){
+    if(
+      !data ||
+      data.success !== true
+    ){
 
       throw new Error(
+        data &&
         data.message
+          ? data.message
+          : "Unable to load word."
       );
 
     }
@@ -1785,54 +2046,65 @@ async function toggleWordDetails(
       data.record;
 
 
-    let html = `
-
-      <div class="details-meaning">
-        ${escapeHtml(
-          record.meaning
-        )}
-      </div>
-
-      <div class="details-pronunciation">
-        ${escapeHtml(
-          record.pronunciation
-        )}
-      </div>
-
-    `;
-
-
-    getSentences(record)
-      .slice(0,2)
-      .forEach(
-        function(sentence,index){
-
-          html += `
-
-            <div class="detail-example">
-
-              <div class="en">
-                ${index+1}.
-                ${escapeHtml(
-                  sentence.english
-                )}
-              </div>
-
-              <div class="hi">
-                ${escapeHtml(
-                  sentence.hindi
-                )}
-              </div>
-
-            </div>
-
-          `;
-
-        }
+    const meanings =
+      getMeanings(
+        record
       );
 
 
-    html += `
+    let meaningsHtml =
+      "";
+
+
+    if(
+      meanings.length > 0
+    ){
+
+      meaningsHtml =
+        meanings
+          .map(
+            function(meaning){
+
+              return `
+                <li>
+                  ${escapeHtml(
+                    meaning
+                  )}
+                </li>
+              `;
+
+            }
+          )
+          .join("");
+
+    }else{
+
+      meaningsHtml =
+        `
+          <li>
+            Meaning not available.
+          </li>
+        `;
+
+    }
+
+
+    let html = `
+
+      <div class="details-pronunciation">
+        <b>Pronunciation:</b>
+        ${escapeHtml(
+          record.pronunciation || ""
+        )}
+      </div>
+
+      <div class="details-meanings-title">
+        Hindi Meanings:
+      </div>
+
+      <ol class="details-meanings-list">
+        ${meaningsHtml}
+      </ol>
 
       <button
         class="delete-btn"
@@ -1860,7 +2132,8 @@ async function toggleWordDetails(
           style="display:block"
         >
           ${escapeHtml(
-            error.message
+            error.message ||
+            "Unable to load word."
           )}
         </div>
       `;
@@ -1910,10 +2183,16 @@ async function deleteDictionaryWord(
       });
 
 
-    if(!data.success){
+    if(
+      !data ||
+      data.success !== true
+    ){
 
       throw new Error(
+        data &&
         data.message
+          ? data.message
+          : "Unable to delete word."
       );
 
     }
@@ -1930,7 +2209,8 @@ async function deleteDictionaryWord(
 
     showMessage(
       "dictionaryMessage",
-      error.message,
+      error.message ||
+      "Unable to delete word.",
       "error"
     );
 
@@ -2045,7 +2325,6 @@ async function importExcel(){
     const unique =
       [];
 
-
     const seen =
       new Set();
 
@@ -2108,7 +2387,7 @@ async function importExcel(){
         "importMessage",
         "Importing " +
         Math.min(
-          i+chunk.length,
+          i + chunk.length,
           unique.length
         ) +
         " / " +
@@ -2131,7 +2410,10 @@ async function importExcel(){
         });
 
 
-      if(data.success){
+      if(
+        data &&
+        data.success
+      ){
 
         added +=
           Number(
@@ -2209,7 +2491,8 @@ async function importExcel(){
 
     showMessage(
       "importMessage",
-      error.message,
+      error.message ||
+      "Excel import failed.",
       "error"
     );
 
@@ -2272,7 +2555,7 @@ async function startExam(){
 
   showMessage(
     "examSetupMessage",
-    "Preparing  exam...",
+    "Preparing exam...",
     "success"
   );
 
@@ -2291,10 +2574,16 @@ async function startExam(){
       });
 
 
-    if(!data.success){
+    if(
+      !data ||
+      data.success !== true
+    ){
 
       throw new Error(
+        data &&
         data.message
+          ? data.message
+          : "Unable to prepare exam."
       );
 
     }
@@ -2317,7 +2606,6 @@ async function startExam(){
 
     examAnswers =
       {};
-
 
     examSubmitted =
       false;
@@ -2361,7 +2649,8 @@ async function startExam(){
 
     showMessage(
       "examSetupMessage",
-      error.message,
+      error.message ||
+      "Unable to start exam.",
       "error"
     );
 
@@ -2405,16 +2694,14 @@ function renderExam(){
         ).trim();
 
 
-      /*
-       * Create options from meanings
-       */
-
       const distractors =
         examRecords
 
           .filter(
             function(_,i){
+
               return i !== index;
+
             }
           )
 
@@ -2552,10 +2839,6 @@ function selectExamAnswer(
 
 ){
 
-  /*
-   * Prevent second click
-   */
-
   if(
     examAnswers[
       questionIndex
@@ -2580,10 +2863,6 @@ function selectExamAnswer(
       );
 
 
-  /*
-   * Disable all options.
-   */
-
   buttons.forEach(
     function(button){
 
@@ -2598,10 +2877,6 @@ function selectExamAnswer(
   );
 
 
-  /*
-   * Correct answer
-   */
-
   if(
     selectedAnswer
       .toLowerCase() ===
@@ -2609,37 +2884,16 @@ function selectExamAnswer(
       .toLowerCase()
   ){
 
-    /*
-     * ONLY GREEN
-     */
-
     clickedButton.classList.add(
       "correct"
     );
 
-  }
-
-
-  /*
-   * Wrong answer
-   */
-
-  else{
-
-    /*
-     * Selected answer = RED
-     */
+  }else{
 
     clickedButton.classList.add(
       "wrong"
     );
 
-
-    /*
-     * Correct option = GREEN
-     *
-     * No text is displayed.
-     */
 
     buttons.forEach(
       function(button){
@@ -2926,14 +3180,18 @@ async function submitExam(){
   const total =
     examRecords.length;
 
+
   const attempted =
     answers.filter(
       function(item){
+
         return Boolean(
           item.answer
         );
+
       }
     ).length;
+
 
   const incorrect =
     Math.max(
@@ -2941,11 +3199,13 @@ async function submitExam(){
       attempted - correctCount
     );
 
+
   const unanswered =
     Math.max(
       0,
       total - attempted
     );
+
 
   const elapsedSeconds =
     Math.max(
@@ -2953,6 +3213,7 @@ async function submitExam(){
       examTotalSeconds -
       examRemainingSeconds
     );
+
 
   const percentage =
     attempted
@@ -2964,14 +3225,23 @@ async function submitExam(){
         )
       : 0;
 
+
   showExamResult(
+
     correctCount,
+
     incorrect,
+
     attempted,
+
     unanswered,
+
     total,
+
     percentage,
+
     elapsedSeconds
+
   );
 
 }
@@ -3002,29 +3272,48 @@ function autoSubmitExam(){
 ===================================================== */
 
 function showExamResult(
+
   correct,
+
   incorrect,
+
   attempted,
+
   unanswered,
+
   total,
+
   percentage,
+
   elapsedSeconds
+
 ){
 
   document.getElementById(
     "examArea"
-  ).classList.add("hidden");
+  ).classList.add(
+    "hidden"
+  );
+
 
   const result =
-    document.getElementById("examResult");
+    document.getElementById(
+      "examResult"
+    );
 
-  result.classList.remove("hidden");
+
+  result.classList.remove(
+    "hidden"
+  );
+
 
   result.innerHTML = `
 
     <div class="exam-result">
 
-      <h2>Exam Result</h2>
+      <h2>
+        Exam Result
+      </h2>
 
       <div class="score">
         ${correct} / ${total}
@@ -3033,53 +3322,118 @@ function showExamResult(
       <div class="exam-result-dashboard">
 
         <div class="exam-pie-box">
-          <canvas id="examPieChart" width="220" height="220"></canvas>
+
+          <canvas
+            id="examPieChart"
+            width="220"
+            height="220"
+          ></canvas>
+
         </div>
+
 
         <div class="exam-stats-box">
 
           <div class="exam-stat-card exam-stat-total">
-            <span class="label">Total Questions</span>
-            <span class="value">${total}</span>
+
+            <span class="label">
+              Total Questions
+            </span>
+
+            <span class="value">
+              ${total}
+            </span>
+
           </div>
+
 
           <div class="exam-stat-card exam-stat-attempted">
-            <span class="label">Attempted</span>
-            <span class="value">${attempted}</span>
+
+            <span class="label">
+              Attempted
+            </span>
+
+            <span class="value">
+              ${attempted}
+            </span>
+
           </div>
+
 
           <div class="exam-stat-card exam-stat-correct">
-            <span class="label">Correct</span>
-            <span class="value">${correct}</span>
+
+            <span class="label">
+              Correct
+            </span>
+
+            <span class="value">
+              ${correct}
+            </span>
+
           </div>
+
 
           <div class="exam-stat-card exam-stat-incorrect">
-            <span class="label">Incorrect</span>
-            <span class="value">${incorrect}</span>
+
+            <span class="label">
+              Incorrect
+            </span>
+
+            <span class="value">
+              ${incorrect}
+            </span>
+
           </div>
 
+
           <div class="exam-stat-card exam-stat-unattempted">
-            <span class="label">Unattempted</span>
-            <span class="value">${unanswered}</span>
+
+            <span class="label">
+              Unattempted
+            </span>
+
+            <span class="value">
+              ${unanswered}
+            </span>
+
           </div>
 
         </div>
 
       </div>
+
 
       <div class="exam-summary-grid">
 
         <div class="exam-summary-item">
-          <div class="exam-summary-label">Time Taken</div>
-          <div class="exam-summary-value">${formatTime(elapsedSeconds)}</div>
+
+          <div class="exam-summary-label">
+            Time Taken
+          </div>
+
+          <div class="exam-summary-value">
+            ${formatTime(
+              elapsedSeconds
+            )}
+          </div>
+
         </div>
 
+
         <div class="exam-summary-item">
-          <div class="exam-summary-label">Accuracy</div>
-          <div class="exam-summary-value">${percentage}%</div>
+
+          <div class="exam-summary-label">
+            Accuracy
+          </div>
+
+          <div class="exam-summary-value">
+            ${percentage}%
+          </div>
+
         </div>
 
       </div>
+
 
       <button
         class="primary"
@@ -3092,72 +3446,168 @@ function showExamResult(
 
   `;
 
-  if(typeof Chart !== "undefined"){
+
+  if(
+    typeof Chart !==
+    "undefined"
+  ){
 
     const pieCanvas =
-      document.getElementById("examPieChart");
+      document.getElementById(
+        "examPieChart"
+      );
 
-    if(typeof ChartDataLabels !== "undefined"){
-      Chart.register(ChartDataLabels);
+
+    if(
+      typeof ChartDataLabels !==
+      "undefined"
+    ){
+
+      Chart.register(
+        ChartDataLabels
+      );
+
     }
+
 
     new Chart(
       pieCanvas,
       {
+
         type:"pie",
+
         data:{
+
           labels:[
             "Correct",
             "Incorrect",
             "Unattempted"
           ],
+
           datasets:[
             {
+
               data:[
+
                 correct,
+
                 incorrect,
+
                 unanswered
+
               ]
+
             }
+
           ]
+
         },
+
         options:{
+
           responsive:true,
+
           maintainAspectRatio:true,
+
           plugins:{
+
             legend:{
+
               position:"bottom",
+
               labels:{
+
                 boxWidth:12,
-                font:{size:11}
-              }
-            },
-            title:{
-              display:true,
-              text:"Exam Performance",
-              font:{size:14}
-            },
-            datalabels:{
-              display:true,
-              formatter:function(value, context){
-                const totalValue =
-                  context.chart.data.datasets[0].data
-                    .reduce(function(a,b){ return a + b; }, 0);
-                if(!totalValue){
-                  return "0%";
+
+                font:{
+                  size:11
                 }
-                return Math.round((value / totalValue) * 100) + "%";
-              },
-              font:{
-                weight:"bold",
-                size:12
+
               }
+
+            },
+
+            title:{
+
+              display:true,
+
+              text:
+                "Exam Performance",
+
+              font:{
+                size:14
+              }
+
+            },
+
+            datalabels:{
+
+              display:true,
+
+              formatter:
+                function(
+                  value,
+                  context
+                ){
+
+                  const totalValue =
+                    context
+                      .chart
+                      .data
+                      .datasets[0]
+                      .data
+                      .reduce(
+                        function(
+                          a,
+                          b
+                        ){
+
+                          return a+b;
+
+                        },
+                        0
+                      );
+
+
+                  if(
+                    !totalValue
+                  ){
+
+                    return "0%";
+
+                  }
+
+
+                  return Math.round(
+                    (
+                      value /
+                      totalValue
+                    ) * 100
+                  ) + "%";
+
+                },
+
+              font:{
+
+                weight:
+                  "bold",
+
+                size:12
+
+              }
+
             }
+
           }
+
         }
+
       }
+
     );
+
   }
+
 }
 
 
@@ -3220,7 +3670,8 @@ document
     function(event){
 
       if(
-        event.key === "Enter"
+        event.key ===
+        "Enter"
       ){
 
         searchWord();
@@ -3238,7 +3689,6 @@ document
 checkServer();
 
 </script>
-
 
 </body>
 
