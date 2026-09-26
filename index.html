@@ -137,6 +137,63 @@ label{
   background:#999;
 }
 
+.save-word-btn{
+  display:inline-block;
+  width:auto;
+  padding:7px 12px;
+  margin-top:12px;
+  border:none;
+  border-radius:6px;
+  background:#198754;
+  color:white;
+  font-size:13px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.save-word-btn:disabled{
+  background:#999;
+  cursor:not-allowed;
+}
+
+.exam-summary-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  margin:18px 0;
+}
+
+.exam-summary-item{
+  background:#f5f8fc;
+  border:1px solid #e1e6ef;
+  border-radius:10px;
+  padding:12px;
+}
+
+.exam-summary-label{
+  color:#666;
+  font-size:13px;
+}
+
+.exam-summary-value{
+  margin-top:4px;
+  font-size:21px;
+  font-weight:bold;
+  color:#0b5ed7;
+}
+
+.exam-chart-wrap{
+  max-width:360px;
+  margin:20px auto;
+  position:relative;
+}
+
+@media(max-width:600px){
+  .exam-summary-grid{
+    grid-template-columns:1fr 1fr;
+  }
+}
+
 .message{
   margin-top:12px;
   padding:10px;
@@ -429,6 +486,13 @@ Search English Word
 
 <button
   class="tab-btn"
+  onclick="openTab('examTab',this)"
+>
+Exam
+</button>
+
+<button
+  class="tab-btn"
   onclick="openTab('dictionaryTab',this)"
 >
 Dictionary List
@@ -439,13 +503,6 @@ Dictionary List
   onclick="openTab('importTab',this)"
 >
 Excel Import
-</button>
-
-<button
-  class="tab-btn"
-  onclick="openTab('examTab',this)"
->
-Exam
 </button>
 
 </div>
@@ -593,7 +650,7 @@ Import Words
 >
 
 <h2>
-IBBI Exam Vocabulary Test
+Exam Vocabulary Test
 </h2>
 
 <label>
@@ -689,6 +746,10 @@ Submit Exam
 
 <script
 src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"
+></script>
+
+<script
+src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"
 ></script>
 
 
@@ -1078,7 +1139,7 @@ async function searchWord(){
   result.innerHTML =
     `
       <div class="card loading">
-        Generating IBBI exam-based meaning and examples...
+        Generating meaning and examples...
       </div>
     `;
 
@@ -1134,6 +1195,65 @@ async function searchWord(){
 
     btn.disabled =
       false;
+
+  }
+
+}
+
+/* =====================================================
+   SAVE SEARCHED WORD
+===================================================== */
+
+async function saveSearchedWord(word){
+
+  const btn =
+    document.getElementById(
+      "saveWordBtn"
+    );
+
+  if(!btn){
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = "Saving...";
+
+  try{
+
+    const data =
+      await apiGet({
+        action:"saveWord",
+        word:word
+      });
+
+    if(!data.success){
+
+      throw new Error(
+        data.message ||
+        "Unable to save word."
+      );
+
+    }
+
+    btn.textContent = "Saved";
+    btn.disabled = true;
+
+    showMessage(
+      "searchMessage",
+      "Word saved to Dictionary.",
+      "success"
+    );
+
+  }catch(error){
+
+    btn.disabled = false;
+    btn.textContent = "Save Word";
+
+    showMessage(
+      "searchMessage",
+      error.message,
+      "error"
+    );
 
   }
 
@@ -1269,6 +1389,14 @@ function renderSearchResult(
           record.pronunciation
         )}
       </div>
+
+      <button
+        id="saveWordBtn"
+        class="save-word-btn"
+        onclick="saveSearchedWord('${escapeJs(record.word)}')"
+      >
+        Save Word
+      </button>
 
   `;
 
@@ -1547,7 +1675,7 @@ async function toggleWordDetails(
   details.innerHTML =
     `
       <div class="loading">
-        Generating IBBI exam-based details...
+        Generating meaning and examples...
       </div>
     `;
 
@@ -2066,7 +2194,7 @@ async function startExam(){
 
   showMessage(
     "examSetupMessage",
-    "Preparing IBBI exam...",
+    "Preparing  exam...",
     "success"
   );
 
@@ -2720,22 +2848,52 @@ async function submitExam(){
   const total =
     examRecords.length;
 
+  const attempted =
+    answers.filter(
+      function(item){
+        return Boolean(
+          item.answer
+        );
+      }
+    ).length;
+
+  const incorrect =
+    Math.max(
+      0,
+      attempted - correctCount
+    );
+
+  const unanswered =
+    Math.max(
+      0,
+      total - attempted
+    );
+
+  const elapsedSeconds =
+    Math.max(
+      0,
+      examTotalSeconds -
+      examRemainingSeconds
+    );
 
   const percentage =
-    total
+    attempted
       ? Math.round(
           (
             correctCount /
-            total
+            attempted
           ) * 100
         )
       : 0;
 
-
   showExamResult(
     correctCount,
+    incorrect,
+    attempted,
+    unanswered,
     total,
-    percentage
+    percentage,
+    elapsedSeconds
   );
 
 }
@@ -2766,9 +2924,13 @@ function autoSubmitExam(){
 ===================================================== */
 
 function showExamResult(
-  score,
+  correct,
+  incorrect,
+  attempted,
+  unanswered,
   total,
-  percentage
+  percentage,
+  elapsedSeconds
 ){
 
   document.getElementById(
@@ -2777,34 +2939,69 @@ function showExamResult(
     "hidden"
   );
 
-
   const result =
     document.getElementById(
       "examResult"
     );
 
-
   result.classList.remove(
     "hidden"
   );
-
 
   result.innerHTML = `
 
     <div class="exam-result">
 
       <h2>
-        Exam Completed
+        Exam Result
       </h2>
 
       <div class="score">
-        ${score} / ${total}
+        ${correct} / ${total}
       </div>
 
-      <p>
-        Percentage:
-        <b>${percentage}%</b>
-      </p>
+      <div class="exam-summary-grid">
+
+        <div class="exam-summary-item">
+          <div class="exam-summary-label">Total Questions</div>
+          <div class="exam-summary-value">${total}</div>
+        </div>
+
+        <div class="exam-summary-item">
+          <div class="exam-summary-label">Attempted</div>
+          <div class="exam-summary-value">${attempted}</div>
+        </div>
+
+        <div class="exam-summary-item">
+          <div class="exam-summary-label">Correct</div>
+          <div class="exam-summary-value">${correct}</div>
+        </div>
+
+        <div class="exam-summary-item">
+          <div class="exam-summary-label">Incorrect</div>
+          <div class="exam-summary-value">${incorrect}</div>
+        </div>
+
+        <div class="exam-summary-item">
+          <div class="exam-summary-label">Unattempted</div>
+          <div class="exam-summary-value">${unanswered}</div>
+        </div>
+
+        <div class="exam-summary-item">
+          <div class="exam-summary-label">Time Taken</div>
+          <div class="exam-summary-value">${formatTime(elapsedSeconds)}</div>
+        </div>
+
+        <div class="exam-summary-item">
+          <div class="exam-summary-label">Accuracy</div>
+          <div class="exam-summary-value">${percentage}%</div>
+        </div>
+
+      </div>
+
+      <div class="exam-chart-wrap">
+        <canvas id="examPieChart"></canvas>
+      </div>
 
       <button
         class="primary"
@@ -2816,6 +3013,52 @@ function showExamResult(
     </div>
 
   `;
+
+  if(
+    typeof Chart !== "undefined"
+  ){
+
+    const canvas =
+      document.getElementById(
+        "examPieChart"
+      );
+
+    new Chart(
+      canvas,
+      {
+        type:"pie",
+        data:{
+          labels:[
+            "Correct",
+            "Incorrect",
+            "Unattempted"
+          ],
+          datasets:[
+            {
+              data:[
+                correct,
+                incorrect,
+                unanswered
+              ]
+            }
+          ]
+        },
+        options:{
+          responsive:true,
+          plugins:{
+            legend:{
+              position:"bottom"
+            },
+            title:{
+              display:true,
+              text:"Exam Performance"
+            }
+          }
+        }
+      }
+    );
+
+  }
 
 }
 
