@@ -188,6 +188,20 @@ label{
   position:relative;
 }
 
+.exam-bar-chart-wrap{
+  max-width:760px;
+  margin:25px auto;
+  position:relative;
+}
+
+.exam-chart-title{
+  text-align:center;
+  font-size:17px;
+  font-weight:bold;
+  color:#0b5ed7;
+  margin:20px 0 8px;
+}
+
 @media(max-width:600px){
   .exam-summary-grid{
     grid-template-columns:1fr 1fr;
@@ -750,6 +764,10 @@ src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"
 
 <script
 src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"
+></script>
+
+<script
+src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"
 ></script>
 
 
@@ -1390,13 +1408,17 @@ function renderSearchResult(
         )}
       </div>
 
-      <button
-        id="saveWordBtn"
-        class="save-word-btn"
-        onclick="saveSearchedWord('${escapeJs(record.word)}')"
-      >
-        Save Word
-      </button>
+      ${record.saved ? `
+        <div class="saved-label">✓ Saved in Dictionary</div>
+      ` : `
+        <button
+          id="saveWordBtn"
+          class="save-word-btn"
+          onclick="saveSearchedWord('${escapeJs(record.word)}')"
+        >
+          Save Word
+        </button>
+      `}
 
   `;
 
@@ -2999,8 +3021,14 @@ function showExamResult(
 
       </div>
 
+      <div class="exam-chart-title">Percentage Distribution</div>
       <div class="exam-chart-wrap">
         <canvas id="examPieChart"></canvas>
+      </div>
+
+      <div class="exam-chart-title">Question Performance</div>
+      <div class="exam-bar-chart-wrap">
+        <canvas id="examBarChart"></canvas>
       </div>
 
       <button
@@ -3018,13 +3046,24 @@ function showExamResult(
     typeof Chart !== "undefined"
   ){
 
-    const canvas =
+    const pieCanvas =
       document.getElementById(
         "examPieChart"
       );
 
+    const barCanvas =
+      document.getElementById(
+        "examBarChart"
+      );
+
+    if(
+      typeof ChartDataLabels !== "undefined"
+    ){
+      Chart.register(ChartDataLabels);
+    }
+
     new Chart(
-      canvas,
+      pieCanvas,
       {
         type:"pie",
         data:{
@@ -3052,6 +3091,82 @@ function showExamResult(
             title:{
               display:true,
               text:"Exam Performance"
+            },
+            datalabels:{
+              display:true,
+              formatter:function(value, context){
+                const totalValue =
+                  context.chart.data.datasets[0].data
+                    .reduce(function(a,b){ return a + b; }, 0);
+                if(!totalValue){
+                  return "0%";
+                }
+                return Math.round((value / totalValue) * 100) + "%";
+              },
+              font:{
+                weight:"bold",
+                size:14
+              }
+            }
+          }
+        }
+      }
+    );
+
+    new Chart(
+      barCanvas,
+      {
+        type:"bar",
+        data:{
+          labels:[
+            "Total Questions",
+            "Attempted",
+            "Correct",
+            "Incorrect",
+            "Unattempted"
+          ],
+          datasets:[
+            {
+              label:"Questions",
+              data:[
+                total,
+                attempted,
+                correct,
+                incorrect,
+                unanswered
+              ],
+              borderWidth:1
+            }
+          ]
+        },
+        options:{
+          responsive:true,
+          scales:{
+            y:{
+              beginAtZero:true,
+              ticks:{
+                precision:0
+              }
+            }
+          },
+          plugins:{
+            legend:{
+              display:false
+            },
+            title:{
+              display:true,
+              text:"Question-wise Performance"
+            },
+            datalabels:{
+              display:true,
+              anchor:"end",
+              align:"top",
+              formatter:function(value){
+                return value;
+              },
+              font:{
+                weight:"bold"
+              }
             }
           }
         }
