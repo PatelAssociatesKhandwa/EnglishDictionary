@@ -298,10 +298,24 @@ label{
   color:#0b5ed7;
 }
 
-.meaning{
-  font-size:21px;
-  font-weight:bold;
+.meaning-boxes{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
   margin-top:8px;
+  margin-bottom:12px;
+}
+
+.meaning-box{
+  display:inline-block;
+  background:#f5f8fc;
+  border:1px solid #b9c7dd;
+  border-radius:8px;
+  padding:8px 12px;
+  color:#0b5ed7;
+  font-size:17px;
+  font-weight:bold;
+  line-height:1.4;
 }
 
 .pronunciation{
@@ -773,6 +787,7 @@ Number of Questions
   oninput="clearQuickSelectionOnManualEntry('questionCount')"
 >
 
+<div class="quick-options-label">10 का पहाड़ा — Quick Questions</div>
 <div class="quick-options" id="questionQuickOptions">
   <button type="button" class="quick-option-btn selected" onclick="setExamQuickValue('questionCount',10,this)">10</button>
   <button type="button" class="quick-option-btn" onclick="setExamQuickValue('questionCount',20,this)">20</button>
@@ -784,8 +799,6 @@ Number of Questions
   <button type="button" class="quick-option-btn" onclick="setExamQuickValue('questionCount',80,this)">80</button>
   <button type="button" class="quick-option-btn" onclick="setExamQuickValue('questionCount',90,this)">90</button>
   <button type="button" class="quick-option-btn" onclick="setExamQuickValue('questionCount',100,this)">100</button>
-  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('questionCount',150,this)">150</button>
-  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('questionCount',200,this)">200</button>
 </div>
 
 <label>
@@ -800,6 +813,7 @@ Total Time (Minutes)
   oninput="clearQuickSelectionOnManualEntry('examMinutes')"
 >
 
+<div class="quick-options-label">5 का पहाड़ा — Quick Time (Minutes)</div>
 <div class="quick-options" id="timeQuickOptions">
   <button type="button" class="quick-option-btn selected" onclick="setExamQuickValue('examMinutes',5,this)">5</button>
   <button type="button" class="quick-option-btn" onclick="setExamQuickValue('examMinutes',10,this)">10</button>
@@ -1499,6 +1513,34 @@ function getSentences(record){
 
 
 /* =====================================================
+   MEANING BOXES
+===================================================== */
+
+function renderMeaningBoxes(record){
+
+  const meanings =
+    Array.isArray(record && record.meanings)
+      ? record.meanings
+      : String(record && record.meaning || "")
+          .split(/\s*\/\s*/)
+          .map(function(item){ return item.trim(); })
+          .filter(Boolean);
+
+  if(!meanings.length){
+    return "";
+  }
+
+  return `
+    <div class="meaning-boxes">
+      ${meanings.map(function(meaning){
+        return `<div class="meaning-box">${escapeHtml(meaning)}</div>`;
+      }).join("")}
+    </div>
+  `;
+}
+
+
+/* =====================================================
    SEARCH RESULT
 ===================================================== */
 
@@ -1522,11 +1564,7 @@ function renderSearchResult(
         )}
       </div>
 
-      <div class="meaning">
-        ${escapeHtml(
-          record.meaning
-        )}
-      </div>
+      ${renderMeaningBoxes(record)}
 
       <div class="pronunciation">
         ${escapeHtml(
@@ -1857,11 +1895,7 @@ async function toggleWordDetails(
 
     let html = `
 
-      <div class="details-meaning">
-        ${escapeHtml(
-          record.meaning
-        )}
-      </div>
+      ${renderMeaningBoxes(record)}
 
       <div class="details-pronunciation">
         ${escapeHtml(
