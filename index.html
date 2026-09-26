@@ -10,10 +10,7 @@
   content="width=device-width, initial-scale=1.0"
 >
 
-<title>
-PATEL ASSOCIATES - English Hindi Dictionary
-</title>
-
+<title>PATEL ASSOCIATES - English Hindi Dictionary</title>
 
 <style>
 
@@ -156,114 +153,6 @@ label{
   cursor:not-allowed;
 }
 
-.exam-summary-grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:10px;
-  margin:18px 0;
-}
-
-.exam-summary-item{
-  background:#f5f8fc;
-  border:1px solid #e1e6ef;
-  border-radius:10px;
-  padding:12px;
-}
-
-.exam-summary-label{
-  color:#666;
-  font-size:13px;
-}
-
-.exam-summary-value{
-  margin-top:4px;
-  font-size:21px;
-  font-weight:bold;
-  color:#0b5ed7;
-}
-
-.exam-chart-wrap{
-  max-width:360px;
-  margin:20px auto;
-  position:relative;
-}
-
-
-
-.exam-result-dashboard{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:28px;
-  margin:20px auto 10px;
-  flex-wrap:wrap;
-}
-
-.exam-pie-box{
-  width:220px;
-  max-width:220px;
-  flex:0 0 220px;
-}
-
-.exam-stats-box{
-  width:260px;
-  max-width:100%;
-  display:grid;
-  gap:8px;
-}
-
-.exam-stat-card{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:9px 12px;
-  border-radius:9px;
-  color:white;
-  font-weight:bold;
-  box-shadow:0 2px 6px rgba(0,0,0,.08);
-}
-
-.exam-stat-card .label{
-  font-size:13px;
-}
-
-.exam-stat-card .value{
-  font-size:18px;
-}
-
-.exam-stat-total{background:#0b5ed7;}
-.exam-stat-attempted{background:#6f42c1;}
-.exam-stat-correct{background:#198754;}
-.exam-stat-incorrect{background:#dc3545;}
-.exam-stat-unattempted{background:#fd7e14;}
-
-@media(max-width:600px){
-  .exam-result-dashboard{
-    gap:16px;
-  }
-  .exam-pie-box{
-    width:200px;
-    flex-basis:200px;
-  }
-  .exam-stats-box{
-    width:100%;
-  }
-}
-
-.exam-chart-title{
-  text-align:center;
-  font-size:17px;
-  font-weight:bold;
-  color:#0b5ed7;
-  margin:20px 0 8px;
-}
-
-@media(max-width:600px){
-  .exam-summary-grid{
-    grid-template-columns:1fr 1fr;
-  }
-}
-
 .message{
   margin-top:12px;
   padding:10px;
@@ -289,7 +178,6 @@ label{
   color:#666;
 }
 
-
 /* SEARCH */
 
 .word-title{
@@ -306,7 +194,7 @@ label{
 
 .pronunciation{
   color:#666;
-  margin-top:5px;
+  margin-top:12px;
 }
 
 .example{
@@ -324,7 +212,6 @@ label{
 .example .hindi{
   margin-top:5px;
 }
-
 
 /* DICTIONARY */
 
@@ -399,7 +286,6 @@ label{
   cursor:pointer;
 }
 
-
 /* EXAM */
 
 .exam-timer{
@@ -439,13 +325,6 @@ label{
   font-weight:bold;
   margin:8px 0 15px;
 }
-
-
-/*
-  IMPORTANT:
-  Exam answer colors only.
-  No Wrong Answer / Correct Answer text.
-*/
 
 .answer-option{
   width:100%;
@@ -492,6 +371,78 @@ label{
   display:none !important;
 }
 
+.exam-summary-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  margin:18px 0;
+}
+
+.exam-summary-item{
+  background:#f5f8fc;
+  border:1px solid #e1e6ef;
+  border-radius:10px;
+  padding:12px;
+}
+
+.exam-summary-label{
+  color:#666;
+  font-size:13px;
+}
+
+.exam-summary-value{
+  margin-top:4px;
+  font-size:21px;
+  font-weight:bold;
+  color:#0b5ed7;
+}
+
+.exam-result-dashboard{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:28px;
+  margin:20px auto 10px;
+  flex-wrap:wrap;
+}
+
+.exam-pie-box{
+  width:220px;
+  max-width:220px;
+  flex:0 0 220px;
+}
+
+.exam-stats-box{
+  width:260px;
+  max-width:100%;
+  display:grid;
+  gap:8px;
+}
+
+.exam-stat-card{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:9px 12px;
+  border-radius:9px;
+  color:white;
+  font-weight:bold;
+}
+
+.exam-stat-card .label{
+  font-size:13px;
+}
+
+.exam-stat-card .value{
+  font-size:18px;
+}
+
+.exam-stat-total{background:#0b5ed7;}
+.exam-stat-attempted{background:#6f42c1;}
+.exam-stat-correct{background:#198754;}
+.exam-stat-incorrect{background:#dc3545;}
+.exam-stat-unattempted{background:#fd7e14;}
+
 @media(max-width:600px){
 
   header h1{
@@ -511,31 +462,40 @@ label{
     font-size:13px;
   }
 
+  .exam-result-dashboard{
+    gap:16px;
+  }
+
+  .exam-pie-box{
+    width:200px;
+    flex-basis:200px;
+  }
+
+  .exam-stats-box{
+    width:100%;
+  }
+
+  .exam-summary-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
 }
 
 </style>
 
 </head>
 
-
 <body>
-
 
 <header>
 
-<h1>
-PATEL ASSOCIATES
-</h1>
+<h1>PATEL ASSOCIATES</h1>
 
-<p>
-English → Hindi Personal Dictionary
-</p>
+<p>English → Hindi Personal Dictionary</p>
 
 </header>
 
-
 <div class="container">
-
 
 <div
   id="serverStatus"
@@ -543,7 +503,6 @@ English → Hindi Personal Dictionary
 >
 Connecting to server...
 </div>
-
 
 <div class="tabs">
 
@@ -578,9 +537,7 @@ Excel Import
 </div>
 
 
-<!-- =====================================================
-     SEARCH
-===================================================== -->
+<!-- SEARCH -->
 
 <section
   id="searchTab"
@@ -589,9 +546,7 @@ Excel Import
 
 <div class="card">
 
-<h2>
-Search English Word
-</h2>
+<h2>Search English Word</h2>
 
 <input
   type="text"
@@ -614,17 +569,12 @@ Search
 
 </div>
 
-
-<div
-  id="searchResult"
-></div>
+<div id="searchResult"></div>
 
 </section>
 
 
-<!-- =====================================================
-     DICTIONARY
-===================================================== -->
+<!-- DICTIONARY -->
 
 <section
   id="dictionaryTab"
@@ -633,9 +583,7 @@ Search
 
 <div class="card">
 
-<h2>
-Dictionary List
-</h2>
+<h2>Dictionary List</h2>
 
 <button
   class="primary"
@@ -649,18 +597,14 @@ Refresh Dictionary
   class="message"
 ></div>
 
-<div
-  id="dictionaryList"
-></div>
+<div id="dictionaryList"></div>
 
 </div>
 
 </section>
 
 
-<!-- =====================================================
-     IMPORT
-===================================================== -->
+<!-- IMPORT -->
 
 <section
   id="importTab"
@@ -669,9 +613,7 @@ Refresh Dictionary
 
 <div class="card">
 
-<h2>
-Excel Import
-</h2>
+<h2>Excel Import</h2>
 
 <p>
 Excel / CSV की पहली column में English words रखें।
@@ -695,37 +637,28 @@ Import Words
   class="message"
 ></div>
 
-<div
-  id="importResult"
-></div>
+<div id="importResult"></div>
 
 </div>
 
 </section>
 
 
-<!-- =====================================================
-     EXAM
-===================================================== -->
+<!-- EXAM -->
 
 <section
   id="examTab"
   class="tab-content"
 >
 
-
 <div
   id="examSetup"
   class="card"
 >
 
-<h2>
-Exam Vocabulary Test
-</h2>
+<h2>Exam Vocabulary Test</h2>
 
-<label>
-Number of Questions
-</label>
+<label>Number of Questions</label>
 
 <input
   type="number"
@@ -734,9 +667,7 @@ Number of Questions
   value="10"
 >
 
-<label>
-Total Time (Minutes)
-</label>
+<label>Total Time (Minutes)</label>
 
 <input
   type="number"
@@ -759,36 +690,26 @@ Start Exam
 
 </div>
 
-
 <div
   id="examArea"
   class="hidden"
 >
 
-
 <div class="exam-timer">
 
 <span>
 Total Time:
-<span id="totalTimeDisplay">
-00:00
-</span>
+<span id="totalTimeDisplay">00:00</span>
 </span>
 
 <span>
 Remaining:
-<span id="remainingTimeDisplay">
-00:00
-</span>
+<span id="remainingTimeDisplay">00:00</span>
 </span>
 
 </div>
 
-
-<div
-  id="examQuestions"
-></div>
-
+<div id="examQuestions"></div>
 
 <button
   id="submitExamBtn"
@@ -798,18 +719,14 @@ Remaining:
 Submit Exam
 </button>
 
-
 </div>
-
 
 <div
   id="examResult"
   class="hidden"
 ></div>
 
-
 </section>
-
 
 </div>
 
@@ -829,7 +746,6 @@ src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-p
 
 <script>
 
-
 /* =====================================================
    API URL
 ===================================================== */
@@ -843,15 +759,10 @@ const API_URL =
 ===================================================== */
 
 let examRecords = [];
-
 let examAnswers = {};
-
 let examTimer = null;
-
 let examTotalSeconds = 0;
-
 let examRemainingSeconds = 0;
-
 let examSubmitted = false;
 
 
@@ -868,19 +779,16 @@ async function apiGet(params){
     "&_=" +
     Date.now();
 
-
   const controller =
     new AbortController();
-
 
   const timeout =
     setTimeout(
       function(){
         controller.abort();
       },
-      30000
+      60000
     );
-
 
   try{
 
@@ -891,28 +799,33 @@ async function apiGet(params){
           method:"GET",
           cache:"no-store",
           redirect:"follow",
-          signal:
-            controller.signal
+          signal:controller.signal
         }
       );
 
+    const text =
+      await response.text();
 
     if(!response.ok){
 
       throw new Error(
         "HTTP Error " +
-        response.status
+        response.status +
+        ": " +
+        text.slice(0,300)
       );
 
     }
 
+    if(!text){
 
-    const text =
-      await response.text();
+      throw new Error(
+        "Server returned an empty response."
+      );
 
+    }
 
     let data;
-
 
     try{
 
@@ -921,21 +834,37 @@ async function apiGet(params){
 
     }catch(error){
 
+      console.error(
+        "Raw server response:",
+        text
+      );
+
       throw new Error(
-        "Server returned invalid response."
+        "Server returned invalid JSON. " +
+        text.slice(0,300)
       );
 
     }
 
-
     return data;
 
+  }catch(error){
+
+    if(
+      error.name === "AbortError"
+    ){
+
+      throw new Error(
+        "Server response timed out. Please try again."
+      );
+
+    }
+
+    throw error;
 
   }finally{
 
-    clearTimeout(
-      timeout
-    );
+    clearTimeout(timeout);
 
   }
 
@@ -953,14 +882,12 @@ async function checkServer(){
       "serverStatus"
     );
 
-
   try{
 
     const data =
       await apiGet({
         action:"health"
       });
-
 
     if(data.success){
 
@@ -976,11 +903,11 @@ async function checkServer(){
     }else{
 
       throw new Error(
-        data.message
+        data.message ||
+        "Server check failed."
       );
 
     }
-
 
   }catch(error){
 
@@ -1022,7 +949,6 @@ function openTab(
       }
     );
 
-
   document
     .querySelectorAll(
       ".tab-btn"
@@ -1037,7 +963,6 @@ function openTab(
       }
     );
 
-
   document
     .getElementById(
       tabId
@@ -1046,15 +971,12 @@ function openTab(
       "active"
     );
 
-
   button.classList.add(
     "active"
   );
 
-
   if(
-    tabId ===
-    "dictionaryTab"
+    tabId === "dictionaryTab"
   ){
 
     loadDictionary();
@@ -1075,18 +997,13 @@ function showMessage(
 ){
 
   const el =
-    document.getElementById(
-      id
-    );
-
+    document.getElementById(id);
 
   el.textContent =
     message;
 
-
   el.className =
-    "message " +
-    type;
+    "message " + type;
 
 }
 
@@ -1105,7 +1022,6 @@ function escapeHtml(value){
     return "";
 
   }
-
 
   return String(value)
 
@@ -1146,17 +1062,14 @@ function escapeJs(value){
   return String(
     value || ""
   )
-
   .replace(
     /\\/g,
     "\\\\"
   )
-
   .replace(
     /'/g,
     "\\'"
   )
-
   .replace(
     /"/g,
     '\\"'
@@ -1176,22 +1089,18 @@ async function searchWord(){
       "searchInput"
     );
 
-
   const btn =
     document.getElementById(
       "searchBtn"
     );
-
 
   const result =
     document.getElementById(
       "searchResult"
     );
 
-
   const word =
     input.value.trim();
-
 
   if(!word){
 
@@ -1205,18 +1114,21 @@ async function searchWord(){
 
   }
 
+  btn.disabled = true;
 
-  btn.disabled =
-    true;
+  result.innerHTML = `
 
+    <div class="card loading">
 
-  result.innerHTML =
-    `
-      <div class="card loading">
-        Generating meaning and examples...
-      </div>
-    `;
+      <b>Generating with Gemini AI...</b>
 
+      <br><br>
+
+      Finding all Hindi meanings and creating 2 new example sentences...
+
+    </div>
+
+  `;
 
   try{
 
@@ -1229,21 +1141,31 @@ async function searchWord(){
 
       });
 
-
-    if(!data.success){
+    if(
+      !data ||
+      data.success !== true
+    ){
 
       throw new Error(
-        data.message ||
-        "Search failed."
+        data &&
+        data.message
+          ? data.message
+          : "Search failed."
       );
 
     }
 
+    if(!data.record){
+
+      throw new Error(
+        "Server returned no dictionary record."
+      );
+
+    }
 
     renderSearchResult(
       data.record
     );
-
 
     showMessage(
       "searchMessage",
@@ -1251,28 +1173,52 @@ async function searchWord(){
       "success"
     );
 
-
   }catch(error){
 
-    result.innerHTML =
-      "";
+    console.error(
+      "SEARCH ERROR:",
+      error
+    );
 
+    result.innerHTML = `
+
+      <div class="card">
+
+        <div
+          class="message error"
+          style="display:block"
+        >
+
+          <b>Search Error</b>
+
+          <br><br>
+
+          ${escapeHtml(
+            error.message ||
+            "Unknown error."
+          )}
+
+        </div>
+
+      </div>
+
+    `;
 
     showMessage(
       "searchMessage",
-      error.message,
+      error.message ||
+      "Search failed.",
       "error"
     );
 
-
   }finally{
 
-    btn.disabled =
-      false;
+    btn.disabled = false;
 
   }
 
 }
+
 
 /* =====================================================
    SAVE SEARCHED WORD
@@ -1296,8 +1242,11 @@ async function saveSearchedWord(word){
 
     const data =
       await apiGet({
+
         action:"saveWord",
+
         word:word
+
       });
 
     if(!data.success){
@@ -1310,7 +1259,6 @@ async function saveSearchedWord(word){
     }
 
     btn.textContent = "Saved";
-    btn.disabled = true;
 
     showMessage(
       "searchMessage",
@@ -1321,7 +1269,9 @@ async function saveSearchedWord(word){
   }catch(error){
 
     btn.disabled = false;
-    btn.textContent = "Save Word";
+
+    btn.textContent =
+      "Save Word";
 
     showMessage(
       "searchMessage",
@@ -1347,23 +1297,23 @@ function getSentences(record){
   ){
 
     return record.sentences
+
       .map(
         function(s){
 
           return {
 
             english:
-              s.english ||
-              "",
+              s.english || "",
 
             hindi:
-              s.hindi ||
-              ""
+              s.hindi || ""
 
           };
 
         }
       )
+
       .filter(
         function(s){
 
@@ -1377,23 +1327,18 @@ function getSentences(record){
 
   }
 
-
-  const result =
-    [];
-
+  const result = [];
 
   for(
-    let i=1;
-    i<=5;
+    let i = 1;
+    i <= 5;
     i++
   ){
 
     const en =
       record[
-        "sentence" +
-        i
+        "sentence" + i
       ];
-
 
     const hi =
       record[
@@ -1401,7 +1346,6 @@ function getSentences(record){
         i +
         "Hindi"
       ];
-
 
     if(
       en ||
@@ -1422,8 +1366,61 @@ function getSentences(record){
 
   }
 
-
   return result;
+
+}
+
+
+/* =====================================================
+   MEANINGS
+===================================================== */
+
+function getMeanings(record){
+
+  if(
+    Array.isArray(
+      record.meanings
+    )
+  ){
+
+    return record.meanings
+      .map(
+        function(item){
+          return String(
+            item || ""
+          ).trim();
+        }
+      )
+      .filter(
+        function(item){
+          return Boolean(item);
+        }
+      );
+
+  }
+
+  if(record.meaning){
+
+    return String(
+      record.meaning
+    )
+    .split(
+      /\s*(?:,|;|\||\n|•|·)\s*/
+    )
+    .map(
+      function(item){
+        return item.trim();
+      }
+    )
+    .filter(
+      function(item){
+        return Boolean(item);
+      }
+    );
+
+  }
+
+  return [];
 
 }
 
@@ -1441,43 +1438,140 @@ function renderSearchResult(
       "searchResult"
     );
 
+  const meanings =
+    getMeanings(record);
+
+  let meaningHtml = "";
+
+  if(meanings.length){
+
+    meaningHtml = `
+
+      <div
+        style="
+          margin-top:10px;
+          padding:12px;
+          background:#f5f8fc;
+          border-radius:8px;
+        "
+      >
+
+        <div
+          style="
+            color:#0b5ed7;
+            font-weight:bold;
+            margin-bottom:8px;
+          "
+        >
+          Hindi Meanings
+        </div>
+
+        <ol
+          style="
+            margin:0;
+            padding-left:24px;
+          "
+        >
+
+          ${
+            meanings
+              .map(
+                function(meaning){
+
+                  return `
+
+                    <li
+                      style="
+                        margin-bottom:6px;
+                        font-size:18px;
+                      "
+                    >
+                      ${escapeHtml(
+                        meaning
+                      )}
+                    </li>
+
+                  `;
+
+                }
+              )
+              .join("")
+          }
+
+        </ol>
+
+      </div>
+
+    `;
+
+  }
 
   let html = `
 
     <div class="card">
 
       <div class="word-title">
+
         ${escapeHtml(
           record.word
         )}
+
       </div>
 
-      <div class="meaning">
-        ${escapeHtml(
-          record.meaning
-        )}
-      </div>
+      ${meaningHtml}
 
       <div class="pronunciation">
+
+        <b>Pronunciation:</b>
+
         ${escapeHtml(
-          record.pronunciation
+          record.pronunciation || ""
         )}
+
       </div>
 
-      ${record.saved ? `
-        <div class="saved-label">✓ Saved in Dictionary</div>
-      ` : `
-        <button
-          id="saveWordBtn"
-          class="save-word-btn"
-          onclick="saveSearchedWord('${escapeJs(record.word)}')"
-        >
-          Save Word
-        </button>
-      `}
+      ${
+        record.saved
+          ? `
+
+            <div
+              style="
+                margin-top:10px;
+                color:#198754;
+                font-weight:bold;
+              "
+            >
+              ✓ Saved in Dictionary
+            </div>
+
+          `
+          : `
+
+            <button
+              id="saveWordBtn"
+              class="save-word-btn"
+              onclick="saveSearchedWord(
+                '${escapeJs(record.word)}'
+              )"
+            >
+              Save Word
+            </button>
+
+          `
+      }
+
+      <div
+        style="
+          margin-top:18px;
+          color:#0b5ed7;
+          font-weight:bold;
+          font-size:18px;
+        "
+      >
+        Example Sentences
+      </div>
 
   `;
-
 
   getSentences(record)
     .slice(0,2)
@@ -1489,16 +1583,20 @@ function renderSearchResult(
           <div class="example">
 
             <div class="english">
-              ${index+1}.
+
+              ${index + 1}.
               ${escapeHtml(
                 sentence.english
               )}
+
             </div>
 
             <div class="hindi">
+
               ${escapeHtml(
                 sentence.hindi
               )}
+
             </div>
 
           </div>
@@ -1508,11 +1606,9 @@ function renderSearchResult(
       }
     );
 
-
   html += `
     </div>
   `;
-
 
   result.innerHTML =
     html;
@@ -1531,65 +1627,55 @@ async function loadDictionary(){
       "dictionaryList"
     );
 
+  list.innerHTML = `
 
-  list.innerHTML =
-    `
-      <div class="loading">
-        Loading dictionary...
-      </div>
-    `;
+    <div class="loading">
+      Loading dictionary...
+    </div>
 
+  `;
 
   try{
 
     const data =
       await apiGet({
 
-        action:
-          "allWords"
+        action:"allWords"
 
       });
-
 
     if(!data.success){
 
       throw new Error(
-        data.message
+        data.message ||
+        "Unable to load dictionary."
       );
 
     }
-
 
     const words =
       Array.isArray(
         data.words
       )
-      ? data.words
-      : [];
+        ? data.words
+        : [];
 
+    if(!words.length){
 
-    if(
-      words.length === 0
-    ){
+      list.innerHTML = `
 
-      list.innerHTML =
-        `
-          <div class="loading">
-            No words found.
-          </div>
-        `;
+        <div class="loading">
+          No words found.
+        </div>
+
+      `;
 
       return;
 
     }
 
-
-    const unique =
-      [];
-
-    const seen =
-      new Set();
-
+    const unique = [];
+    const seen = new Set();
 
     words.forEach(
       function(item){
@@ -1597,9 +1683,7 @@ async function loadDictionary(){
         const word =
           String(
             item.word || ""
-          )
-          .trim();
-
+          ).trim();
 
         const key =
           word
@@ -1609,7 +1693,6 @@ async function loadDictionary(){
               " "
             );
 
-
         if(
           word &&
           !seen.has(key)
@@ -1617,15 +1700,9 @@ async function loadDictionary(){
 
           seen.add(key);
 
-
           unique.push({
-
-            id:
-              item.id,
-
-            word:
-              word
-
+            id:item.id,
+            word:word
           });
 
         }
@@ -1633,10 +1710,7 @@ async function loadDictionary(){
       }
     );
 
-
-    list.innerHTML =
-      "";
-
+    list.innerHTML = "";
 
     unique.forEach(
       function(item){
@@ -1646,34 +1720,27 @@ async function loadDictionary(){
             "div"
           );
 
-
         wrapper.className =
           "word-item";
-
 
         const button =
           document.createElement(
             "button"
           );
 
-
         button.className =
           "word-button";
 
-
         button.textContent =
           item.word;
-
 
         const details =
           document.createElement(
             "div"
           );
 
-
         details.className =
           "word-details";
-
 
         button.onclick =
           function(){
@@ -1685,16 +1752,13 @@ async function loadDictionary(){
 
           };
 
-
         wrapper.appendChild(
           button
         );
 
-
         wrapper.appendChild(
           details
         );
-
 
         list.appendChild(
           wrapper
@@ -1703,12 +1767,9 @@ async function loadDictionary(){
       }
     );
 
-
   }catch(error){
 
-    list.innerHTML =
-      "";
-
+    list.innerHTML = "";
 
     showMessage(
       "dictionaryMessage",
@@ -1722,7 +1783,7 @@ async function loadDictionary(){
 
 
 /* =====================================================
-   DICTIONARY WORD DETAILS
+   DICTIONARY DETAILS
 ===================================================== */
 
 async function toggleWordDetails(
@@ -1744,63 +1805,97 @@ async function toggleWordDetails(
 
   }
 
-
   details.classList.add(
     "show"
   );
 
+  details.innerHTML = `
 
-  details.innerHTML =
-    `
-      <div class="loading">
-        Generating meaning and examples...
-      </div>
-    `;
+    <div class="loading">
+      Loading word...
+    </div>
 
+  `;
 
   try{
 
     const data =
       await apiGet({
 
-        action:
-          "search",
+        action:"search",
 
-        word:
-          word
+        word:word
 
       });
-
 
     if(!data.success){
 
       throw new Error(
-        data.message
+        data.message ||
+        "Unable to load word."
       );
 
     }
 
-
     const record =
       data.record;
 
+    const meanings =
+      getMeanings(record);
 
     let html = `
 
-      <div class="details-meaning">
-        ${escapeHtml(
-          record.meaning
-        )}
+      <div
+        class="details-meaning"
+      >
+        Hindi Meanings
       </div>
 
+      <ol
+        style="
+          margin-top:8px;
+          padding-left:24px;
+        "
+      >
+
+        ${
+          meanings
+            .map(
+              function(meaning){
+
+                return `
+
+                  <li
+                    style="
+                      margin-bottom:5px;
+                      font-size:17px;
+                    "
+                  >
+                    ${escapeHtml(
+                      meaning
+                    )}
+                  </li>
+
+                `;
+
+              }
+            )
+            .join("")
+        }
+
+      </ol>
+
       <div class="details-pronunciation">
+
+        <b>Pronunciation:</b>
+
         ${escapeHtml(
-          record.pronunciation
+          record.pronunciation || ""
         )}
+
       </div>
 
     `;
-
 
     getSentences(record)
       .slice(0,2)
@@ -1812,16 +1907,20 @@ async function toggleWordDetails(
             <div class="detail-example">
 
               <div class="en">
-                ${index+1}.
+
+                ${index + 1}.
                 ${escapeHtml(
                   sentence.english
                 )}
+
               </div>
 
               <div class="hi">
+
                 ${escapeHtml(
                   sentence.hindi
                 )}
+
               </div>
 
             </div>
@@ -1830,7 +1929,6 @@ async function toggleWordDetails(
 
         }
       );
-
 
     html += `
 
@@ -1846,24 +1944,26 @@ async function toggleWordDetails(
 
     `;
 
-
     details.innerHTML =
       html;
 
-
   }catch(error){
 
-    details.innerHTML =
-      `
-        <div
-          class="message error"
-          style="display:block"
-        >
-          ${escapeHtml(
-            error.message
-          )}
-        </div>
-      `;
+    details.innerHTML = `
+
+      <div
+        class="message error"
+        style="display:block"
+      >
+
+        ${escapeHtml(
+          error.message ||
+          "Unable to load word."
+        )}
+
+      </div>
+
+    `;
 
   }
 
@@ -1891,42 +1991,35 @@ async function deleteDictionaryWord(
 
   }
 
-
   button.disabled =
     true;
-
 
   try{
 
     const data =
       await apiGet({
 
-        action:
-          "deleteWord",
+        action:"deleteWord",
 
-        word:
-          word
+        word:word
 
       });
-
 
     if(!data.success){
 
       throw new Error(
-        data.message
+        data.message ||
+        "Unable to delete word."
       );
 
     }
 
-
     loadDictionary();
-
 
   }catch(error){
 
     button.disabled =
       false;
-
 
     showMessage(
       "dictionaryMessage",
@@ -1950,10 +2043,8 @@ async function importExcel(){
       "excelFile"
     );
 
-
   const file =
     fileInput.files[0];
-
 
   if(!file){
 
@@ -1967,12 +2058,10 @@ async function importExcel(){
 
   }
 
-
   try{
 
     const buffer =
       await file.arrayBuffer();
-
 
     const workbook =
       XLSX.read(
@@ -1982,12 +2071,10 @@ async function importExcel(){
         }
       );
 
-
     const sheet =
       workbook.Sheets[
         workbook.SheetNames[0]
       ];
-
 
     const rows =
       XLSX.utils.sheet_to_json(
@@ -1998,10 +2085,7 @@ async function importExcel(){
         }
       );
 
-
-    const words =
-      [];
-
+    const words = [];
 
     rows.forEach(
       function(row){
@@ -2016,7 +2100,6 @@ async function importExcel(){
               row[0] || ""
             ).trim();
 
-
           if(word){
 
             words.push(
@@ -2030,7 +2113,6 @@ async function importExcel(){
       }
     );
 
-
     if(
       words.length === 0
     ){
@@ -2041,14 +2123,8 @@ async function importExcel(){
 
     }
 
-
-    const unique =
-      [];
-
-
-    const seen =
-      new Set();
-
+    const unique = [];
+    const seen = new Set();
 
     words.forEach(
       function(word){
@@ -2061,54 +2137,47 @@ async function importExcel(){
               " "
             );
 
-
         if(
           !seen.has(key)
         ){
 
           seen.add(key);
 
-          unique.push(
-            word
-          );
+          unique.push(word);
 
         }
 
       }
     );
 
-
     let added = 0;
-
     let updated = 0;
-
     let alreadyAvailable = 0;
-
     let failed = 0;
 
-
-    const chunkSize =
-      40;
-
+    /*
+     * Gemini generation can take time.
+     * Smaller chunks prevent very long requests.
+     */
+    const chunkSize = 10;
 
     for(
-      let i=0;
-      i<unique.length;
-      i+=chunkSize
+      let i = 0;
+      i < unique.length;
+      i += chunkSize
     ){
 
       const chunk =
         unique.slice(
           i,
-          i+chunkSize
+          i + chunkSize
         );
-
 
       showMessage(
         "importMessage",
         "Importing " +
         Math.min(
-          i+chunk.length,
+          i + chunk.length,
           unique.length
         ) +
         " / " +
@@ -2116,12 +2185,10 @@ async function importExcel(){
         "success"
       );
 
-
       const data =
         await apiGet({
 
-          action:
-            "importWords",
+          action:"importWords",
 
           words:
             JSON.stringify(
@@ -2129,7 +2196,6 @@ async function importExcel(){
             )
 
         });
-
 
       if(data.success){
 
@@ -2162,16 +2228,13 @@ async function importExcel(){
 
     }
 
-
     document.getElementById(
       "importResult"
     ).innerHTML = `
 
       <div class="card">
 
-        <b>
-          Import Complete
-        </b>
+        <b>Import Complete</b>
 
         <p>
           Added:
@@ -2197,13 +2260,11 @@ async function importExcel(){
 
     `;
 
-
     showMessage(
       "importMessage",
       "Excel import completed.",
       "success"
     );
-
 
   }catch(error){
 
@@ -2231,7 +2292,6 @@ async function startExam(){
       ).value
     );
 
-
   const minutes =
     Number(
       document.getElementById(
@@ -2239,10 +2299,7 @@ async function startExam(){
       ).value
     );
 
-
-  if(
-    count < 1
-  ){
+  if(count < 1){
 
     showMessage(
       "examSetupMessage",
@@ -2254,10 +2311,7 @@ async function startExam(){
 
   }
 
-
-  if(
-    minutes < 1
-  ){
+  if(minutes < 1){
 
     showMessage(
       "examSetupMessage",
@@ -2269,40 +2323,34 @@ async function startExam(){
 
   }
 
-
   showMessage(
     "examSetupMessage",
-    "Preparing  exam...",
+    "Preparing exam...",
     "success"
   );
-
 
   try{
 
     const data =
       await apiGet({
 
-        action:
-          "examData",
+        action:"examData",
 
-        count:
-          count
+        count:count
 
       });
-
 
     if(!data.success){
 
       throw new Error(
-        data.message
+        data.message ||
+        "Unable to prepare exam."
       );
 
     }
 
-
     examRecords =
       data.records || [];
-
 
     if(
       examRecords.length === 0
@@ -2314,22 +2362,15 @@ async function startExam(){
 
     }
 
+    examAnswers = {};
 
-    examAnswers =
-      {};
-
-
-    examSubmitted =
-      false;
-
+    examSubmitted = false;
 
     examTotalSeconds =
       minutes * 60;
 
-
     examRemainingSeconds =
       examTotalSeconds;
-
 
     document.getElementById(
       "examSetup"
@@ -2337,13 +2378,11 @@ async function startExam(){
       "hidden"
     );
 
-
     document.getElementById(
       "examResult"
     ).classList.add(
       "hidden"
     );
-
 
     document.getElementById(
       "examArea"
@@ -2351,11 +2390,9 @@ async function startExam(){
       "hidden"
     );
 
-
     renderExam();
 
     startExamTimer();
-
 
   }catch(error){
 
@@ -2381,10 +2418,8 @@ function renderExam(){
       "examQuestions"
     );
 
-
   container.innerHTML =
     "";
-
 
   examRecords.forEach(
     function(record,index){
@@ -2394,20 +2429,13 @@ function renderExam(){
           "div"
         );
 
-
       question.className =
         "exam-question";
-
 
       const correct =
         String(
           record.meaning || ""
         ).trim();
-
-
-      /*
-       * Create options from meanings
-       */
 
       const distractors =
         examRecords
@@ -2420,64 +2448,56 @@ function renderExam(){
 
           .map(
             function(r){
-
               return String(
                 r.meaning || ""
               ).trim();
-
             }
           )
 
           .filter(
             function(value){
-
               return (
                 value &&
-                value.toLowerCase()
-                !==
+                value.toLowerCase() !==
                 correct.toLowerCase()
               );
-
             }
           );
-
 
       const options =
         shuffleArray([
 
           correct,
 
-          ...distractors.slice(
-            0,
-            3
-          )
+          ...distractors.slice(0,3)
 
         ]);
-
 
       question.innerHTML = `
 
         <div class="question-number">
-          Question ${index+1}
+
+          Question ${index + 1}
           of ${examRecords.length}
+
         </div>
 
         <div class="question-word">
+
           ${escapeHtml(
             record.word
           )}
+
         </div>
 
         <div class="options"></div>
 
       `;
 
-
       const optionsContainer =
         question.querySelector(
           ".options"
         );
-
 
       options.forEach(
         function(option){
@@ -2487,14 +2507,11 @@ function renderExam(){
               "button"
             );
 
-
           button.className =
             "answer-option";
 
-
           button.textContent =
             option;
-
 
           button.onclick =
             function(){
@@ -2515,14 +2532,12 @@ function renderExam(){
 
             };
 
-
           optionsContainer.appendChild(
             button
           );
 
         }
       );
-
 
       container.appendChild(
         question
@@ -2535,26 +2550,18 @@ function renderExam(){
 
 
 /* =====================================================
-   ANSWER CLICK
+   ANSWER
 ===================================================== */
 
 function selectExamAnswer(
 
   questionIndex,
-
   selectedAnswer,
-
   correctAnswer,
-
   optionsContainer,
-
   clickedButton
 
 ){
-
-  /*
-   * Prevent second click
-   */
 
   if(
     examAnswers[
@@ -2566,12 +2573,10 @@ function selectExamAnswer(
 
   }
 
-
   examAnswers[
     questionIndex
   ] =
     selectedAnswer;
-
 
   const buttons =
     optionsContainer
@@ -2579,16 +2584,10 @@ function selectExamAnswer(
         ".answer-option"
       );
 
-
-  /*
-   * Disable all options.
-   */
-
   buttons.forEach(
     function(button){
 
-      button.disabled =
-        true;
+      button.disabled = true;
 
       button.classList.add(
         "disabled"
@@ -2597,11 +2596,6 @@ function selectExamAnswer(
     }
   );
 
-
-  /*
-   * Correct answer
-   */
-
   if(
     selectedAnswer
       .toLowerCase() ===
@@ -2609,37 +2603,15 @@ function selectExamAnswer(
       .toLowerCase()
   ){
 
-    /*
-     * ONLY GREEN
-     */
-
     clickedButton.classList.add(
       "correct"
     );
 
-  }
-
-
-  /*
-   * Wrong answer
-   */
-
-  else{
-
-    /*
-     * Selected answer = RED
-     */
+  }else{
 
     clickedButton.classList.add(
       "wrong"
     );
-
-
-    /*
-     * Correct option = GREEN
-     *
-     * No text is displayed.
-     */
 
     buttons.forEach(
       function(button){
@@ -2675,13 +2647,10 @@ function shuffleArray(array){
   const arr =
     [...array];
 
-
   for(
     let i =
       arr.length - 1;
-
     i > 0;
-
     i--
   ){
 
@@ -2690,7 +2659,6 @@ function shuffleArray(array){
         Math.random() *
         (i + 1)
       );
-
 
     const temp =
       arr[i];
@@ -2702,7 +2670,6 @@ function shuffleArray(array){
       temp;
 
   }
-
 
   return arr;
 
@@ -2719,9 +2686,7 @@ function startExamTimer(){
     examTimer
   );
 
-
   updateExamTimer();
-
 
   examTimer =
     setInterval(
@@ -2735,13 +2700,11 @@ function startExamTimer(){
             examTimer
           );
 
-
           autoSubmitExam();
 
           return;
 
         }
-
 
         examRemainingSeconds--;
 
@@ -2754,10 +2717,6 @@ function startExamTimer(){
 }
 
 
-/* =====================================================
-   UPDATE TIMER
-===================================================== */
-
 function updateExamTimer(){
 
   document.getElementById(
@@ -2767,18 +2726,15 @@ function updateExamTimer(){
       examTotalSeconds
     );
 
-
   const remaining =
     document.getElementById(
       "remainingTimeDisplay"
     );
 
-
   remaining.textContent =
     formatTime(
       examRemainingSeconds
     );
-
 
   if(
     examRemainingSeconds <= 60
@@ -2799,10 +2755,6 @@ function updateExamTimer(){
 }
 
 
-/* =====================================================
-   FORMAT TIME
-===================================================== */
-
 function formatTime(
   seconds
 ){
@@ -2812,10 +2764,8 @@ function formatTime(
       seconds / 60
     );
 
-
   const sec =
     seconds % 60;
-
 
   return String(min)
     .padStart(2,"0") +
@@ -2840,15 +2790,11 @@ async function submitExam(){
 
   }
 
-
-  examSubmitted =
-    true;
-
+  examSubmitted = true;
 
   clearInterval(
     examTimer
   );
-
 
   const answers =
     examRecords.map(
@@ -2860,36 +2806,25 @@ async function submitExam(){
             record.word,
 
           answer:
-            examAnswers[index] ||
-            "",
+            examAnswers[index] || "",
 
           correctAnswer:
-            record.meaning ||
-            ""
+            record.meaning || ""
 
         };
 
       }
     );
 
-
-  let correctCount =
-    0;
-
+  let correctCount = 0;
 
   answers.forEach(
     function(item){
 
       if(
-
         item.answer &&
-
-        item.answer
-          .toLowerCase() ===
-
-        item.correctAnswer
-          .toLowerCase()
-
+        item.answer.toLowerCase() ===
+        item.correctAnswer.toLowerCase()
       ){
 
         correctCount++;
@@ -2899,13 +2834,11 @@ async function submitExam(){
     }
   );
 
-
   try{
 
     await apiGet({
 
-      action:
-        "saveExam",
+      action:"saveExam",
 
       answers:
         JSON.stringify(
@@ -2916,12 +2849,9 @@ async function submitExam(){
 
   }catch(error){
 
-    console.error(
-      error
-    );
+    console.error(error);
 
   }
-
 
   const total =
     examRecords.length;
@@ -2991,7 +2921,6 @@ function autoSubmitExam(){
 
   }
 
-
   submitExam();
 
 }
@@ -3013,12 +2942,18 @@ function showExamResult(
 
   document.getElementById(
     "examArea"
-  ).classList.add("hidden");
+  ).classList.add(
+    "hidden"
+  );
 
   const result =
-    document.getElementById("examResult");
+    document.getElementById(
+      "examResult"
+    );
 
-  result.classList.remove("hidden");
+  result.classList.remove(
+    "hidden"
+  );
 
   result.innerHTML = `
 
@@ -3033,34 +2968,75 @@ function showExamResult(
       <div class="exam-result-dashboard">
 
         <div class="exam-pie-box">
-          <canvas id="examPieChart" width="220" height="220"></canvas>
+
+          <canvas
+            id="examPieChart"
+            width="220"
+            height="220"
+          ></canvas>
+
         </div>
 
         <div class="exam-stats-box">
 
           <div class="exam-stat-card exam-stat-total">
-            <span class="label">Total Questions</span>
-            <span class="value">${total}</span>
+
+            <span class="label">
+              Total Questions
+            </span>
+
+            <span class="value">
+              ${total}
+            </span>
+
           </div>
 
           <div class="exam-stat-card exam-stat-attempted">
-            <span class="label">Attempted</span>
-            <span class="value">${attempted}</span>
+
+            <span class="label">
+              Attempted
+            </span>
+
+            <span class="value">
+              ${attempted}
+            </span>
+
           </div>
 
           <div class="exam-stat-card exam-stat-correct">
-            <span class="label">Correct</span>
-            <span class="value">${correct}</span>
+
+            <span class="label">
+              Correct
+            </span>
+
+            <span class="value">
+              ${correct}
+            </span>
+
           </div>
 
           <div class="exam-stat-card exam-stat-incorrect">
-            <span class="label">Incorrect</span>
-            <span class="value">${incorrect}</span>
+
+            <span class="label">
+              Incorrect
+            </span>
+
+            <span class="value">
+              ${incorrect}
+            </span>
+
           </div>
 
           <div class="exam-stat-card exam-stat-unattempted">
-            <span class="label">Unattempted</span>
-            <span class="value">${unanswered}</span>
+
+            <span class="label">
+              Unattempted
+            </span>
+
+            <span class="value">
+              ${unanswered}
+            </span>
+
           </div>
 
         </div>
@@ -3070,13 +3046,27 @@ function showExamResult(
       <div class="exam-summary-grid">
 
         <div class="exam-summary-item">
-          <div class="exam-summary-label">Time Taken</div>
-          <div class="exam-summary-value">${formatTime(elapsedSeconds)}</div>
+
+          <div class="exam-summary-label">
+            Time Taken
+          </div>
+
+          <div class="exam-summary-value">
+            ${formatTime(elapsedSeconds)}
+          </div>
+
         </div>
 
         <div class="exam-summary-item">
-          <div class="exam-summary-label">Accuracy</div>
-          <div class="exam-summary-value">${percentage}%</div>
+
+          <div class="exam-summary-label">
+            Accuracy
+          </div>
+
+          <div class="exam-summary-value">
+            ${percentage}%
+          </div>
+
         </div>
 
       </div>
@@ -3092,25 +3082,40 @@ function showExamResult(
 
   `;
 
-  if(typeof Chart !== "undefined"){
+  if(
+    typeof Chart !== "undefined"
+  ){
 
     const pieCanvas =
-      document.getElementById("examPieChart");
+      document.getElementById(
+        "examPieChart"
+      );
 
-    if(typeof ChartDataLabels !== "undefined"){
-      Chart.register(ChartDataLabels);
+    if(
+      typeof ChartDataLabels !==
+      "undefined"
+    ){
+
+      Chart.register(
+        ChartDataLabels
+      );
+
     }
 
     new Chart(
       pieCanvas,
       {
+
         type:"pie",
+
         data:{
+
           labels:[
             "Correct",
             "Incorrect",
             "Unattempted"
           ],
+
           datasets:[
             {
               data:[
@@ -3120,44 +3125,94 @@ function showExamResult(
               ]
             }
           ]
+
         },
+
         options:{
+
           responsive:true,
+
           maintainAspectRatio:true,
+
           plugins:{
+
             legend:{
               position:"bottom",
+
               labels:{
                 boxWidth:12,
-                font:{size:11}
+
+                font:{
+                  size:11
+                }
               }
             },
+
             title:{
+
               display:true,
-              text:"Exam Performance",
-              font:{size:14}
+
+              text:
+                "Exam Performance",
+
+              font:{
+                size:14
+              }
+
             },
+
             datalabels:{
+
               display:true,
-              formatter:function(value, context){
-                const totalValue =
-                  context.chart.data.datasets[0].data
-                    .reduce(function(a,b){ return a + b; }, 0);
-                if(!totalValue){
-                  return "0%";
-                }
-                return Math.round((value / totalValue) * 100) + "%";
-              },
+
+              formatter:
+                function(
+                  value,
+                  context
+                ){
+
+                  const totalValue =
+                    context
+                      .chart
+                      .data
+                      .datasets[0]
+                      .data
+                      .reduce(
+                        function(a,b){
+                          return a + b;
+                        },
+                        0
+                      );
+
+                  if(!totalValue){
+                    return "0%";
+                  }
+
+                  return Math.round(
+                    (
+                      value /
+                      totalValue
+                    ) * 100
+                  ) + "%";
+
+                },
+
               font:{
                 weight:"bold",
                 size:12
               }
+
             }
+
           }
+
         }
+
       }
     );
+
   }
+
 }
 
 
@@ -3171,18 +3226,11 @@ function resetExam(){
     examTimer
   );
 
+  examRecords = [];
 
-  examRecords =
-    [];
+  examAnswers = {};
 
-
-  examAnswers =
-    {};
-
-
-  examSubmitted =
-    false;
-
+  examSubmitted = false;
 
   document.getElementById(
     "examArea"
@@ -3190,13 +3238,11 @@ function resetExam(){
     "hidden"
   );
 
-
   document.getElementById(
     "examResult"
   ).classList.add(
     "hidden"
   );
-
 
   document.getElementById(
     "examSetup"
@@ -3238,7 +3284,6 @@ document
 checkServer();
 
 </script>
-
 
 </body>
 
