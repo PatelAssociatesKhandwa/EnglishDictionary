@@ -439,6 +439,40 @@ label{
 }
 
 
+.search-input-wrap{
+  position:relative;
+  width:100%;
+}
+
+.search-input-wrap input{
+  width:100%;
+  padding-right:34px;
+  box-sizing:border-box;
+}
+
+.clear-search-btn{
+  position:absolute;
+  right:7px;
+  top:50%;
+  transform:translateY(-50%);
+  width:22px;
+  height:22px;
+  padding:0;
+  border:0;
+  border-radius:50%;
+  background:#e5e7eb;
+  color:#555;
+  font-size:18px;
+  line-height:20px;
+  text-align:center;
+  cursor:pointer;
+  display:none;
+}
+
+.clear-search-btn:hover{
+  background:#d1d5db;
+}
+
 .exam-mode-buttons{
   display:flex;
   gap:5px;
@@ -662,11 +696,26 @@ Excel Import
 Search English Word
 </h2>
 
+<div class="search-input-wrap">
+
 <input
   type="text"
   id="searchInput"
   placeholder="Enter English word..."
 >
+
+<button
+  type="button"
+  id="clearSearchBtn"
+  class="clear-search-btn"
+  onclick="clearSearchInput()"
+  aria-label="Clear search word"
+  title="Clear"
+>
+×
+</button>
+
+</div>
 
 <button
   id="searchBtn"
@@ -797,8 +846,8 @@ Exam Mode
 </label>
 
 <div class="exam-mode-buttons" id="examModeButtons">
-  <button type="button" class="exam-mode-btn selected" onclick="selectExamMode('en-hi', this)">English → Hindi</button>
-  <button type="button" class="exam-mode-btn" onclick="selectExamMode('hi-en', this)">Hindi → English</button>
+  <button type="button" class="exam-mode-btn selected" onclick="selectExamMode('hi-en', this)">Hindi → English</button>
+  <button type="button" class="exam-mode-btn" onclick="selectExamMode('en-hi', this)">English → Hindi</button>
 </div>
 
 <label>
@@ -964,7 +1013,7 @@ let examRemainingSeconds = 0;
 
 let examSubmitted = false;
 
-let examMode = "en-hi";
+let examMode = "hi-en";
 
 
 /* =====================================================
@@ -1274,6 +1323,52 @@ function escapeJs(value){
     '\\"'
   );
 
+}
+
+
+/* =====================================================
+   CLEAR SEARCH INPUT
+===================================================== */
+
+function clearSearchInput(){
+
+  const input = document.getElementById("searchInput");
+  const clearBtn = document.getElementById("clearSearchBtn");
+
+  if(!input) return;
+
+  input.value = "";
+  input.focus();
+
+  if(clearBtn){
+    clearBtn.style.display = "none";
+  }
+
+  const message = document.getElementById("searchMessage");
+  if(message){
+    message.textContent = "";
+    message.className = "message";
+  }
+
+  const result = document.getElementById("searchResult");
+  if(result){
+    result.innerHTML = "";
+  }
+}
+
+
+/* =====================================================
+   SEARCH INPUT CLEAR BUTTON VISIBILITY
+===================================================== */
+
+function updateSearchClearButton(){
+
+  const input = document.getElementById("searchInput");
+  const clearBtn = document.getElementById("clearSearchBtn");
+
+  if(!input || !clearBtn) return;
+
+  clearBtn.style.display = input.value ? "block" : "none";
 }
 
 
@@ -3257,6 +3352,18 @@ function resetExam(){
 /* =====================================================
    ENTER KEY
 ===================================================== */
+
+document
+  .getElementById(
+    "searchInput"
+  )
+  .addEventListener(
+    "input",
+    function(){
+      updateSearchClearButton();
+    }
+  );
+
 
 document
   .getElementById(
