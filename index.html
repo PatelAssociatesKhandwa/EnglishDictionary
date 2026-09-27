@@ -2371,7 +2371,7 @@ function clearQuickSelectionOnManualEntry(inputId){
    START EXAM
 ===================================================== */
 
-async function selectExamMode(mode, button){
+function selectExamMode(mode, button){
   examMode = mode === "hi-en" ? "hi-en" : "en-hi";
   document.querySelectorAll("#examModeButtons .exam-mode-btn").forEach(function(btn){
     btn.classList.remove("selected");
@@ -2379,7 +2379,7 @@ async function selectExamMode(mode, button){
   if(button) button.classList.add("selected");
 }
 
-function startExam(){
+async function startExam(){
 
   const count =
     Number(
