@@ -438,6 +438,37 @@ label{
   border-color:#0b5ed7;
 }
 
+
+.exam-mode-buttons{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin:8px 0 16px;
+}
+
+.exam-mode-btn{
+  flex:1 1 220px;
+  min-height:46px;
+  padding:12px 14px;
+  border:2px solid #b9c7dd;
+  border-radius:8px;
+  background:#f5f8fc;
+  color:#0b5ed7;
+  font-weight:bold;
+  font-size:16px;
+  cursor:pointer;
+}
+
+.exam-mode-btn:hover{
+  background:#e7f0ff;
+}
+
+.exam-mode-btn.selected{
+  background:#0b5ed7;
+  color:white;
+  border-color:#0b5ed7;
+}
+
 /* EXAM */
 
 .exam-timer{
@@ -762,6 +793,15 @@ Exam Vocabulary Test
 </h2>
 
 <label>
+Exam Mode
+</label>
+
+<div class="exam-mode-buttons" id="examModeButtons">
+  <button type="button" class="exam-mode-btn selected" onclick="selectExamMode('en-hi', this)">English → Hindi</button>
+  <button type="button" class="exam-mode-btn" onclick="selectExamMode('hi-en', this)">Hindi → English</button>
+</div>
+
+<label>
 Number of Questions
 </label>
 
@@ -923,6 +963,8 @@ let examTotalSeconds = 0;
 let examRemainingSeconds = 0;
 
 let examSubmitted = false;
+
+let examMode = "en-hi";
 
 
 /* =====================================================
@@ -2329,7 +2371,15 @@ function clearQuickSelectionOnManualEntry(inputId){
    START EXAM
 ===================================================== */
 
-async function startExam(){
+async function selectExamMode(mode, button){
+  examMode = mode === "hi-en" ? "hi-en" : "en-hi";
+  document.querySelectorAll("#examModeButtons .exam-mode-btn").forEach(function(btn){
+    btn.classList.remove("selected");
+  });
+  if(button) button.classList.add("selected");
+}
+
+function startExam(){
 
   const count =
     Number(
@@ -2338,7 +2388,6 @@ async function startExam(){
       ).value
     );
 
-
   const minutes =
     Number(
       document.getElementById(
@@ -2346,10 +2395,7 @@ async function startExam(){
       ).value
     );
 
-
-  if(
-    count < 1
-  ){
+  if(count < 1){
 
     showMessage(
       "examSetupMessage",
@@ -2358,13 +2404,9 @@ async function startExam(){
     );
 
     return;
-
   }
 
-
-  if(
-    minutes < 1
-  ){
+  if(minutes < 1){
 
     showMessage(
       "examSetupMessage",
@@ -2373,96 +2415,58 @@ async function startExam(){
     );
 
     return;
-
   }
-
 
   showMessage(
     "examSetupMessage",
-    "Preparing  exam...",
+    "Preparing exam...",
     "success"
   );
-
 
   try{
 
     const data =
       await apiGet({
-
-        action:
-          "examData",
-
-        count:
-          count
-
+        action:"examData",
+        count:count
       });
 
-
     if(!data.success){
-
-      throw new Error(
-        data.message
-      );
-
+      throw new Error(data.message);
     }
-
 
     examRecords =
       data.records || [];
 
-
-    if(
-      examRecords.length === 0
-    ){
-
+    if(examRecords.length === 0){
       throw new Error(
         "No dictionary words available."
       );
-
     }
 
-
-    examAnswers =
-      {};
-
-
-    examSubmitted =
-      false;
-
+    examAnswers = {};
+    examSubmitted = false;
 
     examTotalSeconds =
       minutes * 60;
 
-
     examRemainingSeconds =
       examTotalSeconds;
 
-
     document.getElementById(
       "examSetup"
-    ).classList.add(
-      "hidden"
-    );
-
+    ).classList.add("hidden");
 
     document.getElementById(
       "examResult"
-    ).classList.add(
-      "hidden"
-    );
-
+    ).classList.add("hidden");
 
     document.getElementById(
       "examArea"
-    ).classList.remove(
-      "hidden"
-    );
-
+    ).classList.remove("hidden");
 
     renderExam();
-
     startExamTimer();
-
 
   }catch(error){
 
@@ -2484,83 +2488,80 @@ async function startExam(){
 function renderExam(){
 
   const container =
-    document.getElementById(
-      "examQuestions"
-    );
+    document.getElementById("examQuestions");
 
+  container.innerHTML = "";
 
-  container.innerHTML =
-    "";
-
+  const isHindiToEnglish =
+    examMode === "hi-en";
 
   examRecords.forEach(
     function(record,index){
 
       const question =
-        document.createElement(
-          "div"
-        );
-
+        document.createElement("div");
 
       question.className =
         "exam-question";
 
+      /*
+       * English → Hindi:
+       *   Question = English word
+       *   Answer   = Hindi meaning
+       *
+       * Hindi → English:
+       *   Question = Hindi meaning
+       *   Answer   = English word
+       */
+      const questionText =
+        isHindiToEnglish
+          ? String(record.meaning || "").trim()
+          : String(record.word || "").trim();
 
       const correct =
-        String(
-          record.meaning || ""
-        ).trim();
-
-
-      /*
-       * Create options from meanings
-       */
+        isHindiToEnglish
+          ? String(record.word || "").trim()
+          : String(record.meaning || "").trim();
 
       const distractors =
         examRecords
+          .filter(function(_,i){
+            return i !== index;
+          })
+          .map(function(r){
+            return isHindiToEnglish
+              ? String(r.word || "").trim()
+              : String(r.meaning || "").trim();
+          })
+          .filter(function(value){
+            return (
+              value &&
+              value.toLowerCase() !==
+              correct.toLowerCase()
+            );
+          });
 
-          .filter(
-            function(_,i){
-              return i !== index;
-            }
-          )
+      const uniqueDistractors = [];
+      const seen = {};
 
-          .map(
-            function(r){
-
-              return String(
-                r.meaning || ""
-              ).trim();
-
-            }
-          )
-
-          .filter(
-            function(value){
-
-              return (
-                value &&
-                value.toLowerCase()
-                !==
-                correct.toLowerCase()
-              );
-
-            }
-          );
-
+      distractors.forEach(function(value){
+        const key = value.toLowerCase();
+        if(!seen[key]){
+          seen[key] = true;
+          uniqueDistractors.push(value);
+        }
+      });
 
       const options =
         shuffleArray([
-
           correct,
-
-          ...distractors.slice(
-            0,
-            3
-          )
-
+          ...uniqueDistractors.slice(0,3)
         ]);
 
+      const modeLabel =
+        isHindiToEnglish
+          ? "Hindi → English"
+          : "English → Hindi";
 
       question.innerHTML = `
 
@@ -2569,71 +2570,52 @@ function renderExam(){
           of ${examRecords.length}
         </div>
 
+        <div class="question-number">
+          ${modeLabel}
+        </div>
+
         <div class="question-word">
-          ${escapeHtml(
-            record.word
-          )}
+          ${escapeHtml(questionText)}
         </div>
 
         <div class="options"></div>
 
       `;
 
-
       const optionsContainer =
-        question.querySelector(
-          ".options"
-        );
-
+        question.querySelector(".options");
 
       options.forEach(
         function(option){
 
           const button =
-            document.createElement(
-              "button"
-            );
-
+            document.createElement("button");
 
           button.className =
             "answer-option";
 
-
           button.textContent =
             option;
-
 
           button.onclick =
             function(){
 
               selectExamAnswer(
-
                 index,
-
                 option,
-
                 correct,
-
                 optionsContainer,
-
                 button
-
               );
 
             };
 
-
-          optionsContainer.appendChild(
-            button
-          );
+          optionsContainer.appendChild(button);
 
         }
       );
 
-
-      container.appendChild(
-        question
-      );
+      container.appendChild(question);
 
     }
   );
@@ -2939,108 +2921,69 @@ function formatTime(
 
 async function submitExam(){
 
-  if(
-    examSubmitted
-  ){
-
+  if(examSubmitted){
     return;
-
   }
 
+  examSubmitted = true;
 
-  examSubmitted =
-    true;
+  clearInterval(examTimer);
 
-
-  clearInterval(
-    examTimer
-  );
-
+  const isHindiToEnglish =
+    examMode === "hi-en";
 
   const answers =
     examRecords.map(
       function(record,index){
 
+        const correctAnswer =
+          isHindiToEnglish
+            ? String(record.word || "").trim()
+            : String(record.meaning || "").trim();
+
         return {
-
-          word:
-            record.word,
-
-          answer:
-            examAnswers[index] ||
-            "",
-
-          correctAnswer:
-            record.meaning ||
-            ""
-
+          word:record.word,
+          answer:examAnswers[index] || "",
+          correctAnswer:correctAnswer
         };
 
       }
     );
 
-
-  let correctCount =
-    0;
-
+  let correctCount = 0;
 
   answers.forEach(
     function(item){
 
       if(
-
         item.answer &&
-
-        item.answer
-          .toLowerCase() ===
-
-        item.correctAnswer
-          .toLowerCase()
-
+        item.answer.toLowerCase() ===
+        item.correctAnswer.toLowerCase()
       ){
-
         correctCount++;
-
       }
 
     }
   );
 
-
   try{
 
     await apiGet({
-
-      action:
-        "saveExam",
-
-      answers:
-        JSON.stringify(
-          answers
-        )
-
+      action:"saveExam",
+      answers:JSON.stringify(answers)
     });
 
   }catch(error){
-
-    console.error(
-      error
-    );
-
+    console.error(error);
   }
-
 
   const total =
     examRecords.length;
 
   const attempted =
-    answers.filter(
-      function(item){
-        return Boolean(
-          item.answer
-        );
-      }
-    ).length;
+    answers.filter(function(item){
+      return Boolean(item.answer);
+    }).length;
 
   const incorrect =
     Math.max(
@@ -3064,10 +3007,7 @@ async function submitExam(){
   const percentage =
     attempted
       ? Math.round(
-          (
-            correctCount /
-            attempted
-          ) * 100
+          (correctCount / attempted) * 100
         )
       : 0;
 
