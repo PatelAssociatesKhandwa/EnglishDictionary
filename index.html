@@ -512,37 +512,32 @@ label{
 }
 
 
+/* COMPACT EXAM MODE BUTTONS */
 .exam-mode-buttons{
   display:flex;
-  gap:10px;
   flex-wrap:wrap;
-  margin:8px 0 16px;
+  gap:4px;
+  margin:5px 0 10px;
 }
 
 .exam-mode-btn{
-  flex:1 1 220px;
-  min-height:46px;
-  padding:12px 14px;
-  border:2px solid #b9c7dd;
-  border-radius:8px;
+  flex:0 0 auto;
+  width:auto;
+  min-width:0;
+  min-height:0;
+  padding:4px 7px;
+  border:1px solid #b9c7dd;
+  border-radius:5px;
   background:#f5f8fc;
   color:#0b5ed7;
+  font-size:11px;
+  line-height:1.15;
   font-weight:bold;
-  font-size:16px;
   cursor:pointer;
 }
 
-.exam-mode-btn:hover{
-  background:#e7f0ff;
-}
-
-.exam-mode-btn.selected{
-  background:#0b5ed7;
-  color:white;
-  border-color:#0b5ed7;
-}
-
-
+.exam-mode-btn:hover{background:#e7f0ff;}
+.exam-mode-btn.selected{background:#0b5ed7;color:white;border-color:#0b5ed7;}
 
 /* SEARCH CLEAR */
 .search-input-wrap{
@@ -628,16 +623,19 @@ label{
 .exam-live-status{
   display:flex;
   flex-wrap:wrap;
-  gap:7px;
+  gap:6px;
   align-items:center;
-  font-size:11px;
-  font-weight:bold;
-  color:#555;
+  font-size:12px;
+  font-weight:700;
 }
 
 .exam-live-status span{
   white-space:nowrap;
 }
+
+#examQuestionLive{color:#0b5ed7;}
+#examAttemptedLive{color:#198754;}
+#examRemainingLive{color:#dc3545;}
 
 /* EXAM */
 
@@ -1078,11 +1076,11 @@ Start Exam
 <div class="exam-timer">
 
 <div class="exam-live-status">
-  <span id="examQuestionLive">Q 1/0</span>
+  <span id="examQuestionLive">Question 1/0</span>
   <span>|</span>
-  <span id="examAttemptedLive">A 0</span>
+  <span id="examAttemptedLive">Attempted 0</span>
   <span>|</span>
-  <span id="examRemainingLive">R 0</span>
+  <span id="examRemainingLive">Remaining 0</span>
 </div>
 
 <div class="exam-live-status">
@@ -3093,10 +3091,10 @@ function updateExamLiveStatus(lastQuestionIndex){
 
   if (qEl) {
     const current = total ? Math.min(total, Math.max(1, Number(lastQuestionIndex || 0) + 1)) : 0;
-    qEl.textContent = "Q " + current + "/" + total;
+    qEl.textContent = "Question " + current + "/" + total;
   }
-  if (aEl) aEl.textContent = "A " + attempted;
-  if (rEl) rEl.textContent = "R " + remaining;
+  if (aEl) aEl.textContent = "Attempted " + attempted;
+  if (rEl) rEl.textContent = "Remaining " + remaining;
 }
 
 
