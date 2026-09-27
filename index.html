@@ -340,15 +340,88 @@ label{
   width:100%;
   border:none;
   background:white;
-  padding:14px;
+  padding:11px 48px 11px 14px;
   text-align:left;
   font-size:17px;
   font-weight:bold;
   cursor:pointer;
 }
 
+.word-edit-btn{
+  position:absolute;
+  right:7px;
+  top:7px;
+  width:28px;
+  height:28px;
+  padding:0;
+  border:1px solid #c7d2e2;
+  border-radius:5px;
+  background:#f5f8fc;
+  color:#0b5ed7;
+  font-size:14px;
+  font-weight:bold;
+  line-height:26px;
+  text-align:center;
+  cursor:pointer;
+}
+
+.word-edit-btn:hover{
+  background:#e7f0ff;
+}
+
+.word-item{
+  position:relative;
+}
+
 .word-button:hover{
   background:#f1f6ff;
+}
+
+.word-button.offensive-word{
+  color:#d00000;
+}
+
+.dictionary-search-wrap{
+  position:relative;
+  width:100%;
+  margin:10px 0;
+}
+
+.dictionary-search-wrap input{
+  width:100%;
+  box-sizing:border-box;
+  padding:8px 34px 8px 10px;
+  border:1px solid #c7d2e2;
+  border-radius:6px;
+  font-size:14px;
+}
+
+.dictionary-search-clear{
+  position:absolute;
+  right:6px;
+  top:50%;
+  transform:translateY(-50%);
+  width:23px;
+  height:23px;
+  border:0;
+  border-radius:50%;
+  background:#e9edf3;
+  color:#555;
+  font-size:16px;
+  line-height:23px;
+  padding:0;
+  cursor:pointer;
+  display:none;
+}
+
+.dictionary-search-clear.show{
+  display:block;
+}
+
+.dictionary-search-count{
+  font-size:11px;
+  color:#777;
+  margin:-4px 0 8px;
 }
 
 .word-details{
@@ -412,16 +485,16 @@ label{
 .quick-options{
   display:flex;
   flex-wrap:wrap;
-  gap:5px;
-  margin:5px 0 10px;
+  gap:7px;
+  margin:7px 0 12px;
 }
 
 .quick-option-btn{
   width:auto;
-  min-width:38px;
-  padding:5px 8px;
+  min-width:48px;
+  padding:8px 10px;
   border:1px solid #b9c7dd;
-  border-radius:5px;
+  border-radius:7px;
   background:#f5f8fc;
   color:#0b5ed7;
   font-weight:bold;
@@ -439,57 +512,23 @@ label{
 }
 
 
-.search-input-wrap{
-  position:relative;
-  width:100%;
-}
-
-.search-input-wrap input{
-  width:100%;
-  padding-right:34px;
-  box-sizing:border-box;
-}
-
-.clear-search-btn{
-  position:absolute;
-  right:7px;
-  top:50%;
-  transform:translateY(-50%);
-  width:22px;
-  height:22px;
-  padding:0;
-  border:0;
-  border-radius:50%;
-  background:#e5e7eb;
-  color:#555;
-  font-size:18px;
-  line-height:20px;
-  text-align:center;
-  cursor:pointer;
-  display:none;
-}
-
-.clear-search-btn:hover{
-  background:#d1d5db;
-}
-
 .exam-mode-buttons{
   display:flex;
-  gap:5px;
+  gap:10px;
   flex-wrap:wrap;
-  margin:5px 0 10px;
+  margin:8px 0 16px;
 }
 
 .exam-mode-btn{
-  flex:0 0 auto;
-  min-height:32px;
-  padding:5px 9px;
-  border:1px solid #b9c7dd;
-  border-radius:5px;
+  flex:1 1 220px;
+  min-height:46px;
+  padding:12px 14px;
+  border:2px solid #b9c7dd;
+  border-radius:8px;
   background:#f5f8fc;
   color:#0b5ed7;
   font-weight:bold;
-  font-size:12px;
+  font-size:16px;
   cursor:pointer;
 }
 
@@ -501,6 +540,103 @@ label{
   background:#0b5ed7;
   color:white;
   border-color:#0b5ed7;
+}
+
+
+
+/* SEARCH CLEAR */
+.search-input-wrap{
+  position:relative;
+  width:100%;
+}
+
+.search-input-wrap input{
+  width:100%;
+  padding-right:38px;
+  box-sizing:border-box;
+}
+
+.search-clear-btn{
+  position:absolute;
+  right:7px;
+  top:50%;
+  transform:translateY(-50%);
+  width:24px;
+  height:24px;
+  padding:0;
+  border:0;
+  border-radius:50%;
+  background:#e9edf3;
+  color:#555;
+  font-size:17px;
+  line-height:24px;
+  cursor:pointer;
+  display:none;
+}
+
+.search-clear-btn.show{
+  display:block;
+}
+
+/* COMPACT EXAM CONTROLS */
+.exam-mode-buttons{
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+  margin:5px 0 10px;
+}
+
+.exam-mode-btn{
+  width:auto;
+  min-width:0;
+  padding:5px 8px;
+  border:1px solid #b9c7dd;
+  border-radius:5px;
+  background:#f5f8fc;
+  color:#0b5ed7;
+  font-size:12px;
+  font-weight:bold;
+  line-height:1.2;
+  cursor:pointer;
+}
+
+.exam-mode-btn:hover{background:#e7f0ff;}
+.exam-mode-btn.selected{background:#0b5ed7;color:white;border-color:#0b5ed7;}
+
+.quick-options{
+  display:flex;
+  flex-wrap:wrap;
+  gap:4px;
+  margin:5px 0 10px;
+}
+
+.quick-option-btn{
+  min-width:32px;
+  width:auto;
+  padding:4px 7px;
+  border:1px solid #b9c7dd;
+  border-radius:5px;
+  background:#f5f8fc;
+  color:#0b5ed7;
+  font-size:12px;
+  line-height:1.15;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+/* LIVE EXAM STATUS */
+.exam-live-status{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  align-items:center;
+  font-size:11px;
+  font-weight:bold;
+  color:#555;
+}
+
+.exam-live-status span{
+  white-space:nowrap;
 }
 
 /* EXAM */
@@ -697,24 +833,20 @@ Search English Word
 </h2>
 
 <div class="search-input-wrap">
-
 <input
   type="text"
   id="searchInput"
   placeholder="Enter English word..."
+  oninput="toggleSearchClear()"
 >
-
 <button
   type="button"
-  id="clearSearchBtn"
-  class="clear-search-btn"
-  onclick="clearSearchInput()"
-  aria-label="Clear search word"
+  id="searchClearBtn"
+  class="search-clear-btn"
   title="Clear"
->
-×
-</button>
-
+  aria-label="Clear search"
+  onclick="clearSearchInput()"
+>×</button>
 </div>
 
 <button
@@ -754,6 +886,24 @@ Search
 <h2>
 Dictionary List
 </h2>
+
+<div class="dictionary-search-wrap">
+  <input
+    type="text"
+    id="dictionarySearchInput"
+    placeholder="Search Dictionary word..."
+    oninput="filterDictionaryWords()"
+  >
+  <button
+    type="button"
+    id="dictionarySearchClear"
+    class="dictionary-search-clear"
+    title="Clear"
+    aria-label="Clear Dictionary search"
+    onclick="clearDictionarySearch()"
+  >×</button>
+</div>
+<div id="dictionarySearchCount" class="dictionary-search-count"></div>
 
 <button
   class="primary"
@@ -846,8 +996,8 @@ Exam Mode
 </label>
 
 <div class="exam-mode-buttons" id="examModeButtons">
-  <button type="button" class="exam-mode-btn selected" onclick="selectExamMode('hi-en', this)">Hindi → English</button>
   <button type="button" class="exam-mode-btn" onclick="selectExamMode('en-hi', this)">English → Hindi</button>
+  <button type="button" class="exam-mode-btn selected" onclick="selectExamMode('hi-en', this)">Hindi → English</button>
 </div>
 
 <label>
@@ -927,19 +1077,19 @@ Start Exam
 
 <div class="exam-timer">
 
-<span>
-Total Time:
-<span id="totalTimeDisplay">
-00:00
-</span>
-</span>
+<div class="exam-live-status">
+  <span id="examQuestionLive">Q 1/0</span>
+  <span>|</span>
+  <span id="examAttemptedLive">A 0</span>
+  <span>|</span>
+  <span id="examRemainingLive">R 0</span>
+</div>
 
-<span>
-Remaining:
-<span id="remainingTimeDisplay">
-00:00
-</span>
-</span>
+<div class="exam-live-status">
+  <span id="totalTimeDisplay">00:00</span>
+  <span>|</span>
+  <span id="remainingTimeDisplay">00:00</span>
+</div>
 
 </div>
 
@@ -1014,6 +1164,8 @@ let examRemainingSeconds = 0;
 let examSubmitted = false;
 
 let examMode = "hi-en";
+
+let dictionaryWordsCache = [];
 
 
 /* =====================================================
@@ -1327,48 +1479,25 @@ function escapeJs(value){
 
 
 /* =====================================================
-   CLEAR SEARCH INPUT
+   SEARCH CLEAR
 ===================================================== */
 
-function clearSearchInput(){
-
+function toggleSearchClear(){
   const input = document.getElementById("searchInput");
-  const clearBtn = document.getElementById("clearSearchBtn");
-
-  if(!input) return;
-
-  input.value = "";
-  input.focus();
-
-  if(clearBtn){
-    clearBtn.style.display = "none";
-  }
-
-  const message = document.getElementById("searchMessage");
-  if(message){
-    message.textContent = "";
-    message.className = "message";
-  }
-
-  const result = document.getElementById("searchResult");
-  if(result){
-    result.innerHTML = "";
-  }
+  const btn = document.getElementById("searchClearBtn");
+  if (!input || !btn) return;
+  btn.classList.toggle("show", Boolean(input.value));
 }
 
-
-/* =====================================================
-   SEARCH INPUT CLEAR BUTTON VISIBILITY
-===================================================== */
-
-function updateSearchClearButton(){
-
+function clearSearchInput(){
   const input = document.getElementById("searchInput");
-  const clearBtn = document.getElementById("clearSearchBtn");
-
-  if(!input || !clearBtn) return;
-
-  clearBtn.style.display = input.value ? "block" : "none";
+  const btn = document.getElementById("searchClearBtn");
+  const result = document.getElementById("searchResult");
+  const message = document.getElementById("searchMessage");
+  if (input) { input.value = ""; input.focus(); }
+  if (btn) btn.classList.remove("show");
+  if (result) result.innerHTML = "";
+  if (message) { message.textContent = ""; message.className = "message"; }
 }
 
 
@@ -1438,6 +1567,10 @@ async function searchWord(){
 
 
     if(!data.success){
+
+      if (data.offensive) {
+        alert(data.message || "This word is not allowed because it is offensive.");
+      }
 
       throw new Error(
         data.message ||
@@ -1831,7 +1964,10 @@ async function loadDictionary(){
               item.id,
 
             word:
-              word
+              word,
+
+            offensive:
+              Boolean(item.offensive)
 
           });
 
@@ -1841,75 +1977,9 @@ async function loadDictionary(){
     );
 
 
-    list.innerHTML =
-      "";
-
-
-    unique.forEach(
-      function(item){
-
-        const wrapper =
-          document.createElement(
-            "div"
-          );
-
-
-        wrapper.className =
-          "word-item";
-
-
-        const button =
-          document.createElement(
-            "button"
-          );
-
-
-        button.className =
-          "word-button";
-
-
-        button.textContent =
-          item.word;
-
-
-        const details =
-          document.createElement(
-            "div"
-          );
-
-
-        details.className =
-          "word-details";
-
-
-        button.onclick =
-          function(){
-
-            toggleWordDetails(
-              item.word,
-              details
-            );
-
-          };
-
-
-        wrapper.appendChild(
-          button
-        );
-
-
-        wrapper.appendChild(
-          details
-        );
-
-
-        list.appendChild(
-          wrapper
-        );
-
-      }
-    );
-
+    dictionaryWordsCache = unique;
+    renderDictionaryWords(dictionaryWordsCache);
+    updateDictionarySearchCount(dictionaryWordsCache.length, dictionaryWordsCache.length);
 
   }catch(error){
 
@@ -1925,6 +1995,83 @@ async function loadDictionary(){
 
   }
 
+}
+
+
+function renderDictionaryWords(words){
+  const list = document.getElementById("dictionaryList");
+  if (!list) return;
+
+  if (!words.length) {
+    list.innerHTML = '<div class="loading">No matching words found.</div>';
+    return;
+  }
+
+  list.innerHTML = "";
+
+  words.forEach(function(item){
+    const wrapper = document.createElement("div");
+    wrapper.className = "word-item";
+
+    const button = document.createElement("button");
+    button.className = "word-button" + (item.offensive ? " offensive-word" : "");
+    button.textContent = item.word;
+    if (item.offensive) button.title = "Offensive word";
+
+    const details = document.createElement("div");
+    details.className = "word-details";
+
+    button.onclick = function(){
+      toggleWordDetails(item.word, details);
+    };
+
+    wrapper.appendChild(button);
+
+    const editButton = document.createElement("button");
+    editButton.type = "button";
+    editButton.className = "word-edit-btn";
+    editButton.textContent = "✎";
+    editButton.title = "Edit spelling";
+    editButton.setAttribute("aria-label", "Edit spelling");
+    editButton.onclick = function(event){
+      event.stopPropagation();
+      editDictionaryWord(item.word);
+    };
+    wrapper.appendChild(editButton);
+    wrapper.appendChild(details);
+    list.appendChild(wrapper);
+  });
+}
+
+function filterDictionaryWords(){
+  const input = document.getElementById("dictionarySearchInput");
+  const clear = document.getElementById("dictionarySearchClear");
+  const query = input ? input.value.trim().toLowerCase() : "";
+  if (clear) clear.classList.toggle("show", Boolean(query));
+
+  const filtered = !query
+    ? dictionaryWordsCache
+    : dictionaryWordsCache.filter(function(item){
+        return String(item.word || "").toLowerCase().includes(query);
+      });
+
+  renderDictionaryWords(filtered);
+  updateDictionarySearchCount(filtered.length, dictionaryWordsCache.length);
+}
+
+function clearDictionarySearch(){
+  const input = document.getElementById("dictionarySearchInput");
+  const clear = document.getElementById("dictionarySearchClear");
+  if (input) { input.value = ""; input.focus(); }
+  if (clear) clear.classList.remove("show");
+  renderDictionaryWords(dictionaryWordsCache);
+  updateDictionarySearchCount(dictionaryWordsCache.length, dictionaryWordsCache.length);
+}
+
+function updateDictionarySearchCount(found, total){
+  const el = document.getElementById("dictionarySearchCount");
+  if (!el) return;
+  el.textContent = total ? (found + " / " + total + " words") : "";
 }
 
 
@@ -2074,6 +2221,41 @@ async function toggleWordDetails(
 
   }
 
+}
+
+
+/* =====================================================
+   EDIT DICTIONARY WORD
+===================================================== */
+
+async function editDictionaryWord(oldWord){
+  const newWord = prompt("Correct spelling:", oldWord);
+  if (newWord === null) return;
+
+  const cleaned = newWord.trim().replace(/\s+/g, " ");
+  if (!cleaned) {
+    alert("Word cannot be empty.");
+    return;
+  }
+
+  if (cleaned.toLowerCase() === oldWord.toLowerCase()) return;
+
+  try{
+    const data = await apiGet({
+      action:"editWord",
+      oldWord:oldWord,
+      newWord:cleaned
+    });
+
+    if(!data.success){
+      throw new Error(data.message || "Unable to update spelling.");
+    }
+
+    loadDictionary();
+    showMessage("dictionaryMessage", "Spelling updated successfully.", "success");
+  }catch(error){
+    showMessage("dictionaryMessage", error.message, "error");
+  }
 }
 
 
@@ -2561,6 +2743,7 @@ async function startExam(){
     ).classList.remove("hidden");
 
     renderExam();
+    updateExamLiveStatus(0);
     startExamTimer();
 
   }catch(error){
@@ -2756,6 +2939,8 @@ function selectExamAnswer(
   ] =
     selectedAnswer;
 
+  updateExamLiveStatus(questionIndex);
+
 
   const buttons =
     optionsContainer
@@ -2890,6 +3075,28 @@ function shuffleArray(array){
 
   return arr;
 
+}
+
+
+/* =====================================================
+   LIVE EXAM STATUS
+===================================================== */
+
+function updateExamLiveStatus(lastQuestionIndex){
+  const total = examRecords.length;
+  const attempted = Object.keys(examAnswers).length;
+  const remaining = Math.max(0, total - attempted);
+
+  const qEl = document.getElementById("examQuestionLive");
+  const aEl = document.getElementById("examAttemptedLive");
+  const rEl = document.getElementById("examRemainingLive");
+
+  if (qEl) {
+    const current = total ? Math.min(total, Math.max(1, Number(lastQuestionIndex || 0) + 1)) : 0;
+    qEl.textContent = "Q " + current + "/" + total;
+  }
+  if (aEl) aEl.textContent = "A " + attempted;
+  if (rEl) rEl.textContent = "R " + remaining;
 }
 
 
@@ -3352,18 +3559,6 @@ function resetExam(){
 /* =====================================================
    ENTER KEY
 ===================================================== */
-
-document
-  .getElementById(
-    "searchInput"
-  )
-  .addEventListener(
-    "input",
-    function(){
-      updateSearchClearButton();
-    }
-  );
-
 
 document
   .getElementById(
