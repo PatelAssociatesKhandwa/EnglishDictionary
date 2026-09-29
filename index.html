@@ -296,9 +296,36 @@ label{
   font-size:27px;
   font-weight:bold;
   color:#0b5ed7;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.copy-text-btn{
+  border:1px solid #c7d2e2;
+  background:#f5f8fc;
+  color:#0b5ed7;
+  border-radius:5px;
+  padding:3px 8px;
+  font-size:12px;
+  font-weight:bold;
+  cursor:pointer;
+  line-height:1.4;
+}
+
+.copy-text-btn:hover{
+  background:#e7f0ff;
+}
+
+.copy-text-btn.copied{
+  background:#e8f7ee;
+  color:#198754;
+  border-color:#b7dfc8;
 }
 
 .meaning{
+
   font-size:21px;
   font-weight:bold;
   margin-top:8px;
@@ -1768,6 +1795,49 @@ function getSentences(record){
 
 
 /* =====================================================
+   COPY TEXT
+===================================================== */
+
+async function copyTextToClipboard(text, button){
+  const value = String(text || "").trim();
+  if(!value) return;
+
+  try{
+    if(navigator.clipboard && window.isSecureContext){
+      await navigator.clipboard.writeText(value);
+    }else{
+      const textarea = document.createElement("textarea");
+      textarea.value = value;
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      document.execCommand("copy");
+      textarea.remove();
+    }
+
+    if(button){
+      const oldText = button.textContent;
+      button.textContent = "Copied ✓";
+      button.classList.add("copied");
+
+      setTimeout(function(){
+        button.textContent = oldText;
+        button.classList.remove("copied");
+      }, 1200);
+    }
+  }catch(error){
+    showMessage(
+      "searchMessage",
+      "Copy failed. Please try again.",
+      "error"
+    );
+  }
+}
+
+
+/* =====================================================
    SEARCH RESULT
 ===================================================== */
 
@@ -1786,15 +1856,27 @@ function renderSearchResult(
     <div class="card">
 
       <div class="word-title">
-        ${escapeHtml(
-          record.word
-        )}
+        <span>${escapeHtml(record.word)}</span>
+        <button
+          type="button"
+          class="copy-text-btn"
+          onclick="copyTextToClipboard('${escapeJs(record.word)}', this)"
+          title="Copy English word"
+        >
+          Copy
+        </button>
       </div>
 
       <div class="meaning">
-        ${escapeHtml(
-          record.meaning
-        )}
+        <span>${escapeHtml(record.meaning)}</span>
+        <button
+          type="button"
+          class="copy-text-btn"
+          onclick="copyTextToClipboard('${escapeJs(record.meaning)}', this)"
+          title="Copy Hindi meaning"
+        >
+          Copy
+        </button>
       </div>
 
       <div class="pronunciation">
