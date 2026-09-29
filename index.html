@@ -1798,6 +1798,49 @@ function getSentences(record){
    COPY TEXT
 ===================================================== */
 
+async function copyWordForExcel(word, meaning, button){
+  const english = String(word || "").trim();
+  const hindi = String(meaning || "").trim();
+  if(!english && !hindi) return;
+
+  const value = english + "\t" + hindi;
+
+  try{
+    if(navigator.clipboard && window.isSecureContext){
+      await navigator.clipboard.writeText(value);
+    }else{
+      const textarea = document.createElement("textarea");
+      textarea.value = value;
+      textarea.style.position = "fixed";
+      textarea.style.left = "-9999px";
+      textarea.style.top = "0";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      document.execCommand("copy");
+      textarea.remove();
+    }
+
+    if(button){
+      const oldText = button.textContent;
+      button.textContent = "Copied ✓";
+      button.classList.add("copied");
+      setTimeout(function(){
+        button.textContent = oldText;
+        button.classList.remove("copied");
+      }, 1200);
+    }
+  }catch(error){
+    showMessage(
+      "searchMessage",
+      "Copy failed. Please try again.",
+      "error"
+    );
+  }
+}
+
+
 async function copyTextToClipboard(text, button){
   const value = String(text || "").trim();
   if(!value) return;
@@ -1876,6 +1919,17 @@ function renderSearchResult(
           title="Copy Hindi meaning"
         >
           Copy
+        </button>
+      </div>
+
+      <div style="margin-top:8px;">
+        <button
+          type="button"
+          class="copy-text-btn"
+          onclick="copyWordForExcel('${escapeJs(record.word)}', '${escapeJs(record.meaning)}', this)"
+          title="Copy English word and Hindi meaning for Excel"
+        >
+          Copy for Excel
         </button>
       </div>
 
