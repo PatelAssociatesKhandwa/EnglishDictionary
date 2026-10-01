@@ -1617,7 +1617,7 @@ async function searchWord(){
   result.innerHTML =
     `
       <div class="card loading">
-        Generating meaning and examples...
+        Generating Hindi meaning...
       </div>
     `;
 
@@ -1745,96 +1745,6 @@ async function saveSearchedWord(word){
 /* =====================================================
    SENTENCES
 ===================================================== */
-
-function getSentences(record){
-
-  if(
-    Array.isArray(
-      record.sentences
-    )
-  ){
-
-    return record.sentences
-      .map(
-        function(s){
-
-          return {
-
-            english:
-              s.english ||
-              "",
-
-            hindi:
-              s.hindi ||
-              ""
-
-          };
-
-        }
-      )
-      .filter(
-        function(s){
-
-          return (
-            s.english ||
-            s.hindi
-          );
-
-        }
-      );
-
-  }
-
-
-  const result =
-    [];
-
-
-  for(
-    let i=1;
-    i<=5;
-    i++
-  ){
-
-    const en =
-      record[
-        "sentence" +
-        i
-      ];
-
-
-    const hi =
-      record[
-        "sentence" +
-        i +
-        "Hindi"
-      ];
-
-
-    if(
-      en ||
-      hi
-    ){
-
-      result.push({
-
-        english:
-          en || "",
-
-        hindi:
-          hi || ""
-
-      });
-
-    }
-
-  }
-
-
-  return result;
-
-}
-
 
 /* =====================================================
    COPY TEXT
@@ -1996,35 +1906,6 @@ function renderSearchResult(
   `;
 
 
-  getSentences(record)
-    .slice(0,2)
-    .forEach(
-      function(sentence,index){
-
-        html += `
-
-          <div class="example">
-
-            <div class="english">
-              ${index+1}.
-              ${escapeHtml(
-                sentence.english
-              )}
-            </div>
-
-            <div class="hindi">
-              ${escapeHtml(
-                sentence.hindi
-              )}
-            </div>
-
-          </div>
-
-        `;
-
-      }
-    );
-
 
   html += `
     </div>
@@ -2061,6 +1942,9 @@ async function loadDictionary(){
         renderDictionaryWords(dictionaryWordsCache);
         updateDictionarySearchCount(dictionaryWordsCache.length, dictionaryWordsCache.length);
         cachedShown = true;
+        if(dictionaryWordsCache.some(function(item){ return !item.meaning; })){
+          fillMissingDictionaryMeaningsInBackground();
+        }
       }
     }
   }catch(error){
@@ -2125,6 +2009,12 @@ async function loadDictionary(){
     /* If the user is typing a Dictionary search, preserve it. */
     filterDictionaryWords();
 
+    // Repair blank Hindi meanings after the fast list is already visible.
+    // This does not block Dictionary loading.
+    if(unique.some(function(item){ return !item.meaning; })){
+      fillMissingDictionaryMeaningsInBackground();
+    }
+
   }catch(error){
     if(!cachedShown){
       list.innerHTML = "";
@@ -2132,6 +2022,42 @@ async function loadDictionary(){
     }
   }
 
+}
+
+
+/* =====================================================
+   BACKGROUND HINDI MEANING REPAIR
+===================================================== */
+function fillMissingDictionaryMeaningsInBackground(){
+  apiGet({action:"fillMissingMeanings", limit:25})
+    .then(function(data){
+      if(!data || !data.success || !Array.isArray(data.words) || !data.words.length) return;
+
+      const updates = {};
+      data.words.forEach(function(item){
+        updates[String(item.word || "").trim().toLowerCase().replace(/\s+/g," ")] = String(item.meaning || "").trim();
+      });
+
+      let changed = false;
+      dictionaryWordsCache = dictionaryWordsCache.map(function(item){
+        const key = String(item.word || "").trim().toLowerCase().replace(/\s+/g," ");
+        if(!item.meaning && updates[key]){
+          changed = true;
+          return Object.assign({}, item, {meaning:updates[key]});
+        }
+        return item;
+      });
+
+      if(changed){
+        try{
+          localStorage.setItem("PATEL_ASSOCIATES_DICTIONARY_LIST_V2", JSON.stringify(dictionaryWordsCache));
+        }catch(error){}
+        filterDictionaryWords();
+      }
+    })
+    .catch(function(error){
+      console.log("Background Hindi meaning update failed: " + error.message);
+    });
 }
 
 
@@ -2155,7 +2081,7 @@ function renderDictionaryWords(words){
     const button = document.createElement("button");
     button.className = "word-button" + (item.offensive ? " offensive-word" : "");
     button.type = "button";
-    button.setAttribute("aria-label", item.word + " - " + (item.meaning || "Hindi meaning not available"));
+    button.setAttribute("aria-label", item.word + " - " + (item.meaning || "Hindi meaning pending"));
 
     const row = document.createElement("div");
     row.className = "dictionary-word-row";
@@ -2166,7 +2092,7 @@ function renderDictionaryWords(words){
 
     const hindi = document.createElement("span");
     hindi.className = "dictionary-word-hindi" + (item.meaning ? "" : " empty");
-    hindi.textContent = item.meaning || "Hindi meaning not available";
+    hindi.textContent = item.meaning || "Hindi meaning pending";
 
     row.appendChild(english);
     row.appendChild(hindi);
@@ -2266,7 +2192,7 @@ async function toggleWordDetails(
   details.innerHTML =
     `
       <div class="loading">
-        Generating meaning and examples...
+        Generating Hindi meaning...
       </div>
     `;
 
@@ -2314,35 +2240,6 @@ async function toggleWordDetails(
 
     `;
 
-
-    getSentences(record)
-      .slice(0,2)
-      .forEach(
-        function(sentence,index){
-
-          html += `
-
-            <div class="detail-example">
-
-              <div class="en">
-                ${index+1}.
-                ${escapeHtml(
-                  sentence.english
-                )}
-              </div>
-
-              <div class="hi">
-                ${escapeHtml(
-                  sentence.hindi
-                )}
-              </div>
-
-            </div>
-
-          `;
-
-        }
-      );
 
 
     html += `
