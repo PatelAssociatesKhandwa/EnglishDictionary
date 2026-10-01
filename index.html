@@ -821,6 +821,13 @@ label{
 
 }
 
+
+/* DICTIONARY HINDI SHOW / HIDE */
+.dictionary-meaning-toggle{position:sticky;top:8px;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:8px;margin:7px 0 6px;padding:5px 8px;border:1px solid #d7dfeb;border-radius:6px;background:#f8fafc;box-shadow:0 1px 4px rgba(0,0,0,.08);}
+.dictionary-meaning-toggle-label{font-size:11px;color:#555;font-weight:bold;}
+.dictionary-meaning-toggle-btn{width:auto;min-width:62px;padding:4px 8px;border:1px solid #b9c7dd;border-radius:5px;background:white;color:#0b5ed7;font-size:11px;line-height:1.1;font-weight:bold;cursor:pointer;}
+.dictionary-meaning-toggle-btn:hover{background:#e7f0ff;}
+body.dictionary-meanings-hidden .dictionary-word-hindi{display:none;}
 </style>
 
 </head>
@@ -980,6 +987,11 @@ Dictionary List
 >
 Refresh Dictionary
 </button>
+
+<div class="dictionary-meaning-toggle">
+  <span class="dictionary-meaning-toggle-label">Hindi Meaning</span>
+  <button type="button" id="dictionaryMeaningToggle" class="dictionary-meaning-toggle-btn" onclick="toggleDictionaryMeanings()">Hide</button>
+</div>
 
 <div
   id="dictionaryMessage"
@@ -2079,6 +2091,24 @@ function fillMissingDictionaryMeaningsInBackground(){
     });
 }
 
+
+function updateDictionaryMeaningToggleButton(){
+  const btn=document.getElementById("dictionaryMeaningToggle");
+  if(!btn)return;
+  const hidden=document.body.classList.contains("dictionary-meanings-hidden");
+  btn.textContent=hidden?"Show":"Hide";
+}
+
+function toggleDictionaryMeanings(){
+  document.body.classList.toggle("dictionary-meanings-hidden");
+  try{localStorage.setItem("PATEL_ASSOCIATES_DICTIONARY_HIDE_HINDI",document.body.classList.contains("dictionary-meanings-hidden")?"1":"0");}catch(error){}
+  updateDictionaryMeaningToggleButton();
+}
+
+function initDictionaryMeaningToggle(){
+  try{if(localStorage.getItem("PATEL_ASSOCIATES_DICTIONARY_HIDE_HINDI")==="1")document.body.classList.add("dictionary-meanings-hidden");}catch(error){}
+  updateDictionaryMeaningToggleButton();
+}
 
 function renderDictionaryWords(words){
   const list = document.getElementById("dictionaryList");
@@ -3746,6 +3776,7 @@ document
    START
 ===================================================== */
 
+initDictionaryMeaningToggle();
 checkServer();
 
 </script>
