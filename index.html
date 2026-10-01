@@ -2029,19 +2029,28 @@ async function loadDictionary(){
    BACKGROUND HINDI MEANING REPAIR
 ===================================================== */
 function fillMissingDictionaryMeaningsInBackground(){
-  apiGet({action:"fillMissingMeanings", limit:25})
+  const pendingExists = dictionaryWordsCache.some(function(item){
+    return !String(item.meaning || "").trim();
+  });
+
+  if(!pendingExists) return;
+
+  apiGet({action:"fillMissingMeanings", limit:50})
     .then(function(data){
-      if(!data || !data.success || !Array.isArray(data.words) || !data.words.length) return;
+      if(!data || !data.success) return;
 
       const updates = {};
-      data.words.forEach(function(item){
-        updates[String(item.word || "").trim().toLowerCase().replace(/\s+/g," ")] = String(item.meaning || "").trim();
+      (Array.isArray(data.words) ? data.words : []).forEach(function(item){
+        const meaning = String(item.meaning || "").trim();
+        if(meaning){
+          updates[String(item.word || "").trim().toLowerCase().replace(/\s+/g," ")] = meaning;
+        }
       });
 
       let changed = false;
       dictionaryWordsCache = dictionaryWordsCache.map(function(item){
         const key = String(item.word || "").trim().toLowerCase().replace(/\s+/g," ");
-        if(!item.meaning && updates[key]){
+        if(!String(item.meaning || "").trim() && updates[key]){
           changed = true;
           return Object.assign({}, item, {meaning:updates[key]});
         }
@@ -2053,6 +2062,14 @@ function fillMissingDictionaryMeaningsInBackground(){
           localStorage.setItem("PATEL_ASSOCIATES_DICTIONARY_LIST_V2", JSON.stringify(dictionaryWordsCache));
         }catch(error){}
         filterDictionaryWords();
+      }
+
+      /*
+       * If some words are still empty, continue with the next batch.
+       * This runs in the background and never blocks Dictionary loading.
+       */
+      if(dictionaryWordsCache.some(function(item){ return !String(item.meaning || "").trim(); })){
+        setTimeout(fillMissingDictionaryMeaningsInBackground, 500);
       }
     })
     .catch(function(error){
@@ -2081,7 +2098,7 @@ function renderDictionaryWords(words){
     const button = document.createElement("button");
     button.className = "word-button" + (item.offensive ? " offensive-word" : "");
     button.type = "button";
-    button.setAttribute("aria-label", item.word + " - " + (item.meaning || "Hindi meaning pending"));
+    button.setAttribute("aria-label", item.word + " - " + (item.meaning || "Hindi meaning not available"));
 
     const row = document.createElement("div");
     row.className = "dictionary-word-row";
@@ -2092,7 +2109,7 @@ function renderDictionaryWords(words){
 
     const hindi = document.createElement("span");
     hindi.className = "dictionary-word-hindi" + (item.meaning ? "" : " empty");
-    hindi.textContent = item.meaning || "Hindi meaning pending";
+    hindi.textContent = item.meaning || "Hindi meaning not available";
 
     row.appendChild(english);
     row.appendChild(hindi);
