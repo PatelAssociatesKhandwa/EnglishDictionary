@@ -63,15 +63,15 @@ header p{
 
 .tabs{
   display:flex;
-  gap:3px;
+  gap:5px;
   overflow-x:auto;
   margin-bottom:15px;
 }
 
 .tab-btn{
   flex:1;
-  min-width:0;
-  padding:9px 5px;
+  min-width:125px;
+  padding:12px 8px;
   border:none;
   border-radius:8px;
   background:#ddd;
@@ -356,25 +356,16 @@ label{
 /* DICTIONARY */
 
 .word-item{
-  position:relative;
-  display:grid;
-  grid-template-columns:24px minmax(0,1fr);
-  align-items:start;
-  background:transparent;
-  border:none;
-  border-radius:0;
+  background:white;
+  border:1px solid #ddd;
+  border-radius:8px;
   margin-bottom:8px;
-  padding:0;
-  overflow:visible;
+  overflow:hidden;
 }
 
 .word-button{
-  grid-column:2;
   width:100%;
-  min-width:0;
-  box-sizing:border-box;
-  border:1px solid #ddd;
-  border-radius:8px;
+  border:none;
   background:white;
   padding:11px 48px 11px 14px;
   text-align:left;
@@ -383,20 +374,27 @@ label{
   cursor:pointer;
 }
 
+.dictionary-word-row{
+  display:flex;
+  align-items:flex-start;
+  width:100%;
+  min-width:0;
+  gap:7px;
+}
+
 .dictionary-word-number{
-  grid-column:1;
-  width:18px;
-  margin-top:14px;
+  flex:0 0 28px;
+  width:28px;
   color:#777;
-  font-size:10px;
+  font-size:11px;
   font-weight:bold;
-  line-height:1.2;
+  line-height:1.5;
   text-align:right;
-  pointer-events:none;
+  padding-top:1px;
 }
 
 .dictionary-word-text{
-  width:100%;
+  flex:1 1 auto;
   min-width:0;
 }
 
@@ -430,6 +428,110 @@ label{
 }
 
 /* AUDIO */
+.audio-range-box{
+  margin-top:8px;
+  padding:12px;
+  border:1px solid #d7dfeb;
+  border-radius:8px;
+  background:#f8fafc;
+}
+
+.audio-range-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.audio-range-grid label{
+  margin:0 0 5px;
+  font-size:13px;
+}
+
+.audio-range-grid input{
+  padding:9px;
+  font-size:14px;
+}
+
+.audio-info{
+  margin-top:9px;
+  font-size:12px;
+  color:#666;
+}
+
+.audio-controls{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:8px;
+  margin-top:10px;
+}
+
+.audio-controls button{
+  width:100%;
+  padding:10px 7px;
+  border:1px solid #c8d3e3;
+  border-radius:7px;
+  background:white;
+  color:#0b5ed7;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.audio-controls button:hover{
+  background:#eaf2ff;
+}
+
+.audio-controls button.audio-main{
+  background:#0b5ed7;
+  color:white;
+  border-color:#0b5ed7;
+}
+
+.audio-status{
+  margin-top:10px;
+  padding:8px 10px;
+  border-radius:7px;
+  background:#eef4ff;
+  color:#174a9c;
+  font-size:12px;
+  line-height:1.4;
+}
+
+@media(max-width:600px){
+  .dictionary-word-english{
+    width:100%;
+  }
+  .dictionary-word-hindi{
+    width:100%;
+    font-size:14px;
+  }
+}
+
+.word-edit-btn{
+  position:absolute;
+  right:7px;
+  top:7px;
+  width:28px;
+  height:28px;
+  padding:0;
+  border:1px solid #c7d2e2;
+  border-radius:5px;
+  background:#f5f8fc;
+  color:#0b5ed7;
+  font-size:14px;
+  font-weight:bold;
+  line-height:26px;
+  text-align:center;
+  cursor:pointer;
+}
+
+.word-edit-btn:hover{
+  background:#e7f0ff;
+}
+
+.word-item{
+  position:relative;
+}
+
 .word-button:hover{
   background:#f1f6ff;
 }
@@ -482,7 +584,6 @@ label{
 }
 
 .word-details{
-  grid-column:2;
   display:none;
   padding:14px;
   border-top:1px solid #ddd;
@@ -802,10 +903,8 @@ label{
   }
 
   .tab-btn{
-    min-width:0;
-    padding:8px 3px;
-    font-size:11px;
-    line-height:1.15;
+    min-width:110px;
+    font-size:13px;
   }
 
 }
@@ -1079,11 +1178,6 @@ Audio List
   English → Hindi audio ke liye Start aur End number select karein.
 </div>
 
-<div id="audioDictionaryList" class="audio-list-box">
-  <div class="audio-list-title">Dictionary List</div>
-  <div class="loading">Dictionary load hone ka wait karein...</div>
-</div>
-
 <button type="button" class="primary" onclick="loadDictionaryForAudio()">
 Refresh Dictionary List
 </button>
@@ -1338,7 +1432,6 @@ let dictionaryWordsCache = [];
 let dictionaryAudioQueue = [];
 let dictionaryAudioIndex = 0;
 let dictionaryAudioStopped = true;
-let dictionaryAudioPaused = false;
 
 
 /* =====================================================
@@ -2230,23 +2323,25 @@ function renderDictionaryWords(words){
   }
 
   list.innerHTML = "";
+
   const fragment = document.createDocumentFragment();
 
   words.forEach(function(item){
     const wrapper = document.createElement("div");
     wrapper.className = "word-item";
 
-    const originalIndex = dictionaryWordsCache.indexOf(item);
-
-    // Number is kept OUTSIDE the word box.
-    const number = document.createElement("span");
-    number.className = "dictionary-word-number";
-    number.textContent = originalIndex >= 0 ? (originalIndex + 1) + "." : "";
-
     const button = document.createElement("button");
     button.className = "word-button" + (item.offensive ? " offensive-word" : "");
     button.type = "button";
     button.setAttribute("aria-label", item.word + " - " + (isMissingDictionaryMeaning(item.meaning) ? "Hindi meaning pending" : item.meaning));
+
+    const row = document.createElement("div");
+    row.className = "dictionary-word-row";
+
+    const number = document.createElement("span");
+    number.className = "dictionary-word-number";
+    const originalIndex = dictionaryWordsCache.indexOf(item);
+    number.textContent = originalIndex >= 0 ? (originalIndex + 1) + "." : "";
 
     const textWrap = document.createElement("div");
     textWrap.className = "dictionary-word-text";
@@ -2262,7 +2357,9 @@ function renderDictionaryWords(words){
 
     textWrap.appendChild(english);
     textWrap.appendChild(hindi);
-    button.appendChild(textWrap);
+    row.appendChild(number);
+    row.appendChild(textWrap);
+    button.appendChild(row);
 
     if (item.offensive) button.title = "Offensive word";
 
@@ -2273,8 +2370,6 @@ function renderDictionaryWords(words){
       toggleWordDetails(item.word, details);
     };
 
-    // Keep number beside the box, not inside it.
-    wrapper.appendChild(number);
     wrapper.appendChild(button);
 
     const editButton = document.createElement("button");
@@ -2294,7 +2389,6 @@ function renderDictionaryWords(words){
   });
 
   list.appendChild(fragment);
-  renderAudioDictionaryList();
 }
 
 function filterDictionaryWords(){
@@ -2333,47 +2427,6 @@ function updateDictionarySearchCount(found, total){
    DICTIONARY AUDIO
 ===================================================== */
 
-function setAudioStatus(message){
-  const el = document.getElementById("audioStatus");
-  if(el) el.textContent = message;
-}
-
-function renderAudioDictionaryList(){
-  const box = document.getElementById("audioDictionaryList");
-  if(!box) return;
-
-  if(!dictionaryWordsCache.length){
-    box.innerHTML = '<div class="audio-list-title">Dictionary List</div><div class="loading">Dictionary me koi word nahi hai.</div>';
-    return;
-  }
-
-  let start = parseInt((document.getElementById("audioStartNumber") || {}).value,10);
-  let end = parseInt((document.getElementById("audioEndNumber") || {}).value,10);
-  if(!Number.isFinite(start)) start=1;
-  if(!Number.isFinite(end)) end=Math.min(10,dictionaryWordsCache.length);
-  start=Math.max(1,Math.min(start,dictionaryWordsCache.length));
-  end=Math.max(1,Math.min(end,dictionaryWordsCache.length));
-
-  const title = document.createElement("div");
-  title.className="audio-list-title";
-  title.textContent="Dictionary List — No. " + start + " to " + end;
-  box.innerHTML="";
-  box.appendChild(title);
-
-  const fragment=document.createDocumentFragment();
-  dictionaryWordsCache.forEach(function(item,index){
-    const no=index+1;
-    if(no<start || no>end) return;
-    const row=document.createElement("div");
-    row.className="audio-list-item audio-selected";
-    const n=document.createElement("span"); n.className="audio-list-no"; n.textContent=no+".";
-    const w=document.createElement("span"); w.className="audio-list-word"; w.textContent=item.word || "";
-    const m=document.createElement("span"); m.className="audio-list-meaning"; m.textContent=isMissingDictionaryMeaning(item.meaning)?"Hindi meaning pending…":item.meaning;
-    row.appendChild(n); row.appendChild(w); row.appendChild(m); fragment.appendChild(row);
-  });
-  box.appendChild(fragment);
-}
-
 function updateAudioRangeInfo(){
   const info = document.getElementById("audioRangeInfo");
   const startEl = document.getElementById("audioStartNumber");
@@ -2383,7 +2436,6 @@ function updateAudioRangeInfo(){
   const total = dictionaryWordsCache.length;
   if(!total){
     info.textContent = "Dictionary me abhi koi word available nahi hai.";
-    renderAudioDictionaryList();
     return;
   }
 
@@ -2398,7 +2450,6 @@ function updateAudioRangeInfo(){
   info.textContent = start <= end
     ? "Selected: " + start + " to " + end + "  (" + (end-start+1) + " words)"
     : "Start number End number se chhota ya barabar hona chahiye.";
-  renderAudioDictionaryList();
 }
 
 function setAudioStatus(message){
@@ -2406,23 +2457,17 @@ function setAudioStatus(message){
   if(el) el.textContent = message;
 }
 
-async function loadDictionaryForAudio(){
-  await loadDictionary();
-  openTab("audioTab", document.querySelector('.tab-btn[onclick*="audioTab"]'));
-  updateAudioRangeInfo();
+function loadDictionaryForAudio(){
+  openTab("dictionaryTab", document.querySelector('.tab-btn[onclick*="dictionaryTab"]'));
+  loadDictionary().then(function(){
+    openTab("audioTab", document.querySelector('.tab-btn[onclick*="audioTab"]'));
+    updateAudioRangeInfo();
+  });
 }
 
 function playSelectedDictionaryAudio(){
-  if(!(("speechSynthesis" in window))){
+  if(!("speechSynthesis" in window)){
     setAudioStatus("Aapke browser me audio speech support available nahi hai.");
-    return;
-  }
-
-  // If paused, PLAY means RESUME from exactly where it was paused.
-  if(dictionaryAudioPaused && window.speechSynthesis.paused){
-    dictionaryAudioPaused=false;
-    window.speechSynthesis.resume();
-    setAudioStatus("Audio resumed.");
     return;
   }
 
@@ -2450,7 +2495,6 @@ function playSelectedDictionaryAudio(){
   dictionaryAudioQueue = dictionaryWordsCache.slice(start-1,end);
   dictionaryAudioIndex = 0;
   dictionaryAudioStopped = false;
-  dictionaryAudioPaused = false;
 
   window.speechSynthesis.cancel();
   speakNextDictionaryAudio();
@@ -2462,7 +2506,6 @@ function speakNextDictionaryAudio(){
       setAudioStatus("Audio complete — " + dictionaryAudioQueue.length + " words sunaye gaye.");
     }
     dictionaryAudioStopped = true;
-    dictionaryAudioPaused = false;
     return;
   }
 
@@ -2485,7 +2528,7 @@ function speakNextDictionaryAudio(){
   englishUtterance.pitch = 1;
 
   englishUtterance.onend = function(){
-    if(dictionaryAudioStopped || dictionaryAudioPaused) return;
+    if(dictionaryAudioStopped) return;
 
     if(!hindiText){
       dictionaryAudioIndex++;
@@ -2501,13 +2544,13 @@ function speakNextDictionaryAudio(){
     hindiUtterance.pitch = 1;
 
     hindiUtterance.onend = function(){
-      if(dictionaryAudioStopped || dictionaryAudioPaused) return;
+      if(dictionaryAudioStopped) return;
       dictionaryAudioIndex++;
       speakNextDictionaryAudio();
     };
 
     hindiUtterance.onerror = function(){
-      if(dictionaryAudioStopped || dictionaryAudioPaused) return;
+      if(dictionaryAudioStopped) return;
       dictionaryAudioIndex++;
       speakNextDictionaryAudio();
     };
@@ -2516,7 +2559,7 @@ function speakNextDictionaryAudio(){
   };
 
   englishUtterance.onerror = function(){
-    if(dictionaryAudioStopped || dictionaryAudioPaused) return;
+    if(dictionaryAudioStopped) return;
     dictionaryAudioIndex++;
     speakNextDictionaryAudio();
   };
@@ -2525,16 +2568,14 @@ function speakNextDictionaryAudio(){
 }
 
 function pauseDictionaryAudio(){
-  if("speechSynthesis" in window && window.speechSynthesis.speaking && !window.speechSynthesis.paused){
-    dictionaryAudioPaused = true;
+  if("speechSynthesis" in window && window.speechSynthesis.speaking){
     window.speechSynthesis.pause();
-    setAudioStatus("Audio paused. Play dabane par yahin se continue hoga.");
+    setAudioStatus("Audio paused.");
   }
 }
 
 function stopDictionaryAudio(){
   dictionaryAudioStopped = true;
-  dictionaryAudioPaused = false;
   dictionaryAudioQueue = [];
   dictionaryAudioIndex = 0;
   if("speechSynthesis" in window) window.speechSynthesis.cancel();
