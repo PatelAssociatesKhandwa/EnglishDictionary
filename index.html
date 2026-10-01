@@ -2908,6 +2908,71 @@ function renderExam(){
   const isHindiToEnglish =
     examMode === "hi-en";
 
+  /*
+   * IMPORTANT:
+   * Distractor words are now distributed across questions.
+   *
+   * Old behavior:
+   *   Every question took the first 3 available distractors.
+   *   Therefore the same 2-3 words appeared again and again.
+   *
+   * New behavior:
+   *   1. Keep a usage count for every possible option.
+   *   2. Prefer words that have NOT been used as a distractor yet.
+   *   3. If all words have already been used, prefer the least-used ones.
+   *   4. Randomize candidates having the same usage count.
+   *
+   * This makes the options much more varied from question to question.
+   */
+
+  const distractorUsage = {};
+
+  function normalizeOption(value){
+    return String(value || "")
+      .trim()
+      .replace(/\s+/g, " ")
+      .toLowerCase();
+  }
+
+  function shuffleLocal(array){
+    const arr = [...array];
+
+    for(let i = arr.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      const temp = arr[i];
+      arr[i] = arr[j];
+      arr[j] = temp;
+    }
+
+    return arr;
+  }
+
+  function getAnswerValue(record){
+    return isHindiToEnglish
+      ? String(record.word || "").trim()
+      : String(record.meaning || "").trim();
+  }
+
+  /*
+   * Build one unique pool of possible distractors.
+   * Duplicate meanings/words are kept only once.
+   */
+  const allDistractors = [];
+  const globalSeen = new Set();
+
+  examRecords.forEach(function(record){
+    const value = getAnswerValue(record);
+    const key = normalizeOption(value);
+
+    if(!value || globalSeen.has(key)){
+      return;
+    }
+
+    globalSeen.add(key);
+    allDistractors.push(value);
+    distractorUsage[key] = 0;
+  });
+
   examRecords.forEach(
     function(record,index){
 
@@ -2936,39 +3001,56 @@ function renderExam(){
           ? String(record.word || "").trim()
           : String(record.meaning || "").trim();
 
-      const distractors =
-        examRecords
-          .filter(function(_,i){
-            return i !== index;
-          })
-          .map(function(r){
-            return isHindiToEnglish
-              ? String(r.word || "").trim()
-              : String(r.meaning || "").trim();
-          })
-          .filter(function(value){
-            return (
-              value &&
-              value.toLowerCase() !==
-              correct.toLowerCase()
-            );
-          });
+      const correctKey =
+        normalizeOption(correct);
 
-      const uniqueDistractors = [];
-      const seen = {};
+      /*
+       * Candidates cannot be the correct answer of this question.
+       */
+      const candidates =
+        allDistractors.filter(function(value){
+          return normalizeOption(value) !== correctKey;
+        });
 
-      distractors.forEach(function(value){
-        const key = value.toLowerCase();
-        if(!seen[key]){
-          seen[key] = true;
-          uniqueDistractors.push(value);
-        }
+      /*
+       * First preference:
+       * words never used as distractors before.
+       *
+       * Second preference:
+       * words with the lowest usage count.
+       *
+       * Random shuffle before sorting prevents the same fixed
+       * order from being selected every time.
+       */
+      const shuffledCandidates =
+        shuffleLocal(candidates);
+
+      shuffledCandidates.sort(function(a,b){
+        return (
+          (distractorUsage[normalizeOption(a)] || 0) -
+          (distractorUsage[normalizeOption(b)] || 0)
+        );
+      });
+
+      /*
+       * Select up to 3 distractors.
+       * Because usage is balanced, the same 2-3 words will
+       * no longer be repeatedly selected for every question
+       * while enough different words are available.
+       */
+      const selectedDistractors =
+        shuffledCandidates.slice(0,3);
+
+      selectedDistractors.forEach(function(value){
+        const key = normalizeOption(value);
+        distractorUsage[key] =
+          (distractorUsage[key] || 0) + 1;
       });
 
       const options =
         shuffleArray([
           correct,
-          ...uniqueDistractors.slice(0,3)
+          ...selectedDistractors
         ]);
 
       const modeLabel =
@@ -3034,7 +3116,6 @@ function renderExam(){
   );
 
 }
-
 
 /* =====================================================
    ANSWER CLICK
