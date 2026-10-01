@@ -374,6 +374,48 @@ label{
   cursor:pointer;
 }
 
+.dictionary-word-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  width:100%;
+}
+
+.dictionary-word-english{
+  flex:0 0 42%;
+  min-width:0;
+  color:#0b5ed7;
+  font-weight:bold;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.dictionary-word-hindi{
+  flex:1;
+  min-width:0;
+  color:#333;
+  font-size:15px;
+  font-weight:normal;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.dictionary-word-hindi.empty{
+  color:#999;
+  font-style:italic;
+}
+
+@media(max-width:600px){
+  .dictionary-word-english{
+    flex-basis:40%;
+  }
+  .dictionary-word-hindi{
+    font-size:14px;
+  }
+}
+
 .word-edit-btn{
   position:absolute;
   right:7px;
@@ -2001,133 +2043,93 @@ function renderSearchResult(
 
 async function loadDictionary(){
 
-  const list =
-    document.getElementById(
-      "dictionaryList"
-    );
+  const list = document.getElementById("dictionaryList");
+  const cacheKey = "PATEL_ASSOCIATES_DICTIONARY_LIST_V2";
 
+  /*
+   * Show the last successful list immediately, if available.
+   * The fresh API request still runs in the background, so the
+   * Dictionary feels instant on repeat visits without becoming stale.
+   */
+  let cachedShown = false;
+  try{
+    const cached = localStorage.getItem(cacheKey);
+    if(cached){
+      const parsed = JSON.parse(cached);
+      if(Array.isArray(parsed) && parsed.length){
+        dictionaryWordsCache = parsed;
+        renderDictionaryWords(dictionaryWordsCache);
+        updateDictionarySearchCount(dictionaryWordsCache.length, dictionaryWordsCache.length);
+        cachedShown = true;
+      }
+    }
+  }catch(error){
+    console.log("Dictionary cache read error: " + error.message);
+  }
 
-  list.innerHTML =
-    `
+  if(!cachedShown){
+    list.innerHTML = `
       <div class="loading">
         Loading dictionary...
       </div>
     `;
-
+  }
 
   try{
-
-    const data =
-      await apiGet({
-
-        action:
-          "allWords"
-
-      });
-
+    const data = await apiGet({action:"allWords"});
 
     if(!data.success){
-
-      throw new Error(
-        data.message
-      );
-
+      throw new Error(data.message);
     }
 
+    const words = Array.isArray(data.words) ? data.words : [];
 
-    const words =
-      Array.isArray(
-        data.words
-      )
-      ? data.words
-      : [];
-
-
-    if(
-      words.length === 0
-    ){
-
-      list.innerHTML =
-        `
-          <div class="loading">
-            No words found.
-          </div>
-        `;
-
+    if(words.length === 0){
+      dictionaryWordsCache = [];
+      try{ localStorage.removeItem(cacheKey); }catch(error){}
+      list.innerHTML = `
+        <div class="loading">
+          No words found.
+        </div>
+      `;
+      updateDictionarySearchCount(0, 0);
       return;
-
     }
 
+    const unique = [];
+    const seen = new Set();
 
-    const unique =
-      [];
+    words.forEach(function(item){
+      const word = String(item.word || "").trim();
+      const key = word.toLowerCase().replace(/\s+/g," ");
 
-    const seen =
-      new Set();
-
-
-    words.forEach(
-      function(item){
-
-        const word =
-          String(
-            item.word || ""
-          )
-          .trim();
-
-
-        const key =
-          word
-            .toLowerCase()
-            .replace(
-              /\s+/g,
-              " "
-            );
-
-
-        if(
-          word &&
-          !seen.has(key)
-        ){
-
-          seen.add(key);
-
-
-          unique.push({
-
-            id:
-              item.id,
-
-            word:
-              word,
-
-            offensive:
-              Boolean(item.offensive)
-
-          });
-
-        }
-
+      if(word && !seen.has(key)){
+        seen.add(key);
+        unique.push({
+          id: item.id || "",
+          word: word,
+          meaning: String(item.meaning || "").trim(),
+          offensive: Boolean(item.offensive)
+        });
       }
-    );
-
+    });
 
     dictionaryWordsCache = unique;
-    renderDictionaryWords(dictionaryWordsCache);
-    updateDictionarySearchCount(dictionaryWordsCache.length, dictionaryWordsCache.length);
+
+    try{
+      localStorage.setItem(cacheKey, JSON.stringify(dictionaryWordsCache));
+    }catch(error){
+      console.log("Dictionary cache write error: " + error.message);
+    }
+
+    /* If the user is typing a Dictionary search, preserve it. */
+    filterDictionaryWords();
 
   }catch(error){
-
-    list.innerHTML =
-      "";
-
-
-    showMessage(
-      "dictionaryMessage",
-      error.message,
-      "error"
-    );
-
+    if(!cachedShown){
+      list.innerHTML = "";
+      showMessage("dictionaryMessage", error.message, "error");
+    }
   }
 
 }
@@ -2144,13 +2146,32 @@ function renderDictionaryWords(words){
 
   list.innerHTML = "";
 
+  const fragment = document.createDocumentFragment();
+
   words.forEach(function(item){
     const wrapper = document.createElement("div");
     wrapper.className = "word-item";
 
     const button = document.createElement("button");
     button.className = "word-button" + (item.offensive ? " offensive-word" : "");
-    button.textContent = item.word;
+    button.type = "button";
+    button.setAttribute("aria-label", item.word + " - " + (item.meaning || "Hindi meaning not available"));
+
+    const row = document.createElement("div");
+    row.className = "dictionary-word-row";
+
+    const english = document.createElement("span");
+    english.className = "dictionary-word-english";
+    english.textContent = item.word;
+
+    const hindi = document.createElement("span");
+    hindi.className = "dictionary-word-hindi" + (item.meaning ? "" : " empty");
+    hindi.textContent = item.meaning || "Hindi meaning not available";
+
+    row.appendChild(english);
+    row.appendChild(hindi);
+    button.appendChild(row);
+
     if (item.offensive) button.title = "Offensive word";
 
     const details = document.createElement("div");
@@ -2172,10 +2193,13 @@ function renderDictionaryWords(words){
       event.stopPropagation();
       editDictionaryWord(item.word);
     };
+
     wrapper.appendChild(editButton);
     wrapper.appendChild(details);
-    list.appendChild(wrapper);
+    fragment.appendChild(wrapper);
   });
+
+  list.appendChild(fragment);
 }
 
 function filterDictionaryWords(){
