@@ -827,10 +827,20 @@ label{
   position:sticky;
   bottom:0;
   z-index:30;
-  width:100%;
+  width:calc(100% + 36px);
   margin-top:10px;
-  margin-bottom:0;
-  box-shadow:0 2px 8px rgba(0,0,0,.18);
+  margin-left:-18px;
+  margin-bottom:-18px;
+  border-radius:0 0 12px 12px;
+  box-shadow:0 -2px 8px rgba(0,0,0,.12);
+}
+
+@media (max-width:600px){
+  #submitExamBtn{
+    width:calc(100% + 28px);
+    margin-left:-14px;
+    margin-bottom:-14px;
+  }
 }
 
 /* DICTIONARY HINDI SHOW / HIDE */
@@ -1947,6 +1957,23 @@ function renderSearchResult(
    DICTIONARY
 ===================================================== */
 
+function isMissingDictionaryMeaning(value){
+  const text = String(value || "").trim().toLowerCase();
+  if(!text) return true;
+  return [
+    "hindi meaning not available",
+    "hindi meaning pending",
+    "hindi word not available",
+    "hindi word pending",
+    "hindi translation not available",
+    "hindi translation pending",
+    "meaning not available",
+    "meaning pending",
+    "not available",
+    "pending"
+  ].indexOf(text) !== -1;
+}
+
 async function loadDictionary(){
 
   const list = document.getElementById("dictionaryList");
@@ -1967,7 +1994,7 @@ async function loadDictionary(){
         renderDictionaryWords(dictionaryWordsCache);
         updateDictionarySearchCount(dictionaryWordsCache.length, dictionaryWordsCache.length);
         cachedShown = true;
-        if(dictionaryWordsCache.some(function(item){ return !item.meaning; })){
+        if(dictionaryWordsCache.some(function(item){ return isMissingDictionaryMeaning(item.meaning); })){
           fillMissingDictionaryMeaningsInBackground();
         }
       }
@@ -2036,7 +2063,7 @@ async function loadDictionary(){
 
     // Repair blank Hindi meanings after the fast list is already visible.
     // This does not block Dictionary loading.
-    if(unique.some(function(item){ return !item.meaning; })){
+    if(unique.some(function(item){ return isMissingDictionaryMeaning(item.meaning); })){
       fillMissingDictionaryMeaningsInBackground();
     }
 
@@ -2055,7 +2082,7 @@ async function loadDictionary(){
 ===================================================== */
 function fillMissingDictionaryMeaningsInBackground(){
   const pendingExists = dictionaryWordsCache.some(function(item){
-    return !String(item.meaning || "").trim();
+    return isMissingDictionaryMeaning(item.meaning);
   });
 
   if(!pendingExists) return;
@@ -2075,7 +2102,7 @@ function fillMissingDictionaryMeaningsInBackground(){
       let changed = false;
       dictionaryWordsCache = dictionaryWordsCache.map(function(item){
         const key = String(item.word || "").trim().toLowerCase().replace(/\s+/g," ");
-        if(!String(item.meaning || "").trim() && updates[key]){
+        if(isMissingDictionaryMeaning(item.meaning) && updates[key]){
           changed = true;
           return Object.assign({}, item, {meaning:updates[key]});
         }
@@ -2093,7 +2120,7 @@ function fillMissingDictionaryMeaningsInBackground(){
        * If some words are still empty, continue with the next batch.
        * This runs in the background and never blocks Dictionary loading.
        */
-      if(dictionaryWordsCache.some(function(item){ return !String(item.meaning || "").trim(); })){
+      if(dictionaryWordsCache.some(function(item){ return isMissingDictionaryMeaning(item.meaning); })){
         setTimeout(fillMissingDictionaryMeaningsInBackground, 500);
       }
     })
@@ -2141,7 +2168,7 @@ function renderDictionaryWords(words){
     const button = document.createElement("button");
     button.className = "word-button" + (item.offensive ? " offensive-word" : "");
     button.type = "button";
-    button.setAttribute("aria-label", item.word + " - " + (item.meaning || "Hindi meaning not available"));
+    button.setAttribute("aria-label", item.word + " - " + (isMissingDictionaryMeaning(item.meaning) ? "Hindi meaning pending" : item.meaning));
 
     const row = document.createElement("div");
     row.className = "dictionary-word-row";
@@ -2151,8 +2178,9 @@ function renderDictionaryWords(words){
     english.textContent = item.word;
 
     const hindi = document.createElement("span");
-    hindi.className = "dictionary-word-hindi" + (item.meaning ? "" : " empty");
-    hindi.textContent = item.meaning || "Hindi meaning not available";
+    const hasHindiMeaning = !isMissingDictionaryMeaning(item.meaning);
+    hindi.className = "dictionary-word-hindi" + (hasHindiMeaning ? "" : " empty");
+    hindi.textContent = hasHindiMeaning ? item.meaning : "Hindi meaning pending…";
 
     row.appendChild(english);
     row.appendChild(hindi);
