@@ -188,6 +188,8 @@ label{
   position:relative;
 }
 
+
+
 .exam-result-dashboard{
   display:flex;
   align-items:center;
@@ -236,20 +238,16 @@ label{
 .exam-stat-unattempted{background:#fd7e14;}
 
 @media(max-width:600px){
-
   .exam-result-dashboard{
     gap:16px;
   }
-
   .exam-pie-box{
     width:200px;
     flex-basis:200px;
   }
-
   .exam-stats-box{
     width:100%;
   }
-
 }
 
 .exam-chart-title{
@@ -261,11 +259,9 @@ label{
 }
 
 @media(max-width:600px){
-
   .exam-summary-grid{
     grid-template-columns:1fr 1fr;
   }
-
 }
 
 .message{
@@ -294,9 +290,7 @@ label{
 }
 
 
-/* =====================================================
-   SEARCH
-===================================================== */
+/* SEARCH */
 
 .word-title{
   font-size:27px;
@@ -331,6 +325,7 @@ label{
 }
 
 .meaning{
+
   font-size:21px;
   font-weight:bold;
   margin-top:8px;
@@ -358,9 +353,7 @@ label{
 }
 
 
-/* =====================================================
-   DICTIONARY
-===================================================== */
+/* DICTIONARY */
 
 .word-item{
   background:white;
@@ -368,7 +361,6 @@ label{
   border-radius:8px;
   margin-bottom:8px;
   overflow:hidden;
-  position:relative;
 }
 
 .word-button{
@@ -382,51 +374,33 @@ label{
   cursor:pointer;
 }
 
-
-/*
- * IMPORTANT:
- * English word अब truncate होकर "..." नहीं होगा।
- * पूरा word दिखाई देगा।
- * जरूरत पड़ने पर word अगली line में wrap होगा।
- */
-
 .dictionary-word-row{
-  display:flex;
-  align-items:flex-start;
-  gap:10px;
+  display:block;
   width:100%;
-  min-width:0;
 }
 
 .dictionary-word-english{
-  flex:0 0 auto;
-  max-width:55%;
+  display:block;
+  width:100%;
   min-width:0;
   color:#0b5ed7;
   font-weight:bold;
-
-  /* OLD:
-     overflow:hidden;
-     text-overflow:ellipsis;
-     white-space:nowrap;
-  */
-
-  white-space:normal;
-  overflow-wrap:anywhere;
-  word-break:break-word;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
 }
 
 .dictionary-word-hindi{
-  flex:1;
+  display:block;
+  width:100%;
   min-width:0;
+  margin-top:3px;
   color:#333;
   font-size:15px;
   font-weight:normal;
-
-  /* Hindi meaning भी पूरा दिखे */
-  white-space:normal;
-  overflow-wrap:anywhere;
-  word-break:break-word;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
 }
 
 .dictionary-word-hindi.empty{
@@ -434,24 +408,15 @@ label{
   font-style:italic;
 }
 
-
 @media(max-width:600px){
-
-  .dictionary-word-row{
-    gap:8px;
-  }
-
   .dictionary-word-english{
-    flex:0 0 auto;
-    max-width:52%;
+    width:100%;
   }
-
   .dictionary-word-hindi{
+    width:100%;
     font-size:14px;
   }
-
 }
-
 
 .word-edit-btn{
   position:absolute;
@@ -473,6 +438,10 @@ label{
 
 .word-edit-btn:hover{
   background:#e7f0ff;
+}
+
+.word-item{
+  position:relative;
 }
 
 .word-button:hover{
@@ -575,9 +544,7 @@ label{
 }
 
 
-/* =====================================================
-   EXAM SETUP QUICK OPTIONS
-===================================================== */
+/* EXAM SETUP QUICK OPTIONS */
 
 .quick-options-label{
   margin-top:8px;
@@ -589,20 +556,18 @@ label{
 .quick-options{
   display:flex;
   flex-wrap:wrap;
-  gap:4px;
-  margin:5px 0 10px;
+  gap:7px;
+  margin:7px 0 12px;
 }
 
 .quick-option-btn{
-  min-width:32px;
   width:auto;
-  padding:4px 7px;
+  min-width:48px;
+  padding:8px 10px;
   border:1px solid #b9c7dd;
-  border-radius:5px;
+  border-radius:7px;
   background:#f5f8fc;
   color:#0b5ed7;
-  font-size:12px;
-  line-height:1.15;
   font-weight:bold;
   cursor:pointer;
 }
@@ -618,46 +583,34 @@ label{
 }
 
 
-/* =====================================================
-   COMPACT EXAM MODE BUTTONS
-===================================================== */
-
+/* COMPACT EXAM MODE BUTTONS */
 .exam-mode-buttons{
   display:flex;
   flex-wrap:wrap;
-  gap:5px;
+  gap:4px;
   margin:5px 0 10px;
 }
 
 .exam-mode-btn{
+  flex:0 0 auto;
   width:auto;
   min-width:0;
-  padding:5px 8px;
+  min-height:0;
+  padding:4px 7px;
   border:1px solid #b9c7dd;
   border-radius:5px;
   background:#f5f8fc;
   color:#0b5ed7;
-  font-size:12px;
+  font-size:11px;
+  line-height:1.15;
   font-weight:bold;
-  line-height:1.2;
   cursor:pointer;
 }
 
-.exam-mode-btn:hover{
-  background:#e7f0ff;
-}
+.exam-mode-btn:hover{background:#e7f0ff;}
+.exam-mode-btn.selected{background:#0b5ed7;color:white;border-color:#0b5ed7;}
 
-.exam-mode-btn.selected{
-  background:#0b5ed7;
-  color:white;
-  border-color:#0b5ed7;
-}
-
-
-/* =====================================================
-   SEARCH CLEAR
-===================================================== */
-
+/* SEARCH CLEAR */
 .search-input-wrap{
   position:relative;
   width:100%;
@@ -691,11 +644,53 @@ label{
   display:block;
 }
 
+/* COMPACT EXAM CONTROLS */
+.exam-mode-buttons{
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px;
+  margin:5px 0 10px;
+}
 
-/* =====================================================
-   LIVE EXAM STATUS
-===================================================== */
+.exam-mode-btn{
+  width:auto;
+  min-width:0;
+  padding:5px 8px;
+  border:1px solid #b9c7dd;
+  border-radius:5px;
+  background:#f5f8fc;
+  color:#0b5ed7;
+  font-size:12px;
+  font-weight:bold;
+  line-height:1.2;
+  cursor:pointer;
+}
 
+.exam-mode-btn:hover{background:#e7f0ff;}
+.exam-mode-btn.selected{background:#0b5ed7;color:white;border-color:#0b5ed7;}
+
+.quick-options{
+  display:flex;
+  flex-wrap:wrap;
+  gap:4px;
+  margin:5px 0 10px;
+}
+
+.quick-option-btn{
+  min-width:32px;
+  width:auto;
+  padding:4px 7px;
+  border:1px solid #b9c7dd;
+  border-radius:5px;
+  background:#f5f8fc;
+  color:#0b5ed7;
+  font-size:12px;
+  line-height:1.15;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+/* LIVE EXAM STATUS */
 .exam-live-status{
   display:flex;
   flex-wrap:wrap;
@@ -709,22 +704,11 @@ label{
   white-space:nowrap;
 }
 
-#examQuestionLive{
-  color:#0b5ed7;
-}
+#examQuestionLive{color:#0b5ed7;}
+#examAttemptedLive{color:#198754;}
+#examRemainingLive{color:#dc3545;}
 
-#examAttemptedLive{
-  color:#198754;
-}
-
-#examRemainingLive{
-  color:#dc3545;
-}
-
-
-/* =====================================================
-   EXAM
-===================================================== */
+/* EXAM */
 
 .exam-timer{
   position:sticky;
@@ -918,14 +902,12 @@ Search English Word
 </h2>
 
 <div class="search-input-wrap">
-
 <input
   type="text"
   id="searchInput"
   placeholder="Enter English word..."
   oninput="toggleSearchClear()"
 >
-
 <button
   type="button"
   id="searchClearBtn"
@@ -933,10 +915,7 @@ Search English Word
   title="Clear"
   aria-label="Clear search"
   onclick="clearSearchInput()"
->
-×
-</button>
-
+>×</button>
 </div>
 
 <button
@@ -978,31 +957,22 @@ Dictionary List
 </h2>
 
 <div class="dictionary-search-wrap">
-
-<input
-  type="text"
-  id="dictionarySearchInput"
-  placeholder="Search Dictionary word..."
-  oninput="filterDictionaryWords()"
->
-
-<button
-  type="button"
-  id="dictionarySearchClear"
-  class="dictionary-search-clear"
-  title="Clear"
-  aria-label="Clear Dictionary search"
-  onclick="clearDictionarySearch()"
->
-×
-</button>
-
+  <input
+    type="text"
+    id="dictionarySearchInput"
+    placeholder="Search Dictionary word..."
+    oninput="filterDictionaryWords()"
+  >
+  <button
+    type="button"
+    id="dictionarySearchClear"
+    class="dictionary-search-clear"
+    title="Clear"
+    aria-label="Clear Dictionary search"
+    onclick="clearDictionarySearch()"
+  >×</button>
 </div>
-
-<div
-  id="dictionarySearchCount"
-  class="dictionary-search-count"
-></div>
+<div id="dictionarySearchCount" class="dictionary-search-count"></div>
 
 <button
   class="primary"
@@ -1094,27 +1064,10 @@ Exam Vocabulary Test
 Exam Mode
 </label>
 
-<div
-  class="exam-mode-buttons"
-  id="examModeButtons"
->
-
-<button
-  type="button"
-  class="exam-mode-btn selected"
-  onclick="selectExamMode('hi-en', this)"
->
-Hindi → English
-</button>
-
-<button
-  type="button"
-  class="exam-mode-btn"
-  onclick="selectExamMode('en-hi', this)"
->
-English → Hindi
-</button>
-
+<div class="exam-mode-buttons" id="examModeButtons">
+  <button type="button" class="exam-mode-btn selected" onclick="selectExamMode('hi-en', this)">Hindi → English</button>
+  <button type="button" class="exam-mode-btn" onclick="selectExamMode('en-hi', this)">English → Hindi</button>
+  
 </div>
 
 <label>
@@ -1129,107 +1082,19 @@ Number of Questions
   oninput="clearQuickSelectionOnManualEntry('questionCount')"
 >
 
-<div
-  class="quick-options"
-  id="questionQuickOptions"
->
-
-<button
-  type="button"
-  class="quick-option-btn selected"
-  onclick="setExamQuickValue('questionCount',10,this)"
->
-10
-</button>
-
-<button
-  type="button"
-  class="quick-option-btn"
-  onclick="setExamQuickValue('questionCount',20,this)"
->
-20
-</button>
-
-<button
-  type="button"
-  class="quick-option-btn"
-  onclick="setExamQuickValue('questionCount',30,this)"
->
-30
-</button>
-
-<button
-  type="button"
-  class="quick-option-btn"
-  onclick="setExamQuickValue('questionCount',40,this)"
->
-40
-</button>
-
-<button
-  type="button"
-  class="quick-option-btn"
-  onclick="setExamQuickValue('questionCount',50,this)"
->
-50
-</button>
-
-<button
-  type="button"
-  class="quick-option-btn"
-  onclick="setExamQuickValue('questionCount',60,this)"
->
-60
-</button>
-
-<button
-  type="button"
-  class="quick-option-btn"
-  onclick="setExamQuickValue('questionCount',70,this)"
->
-70
-</button>
-
-<button
-  type="button"
-  class="quick-option-btn"
-  onclick="setExamQuickValue('questionCount',80,this)"
->
-80
-</button>
-
-<button
-  type="button"
-  class="quick-option-btn"
-  onclick="setExamQuickValue('questionCount',90,this)"
->
-90
-</button>
-
-<button
-  type="button"
-  class="quick-option-btn"
-  onclick="setExamQuickValue('questionCount',100,this)"
->
-100
-</button>
-
-<button
-  type="button"
-  class="quick-option-btn"
-  onclick="setExamQuickValue('questionCount',150,this)"
->
-150
-</button>
-
-<button
-  type="button"
-  class="quick-option-btn"
-  onclick="setExamQuickValue('questionCount',200,this)"
->
-200
-</button>
-
+<div class="quick-options" id="questionQuickOptions">
+  <button type="button" class="quick-option-btn selected" onclick="setExamQuickValue('questionCount',10,this)">10</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('questionCount',20,this)">20</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('questionCount',30,this)">30</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('questionCount',40,this)">40</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('questionCount',50,this)">50</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('questionCount',60,this)">60</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('questionCount',70,this)">70</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('questionCount',80,this)">80</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('questionCount',90,this)">90</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('questionCount',100,this)">100</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('questionCount',150,this)">150</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('questionCount',200,this)">200</button>
 </div>
 
 <label>
@@ -1244,107 +1109,19 @@ Total Time (Minutes)
   oninput="clearQuickSelectionOnManualEntry('examMinutes')"
 >
 
-<div
-  class="quick-options"
-  id="timeQuickOptions"
->
-
-<button
-  type="button"
-  class="quick-option-btn selected"
-  onclick="setExamQuickValue('examMinutes',5,this)"
->
-5
-</button>
-
-<button
-  type="button"
-  class="quick-option-btn"
-  onclick="setExamQuickValue('examMinutes',10,this)"
->
-10
-</button>
-
-<button
-  type="button"
-  class="quick-option-btn"
-  onclick="setExamQuickValue('examMinutes',15,this)"
->
-15
-</button>
-
-<button
-  type="button"
-  class="quick-option-btn"
-  onclick="setExamQuickValue('examMinutes',20,this)"
->
-20
-</button>
-
-<button
-  type="button"
-  class="quick-option-btn"
-  onclick="setExamQuickValue('examMinutes',25,this)"
->
-25
-</button>
-
-<button
-  type="button"
-  class="quick-option-btn"
-  onclick="setExamQuickValue('examMinutes',30,this)"
->
-30
-</button>
-
-<button
-  type="button"
-  class="quick-option-btn"
-  onclick="setExamQuickValue('examMinutes',35,this)"
->
-35
-</button>
-
-<button
-  type="button"
-  class="quick-option-btn"
-  onclick="setExamQuickValue('examMinutes',40,this)"
->
-40
-</button>
-
-<button
-  type="button"
-  class="quick-option-btn"
-  onclick="setExamQuickValue('examMinutes',45,this)"
->
-45
-</button>
-
-<button
-  type="button"
-  class="quick-option-btn"
-  onclick="setExamQuickValue('examMinutes',50,this)"
->
-50
-</button>
-
-<button
-  type="button"
-  class="quick-option-btn"
-  onclick="setExamQuickValue('examMinutes',55,this)"
->
-55
-</button>
-
-<button
-  type="button"
-  class="quick-option-btn"
-  onclick="setExamQuickValue('examMinutes',60,this)"
->
-60
-</button>
-
+<div class="quick-options" id="timeQuickOptions">
+  <button type="button" class="quick-option-btn selected" onclick="setExamQuickValue('examMinutes',5,this)">5</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('examMinutes',10,this)">10</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('examMinutes',15,this)">15</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('examMinutes',20,this)">20</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('examMinutes',25,this)">25</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('examMinutes',30,this)">30</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('examMinutes',35,this)">35</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('examMinutes',40,this)">40</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('examMinutes',45,this)">45</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('examMinutes',50,this)">50</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('examMinutes',55,this)">55</button>
+  <button type="button" class="quick-option-btn" onclick="setExamQuickValue('examMinutes',60,this)">60</button>
 </div>
 
 <button
@@ -1371,38 +1148,17 @@ Start Exam
 <div class="exam-timer">
 
 <div class="exam-live-status">
-
-<span id="examQuestionLive">
-Question 1/0
-</span>
-
-<span>|</span>
-
-<span id="examAttemptedLive">
-Attempted 0
-</span>
-
-<span>|</span>
-
-<span id="examRemainingLive">
-Remaining 0
-</span>
-
+  <span id="examQuestionLive">Question 1/0</span>
+  <span>|</span>
+  <span id="examAttemptedLive">Attempted 0</span>
+  <span>|</span>
+  <span id="examRemainingLive">Remaining 0</span>
 </div>
 
-
 <div class="exam-live-status">
-
-<span id="totalTimeDisplay">
-00:00
-</span>
-
-<span>|</span>
-
-<span id="remainingTimeDisplay">
-00:00
-</span>
-
+  <span id="totalTimeDisplay">00:00</span>
+  <span>|</span>
+  <span id="remainingTimeDisplay">00:00</span>
 </div>
 
 </div>
@@ -1797,80 +1553,21 @@ function escapeJs(value){
 ===================================================== */
 
 function toggleSearchClear(){
-
-  const input =
-    document.getElementById(
-      "searchInput"
-    );
-
-  const btn =
-    document.getElementById(
-      "searchClearBtn"
-    );
-
-  if(!input || !btn) return;
-
-  btn.classList.toggle(
-    "show",
-    Boolean(input.value)
-  );
-
+  const input = document.getElementById("searchInput");
+  const btn = document.getElementById("searchClearBtn");
+  if (!input || !btn) return;
+  btn.classList.toggle("show", Boolean(input.value));
 }
 
-
 function clearSearchInput(){
-
-  const input =
-    document.getElementById(
-      "searchInput"
-    );
-
-  const btn =
-    document.getElementById(
-      "searchClearBtn"
-    );
-
-  const result =
-    document.getElementById(
-      "searchResult"
-    );
-
-  const message =
-    document.getElementById(
-      "searchMessage"
-    );
-
-  if(input){
-
-    input.value = "";
-
-    input.focus();
-
-  }
-
-  if(btn){
-
-    btn.classList.remove(
-      "show"
-    );
-
-  }
-
-  if(result){
-
-    result.innerHTML = "";
-
-  }
-
-  if(message){
-
-    message.textContent = "";
-
-    message.className =
-      "message";
-
-  }
-
+  const input = document.getElementById("searchInput");
+  const btn = document.getElementById("searchClearBtn");
+  const result = document.getElementById("searchResult");
+  const message = document.getElementById("searchMessage");
+  if (input) { input.value = ""; input.focus(); }
+  if (btn) btn.classList.remove("show");
+  if (result) result.innerHTML = "";
+  if (message) { message.textContent = ""; message.className = "message"; }
 }
 
 
@@ -1941,13 +1638,8 @@ async function searchWord(){
 
     if(!data.success){
 
-      if(data.offensive){
-
-        alert(
-          data.message ||
-          "This word is not allowed because it is offensive."
-        );
-
+      if (data.offensive) {
+        alert(data.message || "This word is not allowed because it is offensive.");
       }
 
       throw new Error(
@@ -1992,7 +1684,6 @@ async function searchWord(){
 
 }
 
-
 /* =====================================================
    SAVE SEARCHED WORD
 ===================================================== */
@@ -2004,32 +1695,20 @@ async function saveSearchedWord(word){
       "saveWordBtn"
     );
 
-
   if(!btn){
-
     return;
-
   }
 
-
-  btn.disabled =
-    true;
-
-  btn.textContent =
-    "Saving...";
-
+  btn.disabled = true;
+  btn.textContent = "Saving...";
 
   try{
 
     const data =
       await apiGet({
-
         action:"saveWord",
-
         word:word
-
       });
-
 
     if(!data.success){
 
@@ -2040,13 +1719,8 @@ async function saveSearchedWord(word){
 
     }
 
-
-    btn.textContent =
-      "Saved";
-
-    btn.disabled =
-      true;
-
+    btn.textContent = "Saved";
+    btn.disabled = true;
 
     showMessage(
       "searchMessage",
@@ -2054,15 +1728,10 @@ async function saveSearchedWord(word){
       "success"
     );
 
-
   }catch(error){
 
-    btn.disabled =
-      false;
-
-    btn.textContent =
-      "Save Word";
-
+    btn.disabled = false;
+    btn.textContent = "Save Word";
 
     showMessage(
       "searchMessage",
@@ -2076,238 +1745,92 @@ async function saveSearchedWord(word){
 
 
 /* =====================================================
+   SENTENCES
+===================================================== */
+
+/* =====================================================
    COPY TEXT
 ===================================================== */
 
-async function copyWordForExcel(
-  word,
-  meaning,
-  button
-){
+async function copyWordForExcel(word, meaning, button){
+  const english = String(word || "").trim();
+  const hindi = String(meaning || "").trim();
+  if(!english && !hindi) return;
 
-  const english =
-    String(
-      word || ""
-    ).trim();
-
-
-  const hindi =
-    String(
-      meaning || ""
-    ).trim();
-
-
-  if(
-    !english &&
-    !hindi
-  ){
-
-    return;
-
-  }
-
-
-  const value =
-    english +
-    "\t" +
-    hindi;
-
+  const value = english + "\t" + hindi;
 
   try{
-
-    if(
-      navigator.clipboard &&
-      window.isSecureContext
-    ){
-
-      await navigator.clipboard.writeText(
-        value
-      );
-
+    if(navigator.clipboard && window.isSecureContext){
+      await navigator.clipboard.writeText(value);
     }else{
-
-      const textarea =
-        document.createElement(
-          "textarea"
-        );
-
-      textarea.value =
-        value;
-
-      textarea.style.position =
-        "fixed";
-
-      textarea.style.left =
-        "-9999px";
-
-      textarea.style.top =
-        "0";
-
-      textarea.style.opacity =
-        "0";
-
-      document.body.appendChild(
-        textarea
-      );
-
+      const textarea = document.createElement("textarea");
+      textarea.value = value;
+      textarea.style.position = "fixed";
+      textarea.style.left = "-9999px";
+      textarea.style.top = "0";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
       textarea.focus();
-
       textarea.select();
-
-      document.execCommand(
-        "copy"
-      );
-
+      document.execCommand("copy");
       textarea.remove();
-
     }
-
 
     if(button){
-
-      const oldText =
-        button.textContent;
-
-      button.textContent =
-        "Copied ✓";
-
-      button.classList.add(
-        "copied"
-      );
-
-
-      setTimeout(
-        function(){
-
-          button.textContent =
-            oldText;
-
-          button.classList.remove(
-            "copied"
-          );
-
-        },
-        1200
-      );
-
+      const oldText = button.textContent;
+      button.textContent = "Copied ✓";
+      button.classList.add("copied");
+      setTimeout(function(){
+        button.textContent = oldText;
+        button.classList.remove("copied");
+      }, 1200);
     }
-
-
   }catch(error){
-
     showMessage(
       "searchMessage",
       "Copy failed. Please try again.",
       "error"
     );
-
   }
-
 }
 
 
-async function copyTextToClipboard(
-  text,
-  button
-){
-
-  const value =
-    String(
-      text || ""
-    ).trim();
-
-
-  if(!value){
-
-    return;
-
-  }
-
+async function copyTextToClipboard(text, button){
+  const value = String(text || "").trim();
+  if(!value) return;
 
   try{
-
-    if(
-      navigator.clipboard &&
-      window.isSecureContext
-    ){
-
-      await navigator.clipboard.writeText(
-        value
-      );
-
+    if(navigator.clipboard && window.isSecureContext){
+      await navigator.clipboard.writeText(value);
     }else{
-
-      const textarea =
-        document.createElement(
-          "textarea"
-        );
-
-      textarea.value =
-        value;
-
-      textarea.style.position =
-        "fixed";
-
-      textarea.style.opacity =
-        "0";
-
-      document.body.appendChild(
-        textarea
-      );
-
+      const textarea = document.createElement("textarea");
+      textarea.value = value;
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
       textarea.focus();
-
       textarea.select();
-
-      document.execCommand(
-        "copy"
-      );
-
+      document.execCommand("copy");
       textarea.remove();
-
     }
-
 
     if(button){
+      const oldText = button.textContent;
+      button.textContent = "Copied ✓";
+      button.classList.add("copied");
 
-      const oldText =
-        button.textContent;
-
-      button.textContent =
-        "Copied ✓";
-
-      button.classList.add(
-        "copied"
-      );
-
-
-      setTimeout(
-        function(){
-
-          button.textContent =
-            oldText;
-
-          button.classList.remove(
-            "copied"
-          );
-
-        },
-        1200
-      );
-
+      setTimeout(function(){
+        button.textContent = oldText;
+        button.classList.remove("copied");
+      }, 1200);
     }
-
-
   }catch(error){
-
     showMessage(
       "searchMessage",
       "Copy failed. Please try again.",
       "error"
     );
-
   }
-
 }
 
 
@@ -2330,11 +1853,7 @@ function renderSearchResult(
     <div class="card">
 
       <div class="word-title">
-
-        <span>
-          ${escapeHtml(record.word)}
-        </span>
-
+        <span>${escapeHtml(record.word)}</span>
         <button
           type="button"
           class="copy-text-btn"
@@ -2343,16 +1862,10 @@ function renderSearchResult(
         >
           Copy
         </button>
-
       </div>
 
-
       <div class="meaning">
-
-        <span>
-          ${escapeHtml(record.meaning)}
-        </span>
-
+        <span>${escapeHtml(record.meaning)}</span>
         <button
           type="button"
           class="copy-text-btn"
@@ -2361,12 +1874,9 @@ function renderSearchResult(
         >
           Copy
         </button>
-
       </div>
 
-
       <div style="margin-top:8px;">
-
         <button
           type="button"
           class="copy-text-btn"
@@ -2375,37 +1885,32 @@ function renderSearchResult(
         >
           Copy for Excel
         </button>
-
       </div>
-
 
       <div class="pronunciation">
-        ${escapeHtml(record.pronunciation)}
+        ${escapeHtml(
+          record.pronunciation
+        )}
       </div>
 
+      ${record.saved ? `
+        <div class="saved-label">✓ Saved in Dictionary</div>
+      ` : `
+        <button
+          id="saveWordBtn"
+          class="save-word-btn"
+          onclick="saveSearchedWord('${escapeJs(record.word)}')"
+        >
+          Save Word
+        </button>
+      `}
 
-      ${
-        record.saved
-        ?
-        `
-          <div class="saved-label">
-            ✓ Saved in Dictionary
-          </div>
-        `
-        :
-        `
-          <button
-            id="saveWordBtn"
-            class="save-word-btn"
-            onclick="saveSearchedWord('${escapeJs(record.word)}')"
-          >
-            Save Word
-          </button>
-        `
-      }
+  `;
 
+
+
+  html += `
     </div>
-
   `;
 
 
@@ -2421,268 +1926,102 @@ function renderSearchResult(
 
 async function loadDictionary(){
 
-  const list =
-    document.getElementById(
-      "dictionaryList"
-    );
+  const list = document.getElementById("dictionaryList");
+  const cacheKey = "PATEL_ASSOCIATES_DICTIONARY_LIST_V2";
 
-
-  const cacheKey =
-    "PATEL_ASSOCIATES_DICTIONARY_LIST_V2";
-
-
-  let cachedShown =
-    false;
-
-
+  /*
+   * Show the last successful list immediately, if available.
+   * The fresh API request still runs in the background, so the
+   * Dictionary feels instant on repeat visits without becoming stale.
+   */
+  let cachedShown = false;
   try{
-
-    const cached =
-      localStorage.getItem(
-        cacheKey
-      );
-
-
+    const cached = localStorage.getItem(cacheKey);
     if(cached){
-
-      const parsed =
-        JSON.parse(
-          cached
-        );
-
-
-      if(
-        Array.isArray(parsed) &&
-        parsed.length
-      ){
-
-        dictionaryWordsCache =
-          parsed;
-
-
-        renderDictionaryWords(
-          dictionaryWordsCache
-        );
-
-
-        updateDictionarySearchCount(
-          dictionaryWordsCache.length,
-          dictionaryWordsCache.length
-        );
-
-
-        cachedShown =
-          true;
-
-
-        if(
-          dictionaryWordsCache.some(
-            function(item){
-              return !item.meaning;
-            }
-          )
-        ){
-
+      const parsed = JSON.parse(cached);
+      if(Array.isArray(parsed) && parsed.length){
+        dictionaryWordsCache = parsed;
+        renderDictionaryWords(dictionaryWordsCache);
+        updateDictionarySearchCount(dictionaryWordsCache.length, dictionaryWordsCache.length);
+        cachedShown = true;
+        if(dictionaryWordsCache.some(function(item){ return !item.meaning; })){
           fillMissingDictionaryMeaningsInBackground();
-
         }
-
       }
-
     }
-
   }catch(error){
-
-    console.log(
-      "Dictionary cache read error: " +
-      error.message
-    );
-
+    console.log("Dictionary cache read error: " + error.message);
   }
-
 
   if(!cachedShown){
-
-    list.innerHTML =
-      `
-        <div class="loading">
-          Loading dictionary...
-        </div>
-      `;
-
+    list.innerHTML = `
+      <div class="loading">
+        Loading dictionary...
+      </div>
+    `;
   }
 
-
   try{
-
-    const data =
-      await apiGet({
-        action:"allWords"
-      });
-
+    const data = await apiGet({action:"allWords"});
 
     if(!data.success){
-
-      throw new Error(
-        data.message
-      );
-
+      throw new Error(data.message);
     }
 
-
-    const words =
-      Array.isArray(data.words)
-        ? data.words
-        : [];
-
+    const words = Array.isArray(data.words) ? data.words : [];
 
     if(words.length === 0){
-
-      dictionaryWordsCache =
-        [];
-
-
-      try{
-
-        localStorage.removeItem(
-          cacheKey
-        );
-
-      }catch(error){}
-
-
-      list.innerHTML =
-        `
-          <div class="loading">
-            No words found.
-          </div>
-        `;
-
-
-      updateDictionarySearchCount(
-        0,
-        0
-      );
-
-
+      dictionaryWordsCache = [];
+      try{ localStorage.removeItem(cacheKey); }catch(error){}
+      list.innerHTML = `
+        <div class="loading">
+          No words found.
+        </div>
+      `;
+      updateDictionarySearchCount(0, 0);
       return;
-
     }
 
+    const unique = [];
+    const seen = new Set();
 
-    const unique =
-      [];
+    words.forEach(function(item){
+      const word = String(item.word || "").trim();
+      const key = word.toLowerCase().replace(/\s+/g," ");
 
-    const seen =
-      new Set();
-
-
-    words.forEach(
-      function(item){
-
-        const word =
-          String(
-            item.word || ""
-          ).trim();
-
-
-        const key =
-          word
-            .toLowerCase()
-            .replace(
-              /\s+/g,
-              " "
-            );
-
-
-        if(
-          word &&
-          !seen.has(key)
-        ){
-
-          seen.add(key);
-
-
-          unique.push({
-
-            id:
-              item.id || "",
-
-            word:
-              word,
-
-            meaning:
-              String(
-                item.meaning || ""
-              ).trim(),
-
-            offensive:
-              Boolean(
-                item.offensive
-              )
-
-          });
-
-        }
-
+      if(word && !seen.has(key)){
+        seen.add(key);
+        unique.push({
+          id: item.id || "",
+          word: word,
+          meaning: String(item.meaning || "").trim(),
+          offensive: Boolean(item.offensive)
+        });
       }
-    );
+    });
 
-
-    dictionaryWordsCache =
-      unique;
-
+    dictionaryWordsCache = unique;
 
     try{
-
-      localStorage.setItem(
-        cacheKey,
-        JSON.stringify(
-          dictionaryWordsCache
-        )
-      );
-
+      localStorage.setItem(cacheKey, JSON.stringify(dictionaryWordsCache));
     }catch(error){
-
-      console.log(
-        "Dictionary cache write error: " +
-        error.message
-      );
-
+      console.log("Dictionary cache write error: " + error.message);
     }
 
-
+    /* If the user is typing a Dictionary search, preserve it. */
     filterDictionaryWords();
 
-
-    if(
-      unique.some(
-        function(item){
-          return !item.meaning;
-        }
-      )
-    ){
-
+    // Repair blank Hindi meanings after the fast list is already visible.
+    // This does not block Dictionary loading.
+    if(unique.some(function(item){ return !item.meaning; })){
       fillMissingDictionaryMeaningsInBackground();
-
     }
-
 
   }catch(error){
-
     if(!cachedShown){
-
-      list.innerHTML =
-        "";
-
-      showMessage(
-        "dictionaryMessage",
-        error.message,
-        "error"
-      );
-
+      list.innerHTML = "";
+      showMessage("dictionaryMessage", error.message, "error");
     }
-
   }
 
 }
@@ -2691,578 +2030,152 @@ async function loadDictionary(){
 /* =====================================================
    BACKGROUND HINDI MEANING REPAIR
 ===================================================== */
-
 function fillMissingDictionaryMeaningsInBackground(){
+  const pendingExists = dictionaryWordsCache.some(function(item){
+    return !String(item.meaning || "").trim();
+  });
 
-  const pendingExists =
-    dictionaryWordsCache.some(
-      function(item){
+  if(!pendingExists) return;
 
-        return !String(
-          item.meaning || ""
-        ).trim();
+  apiGet({action:"fillMissingMeanings", limit:50})
+    .then(function(data){
+      if(!data || !data.success) return;
 
-      }
-    );
-
-
-  if(!pendingExists){
-
-    return;
-
-  }
-
-
-  apiGet({
-    action:"fillMissingMeanings",
-    limit:50
-  })
-
-  .then(
-    function(data){
-
-      if(
-        !data ||
-        !data.success
-      ){
-
-        return;
-
-      }
-
-
-      const updates =
-        {};
-
-
-      (
-        Array.isArray(data.words)
-          ? data.words
-          : []
-      ).forEach(
-        function(item){
-
-          const meaning =
-            String(
-              item.meaning || ""
-            ).trim();
-
-
-          if(meaning){
-
-            updates[
-              String(
-                item.word || ""
-              )
-              .trim()
-              .toLowerCase()
-              .replace(
-                /\s+/g,
-                " "
-              )
-            ] =
-              meaning;
-
-          }
-
+      const updates = {};
+      (Array.isArray(data.words) ? data.words : []).forEach(function(item){
+        const meaning = String(item.meaning || "").trim();
+        if(meaning){
+          updates[String(item.word || "").trim().toLowerCase().replace(/\s+/g," ")] = meaning;
         }
-      );
+      });
 
-
-      let changed =
-        false;
-
-
-      dictionaryWordsCache =
-        dictionaryWordsCache.map(
-          function(item){
-
-            const key =
-              String(
-                item.word || ""
-              )
-              .trim()
-              .toLowerCase()
-              .replace(
-                /\s+/g,
-                " "
-              );
-
-
-            if(
-              !String(
-                item.meaning || ""
-              ).trim() &&
-              updates[key]
-            ){
-
-              changed =
-                true;
-
-
-              return Object.assign(
-                {},
-                item,
-                {
-                  meaning:
-                    updates[key]
-                }
-              );
-
-            }
-
-
-            return item;
-
-          }
-        );
-
+      let changed = false;
+      dictionaryWordsCache = dictionaryWordsCache.map(function(item){
+        const key = String(item.word || "").trim().toLowerCase().replace(/\s+/g," ");
+        if(!String(item.meaning || "").trim() && updates[key]){
+          changed = true;
+          return Object.assign({}, item, {meaning:updates[key]});
+        }
+        return item;
+      });
 
       if(changed){
-
         try{
-
-          localStorage.setItem(
-            "PATEL_ASSOCIATES_DICTIONARY_LIST_V2",
-            JSON.stringify(
-              dictionaryWordsCache
-            )
-          );
-
+          localStorage.setItem("PATEL_ASSOCIATES_DICTIONARY_LIST_V2", JSON.stringify(dictionaryWordsCache));
         }catch(error){}
-
-
         filterDictionaryWords();
-
       }
-
-
-      if(
-        dictionaryWordsCache.some(
-          function(item){
-
-            return !String(
-              item.meaning || ""
-            ).trim();
-
-          }
-        )
-      ){
-
-        setTimeout(
-          fillMissingDictionaryMeaningsInBackground,
-          500
-        );
-
-      }
-
-    }
-  )
-
-  .catch(
-    function(error){
-
-      console.log(
-        "Background Hindi meaning update failed: " +
-        error.message
-      );
-
-    }
-  );
-
-}
-
-
-/* =====================================================
-   RENDER DICTIONARY WORDS
-===================================================== */
-
-function renderDictionaryWords(
-  words
-){
-
-  const list =
-    document.getElementById(
-      "dictionaryList"
-    );
-
-
-  if(!list){
-
-    return;
-
-  }
-
-
-  if(!words.length){
-
-    list.innerHTML =
-      '<div class="loading">No matching words found.</div>';
-
-    return;
-
-  }
-
-
-  list.innerHTML =
-    "";
-
-
-  const fragment =
-    document.createDocumentFragment();
-
-
-  words.forEach(
-    function(item){
-
-      const wrapper =
-        document.createElement(
-          "div"
-        );
-
-
-      wrapper.className =
-        "word-item";
-
-
-      const button =
-        document.createElement(
-          "button"
-        );
-
-
-      button.className =
-        "word-button" +
-        (
-          item.offensive
-            ? " offensive-word"
-            : ""
-        );
-
-
-      button.type =
-        "button";
-
-
-      button.setAttribute(
-        "aria-label",
-        item.word +
-        " - " +
-        (
-          item.meaning ||
-          "Hindi meaning not available"
-        )
-      );
-
-
-      const row =
-        document.createElement(
-          "div"
-        );
-
-
-      row.className =
-        "dictionary-word-row";
-
-
-      const english =
-        document.createElement(
-          "span"
-        );
-
-
-      english.className =
-        "dictionary-word-english";
-
 
       /*
-       * textContent इस्तेमाल हो रहा है,
-       * इसलिए पूरा English word सुरक्षित रहेगा।
+       * If some words are still empty, continue with the next batch.
+       * This runs in the background and never blocks Dictionary loading.
        */
-
-      english.textContent =
-        item.word;
-
-
-      const hindi =
-        document.createElement(
-          "span"
-        );
-
-
-      hindi.className =
-        "dictionary-word-hindi" +
-        (
-          item.meaning
-            ? ""
-            : " empty"
-        );
-
-
-      hindi.textContent =
-        item.meaning ||
-        "Hindi meaning not available";
-
-
-      row.appendChild(
-        english
-      );
-
-
-      row.appendChild(
-        hindi
-      );
-
-
-      button.appendChild(
-        row
-      );
-
-
-      if(item.offensive){
-
-        button.title =
-          "Offensive word";
-
+      if(dictionaryWordsCache.some(function(item){ return !String(item.meaning || "").trim(); })){
+        setTimeout(fillMissingDictionaryMeaningsInBackground, 500);
       }
-
-
-      const details =
-        document.createElement(
-          "div"
-        );
-
-
-      details.className =
-        "word-details";
-
-
-      button.onclick =
-        function(){
-
-          toggleWordDetails(
-            item.word,
-            details
-          );
-
-        };
-
-
-      wrapper.appendChild(
-        button
-      );
-
-
-      const editButton =
-        document.createElement(
-          "button"
-        );
-
-
-      editButton.type =
-        "button";
-
-
-      editButton.className =
-        "word-edit-btn";
-
-
-      editButton.textContent =
-        "✎";
-
-
-      editButton.title =
-        "Edit spelling";
-
-
-      editButton.setAttribute(
-        "aria-label",
-        "Edit spelling"
-      );
-
-
-      editButton.onclick =
-        function(event){
-
-          event.stopPropagation();
-
-          editDictionaryWord(
-            item.word
-          );
-
-        };
-
-
-      wrapper.appendChild(
-        editButton
-      );
-
-
-      wrapper.appendChild(
-        details
-      );
-
-
-      fragment.appendChild(
-        wrapper
-      );
-
-    }
-  );
-
-
-  list.appendChild(
-    fragment
-  );
-
+    })
+    .catch(function(error){
+      console.log("Background Hindi meaning update failed: " + error.message);
+    });
 }
 
 
-/* =====================================================
-   FILTER DICTIONARY
-===================================================== */
+function renderDictionaryWords(words){
+  const list = document.getElementById("dictionaryList");
+  if (!list) return;
+
+  if (!words.length) {
+    list.innerHTML = '<div class="loading">No matching words found.</div>';
+    return;
+  }
+
+  list.innerHTML = "";
+
+  const fragment = document.createDocumentFragment();
+
+  words.forEach(function(item){
+    const wrapper = document.createElement("div");
+    wrapper.className = "word-item";
+
+    const button = document.createElement("button");
+    button.className = "word-button" + (item.offensive ? " offensive-word" : "");
+    button.type = "button";
+    button.setAttribute("aria-label", item.word + " - " + (item.meaning || "Hindi meaning not available"));
+
+    const row = document.createElement("div");
+    row.className = "dictionary-word-row";
+
+    const english = document.createElement("span");
+    english.className = "dictionary-word-english";
+    english.textContent = item.word;
+
+    const hindi = document.createElement("span");
+    hindi.className = "dictionary-word-hindi" + (item.meaning ? "" : " empty");
+    hindi.textContent = item.meaning || "Hindi meaning not available";
+
+    row.appendChild(english);
+    row.appendChild(hindi);
+    button.appendChild(row);
+
+    if (item.offensive) button.title = "Offensive word";
+
+    const details = document.createElement("div");
+    details.className = "word-details";
+
+    button.onclick = function(){
+      toggleWordDetails(item.word, details);
+    };
+
+    wrapper.appendChild(button);
+
+    const editButton = document.createElement("button");
+    editButton.type = "button";
+    editButton.className = "word-edit-btn";
+    editButton.textContent = "✎";
+    editButton.title = "Edit spelling";
+    editButton.setAttribute("aria-label", "Edit spelling");
+    editButton.onclick = function(event){
+      event.stopPropagation();
+      editDictionaryWord(item.word);
+    };
+
+    wrapper.appendChild(editButton);
+    wrapper.appendChild(details);
+    fragment.appendChild(wrapper);
+  });
+
+  list.appendChild(fragment);
+}
 
 function filterDictionaryWords(){
+  const input = document.getElementById("dictionarySearchInput");
+  const clear = document.getElementById("dictionarySearchClear");
+  const query = input ? input.value.trim().toLowerCase() : "";
+  if (clear) clear.classList.toggle("show", Boolean(query));
 
-  const input =
-    document.getElementById(
-      "dictionarySearchInput"
-    );
+  const filtered = !query
+    ? dictionaryWordsCache
+    : dictionaryWordsCache.filter(function(item){
+        return String(item.word || "").toLowerCase().includes(query);
+      });
 
-
-  const clear =
-    document.getElementById(
-      "dictionarySearchClear"
-    );
-
-
-  const query =
-    input
-      ? input.value.trim().toLowerCase()
-      : "";
-
-
-  if(clear){
-
-    clear.classList.toggle(
-      "show",
-      Boolean(query)
-    );
-
-  }
-
-
-  const filtered =
-    !query
-      ? dictionaryWordsCache
-      : dictionaryWordsCache.filter(
-          function(item){
-
-            return String(
-              item.word || ""
-            )
-            .toLowerCase()
-            .includes(
-              query
-            );
-
-          }
-        );
-
-
-  renderDictionaryWords(
-    filtered
-  );
-
-
-  updateDictionarySearchCount(
-    filtered.length,
-    dictionaryWordsCache.length
-  );
-
+  renderDictionaryWords(filtered);
+  updateDictionarySearchCount(filtered.length, dictionaryWordsCache.length);
 }
-
-
-/* =====================================================
-   CLEAR DICTIONARY SEARCH
-===================================================== */
 
 function clearDictionarySearch(){
-
-  const input =
-    document.getElementById(
-      "dictionarySearchInput"
-    );
-
-
-  const clear =
-    document.getElementById(
-      "dictionarySearchClear"
-    );
-
-
-  if(input){
-
-    input.value =
-      "";
-
-    input.focus();
-
-  }
-
-
-  if(clear){
-
-    clear.classList.remove(
-      "show"
-    );
-
-  }
-
-
-  renderDictionaryWords(
-    dictionaryWordsCache
-  );
-
-
-  updateDictionarySearchCount(
-    dictionaryWordsCache.length,
-    dictionaryWordsCache.length
-  );
-
+  const input = document.getElementById("dictionarySearchInput");
+  const clear = document.getElementById("dictionarySearchClear");
+  if (input) { input.value = ""; input.focus(); }
+  if (clear) clear.classList.remove("show");
+  renderDictionaryWords(dictionaryWordsCache);
+  updateDictionarySearchCount(dictionaryWordsCache.length, dictionaryWordsCache.length);
 }
 
-
-/* =====================================================
-   DICTIONARY SEARCH COUNT
-===================================================== */
-
-function updateDictionarySearchCount(
-  found,
-  total
-){
-
-  const el =
-    document.getElementById(
-      "dictionarySearchCount"
-    );
-
-
-  if(!el){
-
-    return;
-
-  }
-
-
-  el.textContent =
-    total
-      ? found +
-        " / " +
-        total +
-        " words"
-      : "";
-
+function updateDictionarySearchCount(found, total){
+  const el = document.getElementById("dictionarySearchCount");
+  if (!el) return;
+  el.textContent = total ? (found + " / " + total + " words") : "";
 }
 
 
@@ -3308,9 +2221,11 @@ async function toggleWordDetails(
     const data =
       await apiGet({
 
-        action:"search",
+        action:
+          "search",
 
-        word:word
+        word:
+          word
 
       });
 
@@ -3331,14 +2246,19 @@ async function toggleWordDetails(
     let html = `
 
       <div class="details-meaning">
-        ${escapeHtml(record.meaning)}
+        ${escapeHtml(
+          record.meaning
+        )}
       </div>
 
       <div class="details-pronunciation">
-        ${escapeHtml(record.pronunciation)}
+        ${escapeHtml(
+          record.pronunciation
+        )}
       </div>
 
     `;
+
 
 
     html += `
@@ -3368,7 +2288,9 @@ async function toggleWordDetails(
           class="message error"
           style="display:block"
         >
-          ${escapeHtml(error.message)}
+          ${escapeHtml(
+            error.message
+          )}
         </div>
       `;
 
@@ -3381,100 +2303,34 @@ async function toggleWordDetails(
    EDIT DICTIONARY WORD
 ===================================================== */
 
-async function editDictionaryWord(
-  oldWord
-){
+async function editDictionaryWord(oldWord){
+  const newWord = prompt("Correct spelling:", oldWord);
+  if (newWord === null) return;
 
-  const newWord =
-    prompt(
-      "Correct spelling:",
-      oldWord
-    );
-
-
-  if(newWord === null){
-
+  const cleaned = newWord.trim().replace(/\s+/g, " ");
+  if (!cleaned) {
+    alert("Word cannot be empty.");
     return;
-
   }
 
-
-  const cleaned =
-    newWord
-      .trim()
-      .replace(
-        /\s+/g,
-        " "
-      );
-
-
-  if(!cleaned){
-
-    alert(
-      "Word cannot be empty."
-    );
-
-    return;
-
-  }
-
-
-  if(
-    cleaned.toLowerCase() ===
-    oldWord.toLowerCase()
-  ){
-
-    return;
-
-  }
-
+  if (cleaned.toLowerCase() === oldWord.toLowerCase()) return;
 
   try{
-
-    const data =
-      await apiGet({
-
-        action:"editWord",
-
-        oldWord:
-          oldWord,
-
-        newWord:
-          cleaned
-
-      });
-
+    const data = await apiGet({
+      action:"editWord",
+      oldWord:oldWord,
+      newWord:cleaned
+    });
 
     if(!data.success){
-
-      throw new Error(
-        data.message ||
-        "Unable to update spelling."
-      );
-
+      throw new Error(data.message || "Unable to update spelling.");
     }
 
-
     loadDictionary();
-
-
-    showMessage(
-      "dictionaryMessage",
-      "Spelling updated successfully.",
-      "success"
-    );
-
-
+    showMessage("dictionaryMessage", "Spelling updated successfully.", "success");
   }catch(error){
-
-    showMessage(
-      "dictionaryMessage",
-      error.message,
-      "error"
-    );
-
+    showMessage("dictionaryMessage", error.message, "error");
   }
-
 }
 
 
@@ -3509,7 +2365,8 @@ async function deleteDictionaryWord(
     const data =
       await apiGet({
 
-        action:"deleteWord",
+        action:
+          "deleteWord",
 
         word:
           word
@@ -3685,17 +2542,13 @@ async function importExcel(){
     );
 
 
-    let added =
-      0;
+    let added = 0;
 
-    let updated =
-      0;
+    let updated = 0;
 
-    let alreadyAvailable =
-      0;
+    let alreadyAvailable = 0;
 
-    let failed =
-      0;
+    let failed = 0;
 
 
     const chunkSize =
@@ -3703,15 +2556,15 @@ async function importExcel(){
 
 
     for(
-      let i = 0;
-      i < unique.length;
-      i += chunkSize
+      let i=0;
+      i<unique.length;
+      i+=chunkSize
     ){
 
       const chunk =
         unique.slice(
           i,
-          i + chunkSize
+          i+chunkSize
         );
 
 
@@ -3719,7 +2572,7 @@ async function importExcel(){
         "importMessage",
         "Importing " +
         Math.min(
-          i + chunk.length,
+          i+chunk.length,
           unique.length
         ) +
         " / " +
@@ -3749,18 +2602,15 @@ async function importExcel(){
             data.added || 0
           );
 
-
         updated +=
           Number(
             data.updated || 0
           );
 
-
         alreadyAvailable +=
           Number(
             data.alreadyAvailable || 0
           );
-
 
         failed +=
           Number(
@@ -3836,166 +2686,50 @@ async function importExcel(){
    EXAM QUICK OPTION
 ===================================================== */
 
-function setExamQuickValue(
-  inputId,
-  value,
-  button
-){
+function setExamQuickValue(inputId, value, button){
 
-  const input =
-    document.getElementById(
-      inputId
-    );
+  const input = document.getElementById(inputId);
+  if (!input) return;
 
+  input.value = value;
 
-  if(!input){
-
-    return;
-
+  const container = button && button.parentElement;
+  if (container) {
+    container.querySelectorAll(".quick-option-btn").forEach(function(btn){
+      btn.classList.remove("selected");
+    });
   }
 
-
-  input.value =
-    value;
-
-
-  const container =
-    button &&
-    button.parentElement;
-
-
-  if(container){
-
-    container
-      .querySelectorAll(
-        ".quick-option-btn"
-      )
-      .forEach(
-        function(btn){
-
-          btn.classList.remove(
-            "selected"
-          );
-
-        }
-      );
-
+  if (button) {
+    button.classList.add("selected");
   }
-
-
-  if(button){
-
-    button.classList.add(
-      "selected"
-    );
-
-  }
-
 }
 
+function clearQuickSelectionOnManualEntry(inputId){
+  const input = document.getElementById(inputId);
+  if (!input) return;
 
-function clearQuickSelectionOnManualEntry(
-  inputId
-){
+  const value = Number(input.value);
+  const containerId = inputId === "questionCount" ? "questionQuickOptions" : "timeQuickOptions";
+  const container = document.getElementById(containerId);
+  if (!container) return;
 
-  const input =
-    document.getElementById(
-      inputId
-    );
-
-
-  if(!input){
-
-    return;
-
-  }
-
-
-  const value =
-    Number(
-      input.value
-    );
-
-
-  const containerId =
-    inputId === "questionCount"
-      ? "questionQuickOptions"
-      : "timeQuickOptions";
-
-
-  const container =
-    document.getElementById(
-      containerId
-    );
-
-
-  if(!container){
-
-    return;
-
-  }
-
-
-  container
-    .querySelectorAll(
-      ".quick-option-btn"
-    )
-    .forEach(
-      function(btn){
-
-        btn.classList.toggle(
-          "selected",
-          Number(
-            btn.textContent.trim()
-          ) === value
-        );
-
-      }
-    );
-
+  container.querySelectorAll(".quick-option-btn").forEach(function(btn){
+    btn.classList.toggle("selected", Number(btn.textContent.trim()) === value);
+  });
 }
-
 
 /* =====================================================
    START EXAM
 ===================================================== */
 
-function selectExamMode(
-  mode,
-  button
-){
-
-  examMode =
-    mode === "hi-en"
-      ? "hi-en"
-      : "en-hi";
-
-
-  document
-    .querySelectorAll(
-      "#examModeButtons .exam-mode-btn"
-    )
-    .forEach(
-      function(btn){
-
-        btn.classList.remove(
-          "selected"
-        );
-
-      }
-    );
-
-
-  if(button){
-
-    button.classList.add(
-      "selected"
-    );
-
-  }
-
+function selectExamMode(mode, button){
+  examMode = mode === "hi-en" ? "hi-en" : "en-hi";
+  document.querySelectorAll("#examModeButtons .exam-mode-btn").forEach(function(btn){
+    btn.classList.remove("selected");
+  });
+  if(button) button.classList.add("selected");
 }
-
 
 async function startExam(){
 
@@ -4006,14 +2740,12 @@ async function startExam(){
       ).value
     );
 
-
   const minutes =
     Number(
       document.getElementById(
         "examMinutes"
       ).value
     );
-
 
   if(count < 1){
 
@@ -4024,9 +2756,7 @@ async function startExam(){
     );
 
     return;
-
   }
-
 
   if(minutes < 1){
 
@@ -4037,9 +2767,7 @@ async function startExam(){
     );
 
     return;
-
   }
-
 
   showMessage(
     "examSetupMessage",
@@ -4047,90 +2775,51 @@ async function startExam(){
     "success"
   );
 
-
   try{
 
     const data =
       await apiGet({
-
         action:"examData",
-
         count:count
-
       });
 
-
     if(!data.success){
-
-      throw new Error(
-        data.message
-      );
-
+      throw new Error(data.message);
     }
-
 
     examRecords =
       data.records || [];
 
-
-    if(
-      examRecords.length === 0
-    ){
-
+    if(examRecords.length === 0){
       throw new Error(
         "No dictionary words available."
       );
-
     }
 
-
-    examAnswers =
-      {};
-
-
-    examSubmitted =
-      false;
-
+    examAnswers = {};
+    examSubmitted = false;
 
     examTotalSeconds =
       minutes * 60;
 
-
     examRemainingSeconds =
       examTotalSeconds;
 
-
     document.getElementById(
       "examSetup"
-    ).classList.add(
-      "hidden"
-    );
-
+    ).classList.add("hidden");
 
     document.getElementById(
       "examResult"
-    ).classList.add(
-      "hidden"
-    );
-
+    ).classList.add("hidden");
 
     document.getElementById(
       "examArea"
-    ).classList.remove(
-      "hidden"
-    );
-
+    ).classList.remove("hidden");
 
     renderExam();
-
-
-    updateExamLiveStatus(
-      0
-    );
-
-
+    updateExamLiveStatus(0);
     startExamTimer();
-
 
   }catch(error){
 
@@ -4138,11 +2827,7 @@ async function startExam(){
       error &&
       error.name === "AbortError"
         ? "Exam preparation timed out. Please try again."
-        : (
-            error.message ||
-            "Unable to prepare exam."
-          );
-
+        : (error.message || "Unable to prepare exam.");
 
     showMessage(
       "examSetupMessage",
@@ -4162,247 +2847,151 @@ async function startExam(){
 function renderExam(){
 
   const container =
-    document.getElementById(
-      "examQuestions"
-    );
+    document.getElementById("examQuestions");
 
-
-  container.innerHTML =
-    "";
-
+  container.innerHTML = "";
 
   const isHindiToEnglish =
     examMode === "hi-en";
 
+  /*
+   * IMPORTANT:
+   * Distractor words are now distributed across questions.
+   *
+   * Old behavior:
+   *   Every question took the first 3 available distractors.
+   *   Therefore the same 2-3 words appeared again and again.
+   *
+   * New behavior:
+   *   1. Keep a usage count for every possible option.
+   *   2. Prefer words that have NOT been used as a distractor yet.
+   *   3. If all words have already been used, prefer the least-used ones.
+   *   4. Randomize candidates having the same usage count.
+   *
+   * This makes the options much more varied from question to question.
+   */
 
-  const distractorUsage =
-    {};
+  const distractorUsage = {};
 
-
-  function normalizeOption(
-    value
-  ){
-
-    return String(
-      value || ""
-    )
-    .trim()
-    .replace(
-      /\s+/g,
-      " "
-    )
-    .toLowerCase();
-
+  function normalizeOption(value){
+    return String(value || "")
+      .trim()
+      .replace(/\s+/g, " ")
+      .toLowerCase();
   }
 
+  function shuffleLocal(array){
+    const arr = [...array];
 
-  function shuffleLocal(
-    array
-  ){
-
-    const arr =
-      [...array];
-
-
-    for(
-      let i = arr.length - 1;
-      i > 0;
-      i--
-    ){
-
-      const j =
-        Math.floor(
-          Math.random() *
-          (i + 1)
-        );
-
-
-      const temp =
-        arr[i];
-
-
-      arr[i] =
-        arr[j];
-
-
-      arr[j] =
-        temp;
-
+    for(let i = arr.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      const temp = arr[i];
+      arr[i] = arr[j];
+      arr[j] = temp;
     }
-
 
     return arr;
-
   }
 
-
-  function getAnswerValue(
-    record
-  ){
-
+  function getAnswerValue(record){
     return isHindiToEnglish
-      ? String(
-          record.word || ""
-        ).trim()
-      : String(
-          record.meaning || ""
-        ).trim();
-
+      ? String(record.word || "").trim()
+      : String(record.meaning || "").trim();
   }
 
+  /*
+   * Build one unique pool of possible distractors.
+   * Duplicate meanings/words are kept only once.
+   */
+  const allDistractors = [];
+  const globalSeen = new Set();
 
-  const allDistractors =
-    [];
+  examRecords.forEach(function(record){
+    const value = getAnswerValue(record);
+    const key = normalizeOption(value);
 
-
-  const globalSeen =
-    new Set();
-
-
-  examRecords.forEach(
-    function(record){
-
-      const value =
-        getAnswerValue(
-          record
-        );
-
-
-      const key =
-        normalizeOption(
-          value
-        );
-
-
-      if(
-        !value ||
-        globalSeen.has(key)
-      ){
-
-        return;
-
-      }
-
-
-      globalSeen.add(
-        key
-      );
-
-
-      allDistractors.push(
-        value
-      );
-
-
-      distractorUsage[key] =
-        0;
-
+    if(!value || globalSeen.has(key)){
+      return;
     }
-  );
 
+    globalSeen.add(key);
+    allDistractors.push(value);
+    distractorUsage[key] = 0;
+  });
 
   examRecords.forEach(
     function(record,index){
 
       const question =
-        document.createElement(
-          "div"
-        );
-
+        document.createElement("div");
 
       question.className =
         "exam-question";
 
-
+      /*
+       * English → Hindi:
+       *   Question = English word
+       *   Answer   = Hindi meaning
+       *
+       * Hindi → English:
+       *   Question = Hindi meaning
+       *   Answer   = English word
+       */
       const questionText =
         isHindiToEnglish
-          ? String(
-              record.meaning || ""
-            ).trim()
-          : String(
-              record.word || ""
-            ).trim();
-
+          ? String(record.meaning || "").trim()
+          : String(record.word || "").trim();
 
       const correct =
         isHindiToEnglish
-          ? String(
-              record.word || ""
-            ).trim()
-          : String(
-              record.meaning || ""
-            ).trim();
-
+          ? String(record.word || "").trim()
+          : String(record.meaning || "").trim();
 
       const correctKey =
-        normalizeOption(
-          correct
-        );
+        normalizeOption(correct);
 
-
+      /*
+       * Candidates cannot be the correct answer of this question.
+       */
       const candidates =
-        allDistractors.filter(
-          function(value){
+        allDistractors.filter(function(value){
+          return normalizeOption(value) !== correctKey;
+        });
 
-            return normalizeOption(
-              value
-            ) !== correctKey;
-
-          }
-        );
-
-
+      /*
+       * First preference:
+       * words never used as distractors before.
+       *
+       * Second preference:
+       * words with the lowest usage count.
+       *
+       * Random shuffle before sorting prevents the same fixed
+       * order from being selected every time.
+       */
       const shuffledCandidates =
-        shuffleLocal(
-          candidates
+        shuffleLocal(candidates);
+
+      shuffledCandidates.sort(function(a,b){
+        return (
+          (distractorUsage[normalizeOption(a)] || 0) -
+          (distractorUsage[normalizeOption(b)] || 0)
         );
+      });
 
-
-      shuffledCandidates.sort(
-        function(a,b){
-
-          return (
-            (
-              distractorUsage[
-                normalizeOption(a)
-              ] || 0
-            ) -
-            (
-              distractorUsage[
-                normalizeOption(b)
-              ] || 0
-            )
-          );
-
-        }
-      );
-
-
+      /*
+       * Select up to 3 distractors.
+       * Because usage is balanced, the same 2-3 words will
+       * no longer be repeatedly selected for every question
+       * while enough different words are available.
+       */
       const selectedDistractors =
-        shuffledCandidates.slice(
-          0,
-          3
-        );
+        shuffledCandidates.slice(0,3);
 
-
-      selectedDistractors.forEach(
-        function(value){
-
-          const key =
-            normalizeOption(
-              value
-            );
-
-
-          distractorUsage[key] =
-            (
-              distractorUsage[key] ||
-              0
-            ) + 1;
-
-        }
-      );
-
+      selectedDistractors.forEach(function(value){
+        const key = normalizeOption(value);
+        distractorUsage[key] =
+          (distractorUsage[key] || 0) + 1;
+      });
 
       const options =
         shuffleArray([
@@ -4410,17 +2999,15 @@ function renderExam(){
           ...selectedDistractors
         ]);
 
-
       const modeLabel =
         isHindiToEnglish
           ? "Hindi → English"
           : "English → Hindi";
 
-
       question.innerHTML = `
 
         <div class="question-number">
-          Question ${index + 1}
+          Question ${index+1}
           of ${examRecords.length}
         </div>
 
@@ -4436,29 +3023,20 @@ function renderExam(){
 
       `;
 
-
       const optionsContainer =
-        question.querySelector(
-          ".options"
-        );
-
+        question.querySelector(".options");
 
       options.forEach(
         function(option){
 
           const button =
-            document.createElement(
-              "button"
-            );
-
+            document.createElement("button");
 
           button.className =
             "answer-option";
 
-
           button.textContent =
             option;
-
 
           button.onclick =
             function(){
@@ -4473,24 +3051,17 @@ function renderExam(){
 
             };
 
-
-          optionsContainer.appendChild(
-            button
-          );
+          optionsContainer.appendChild(button);
 
         }
       );
 
-
-      container.appendChild(
-        question
-      );
+      container.appendChild(question);
 
     }
   );
 
 }
-
 
 /* =====================================================
    ANSWER CLICK
@@ -4510,6 +3081,10 @@ function selectExamAnswer(
 
 ){
 
+  /*
+   * Prevent second click
+   */
+
   if(
     examAnswers[
       questionIndex
@@ -4526,10 +3101,7 @@ function selectExamAnswer(
   ] =
     selectedAnswer;
 
-
-  updateExamLiveStatus(
-    questionIndex
-  );
+  updateExamLiveStatus(questionIndex);
 
 
   const buttons =
@@ -4539,12 +3111,15 @@ function selectExamAnswer(
       );
 
 
+  /*
+   * Disable all options.
+   */
+
   buttons.forEach(
     function(button){
 
       button.disabled =
         true;
-
 
       button.classList.add(
         "disabled"
@@ -4554,6 +3129,10 @@ function selectExamAnswer(
   );
 
 
+  /*
+   * Correct answer
+   */
+
   if(
     selectedAnswer
       .toLowerCase() ===
@@ -4561,16 +3140,37 @@ function selectExamAnswer(
       .toLowerCase()
   ){
 
+    /*
+     * ONLY GREEN
+     */
+
     clickedButton.classList.add(
       "correct"
     );
 
-  }else{
+  }
+
+
+  /*
+   * Wrong answer
+   */
+
+  else{
+
+    /*
+     * Selected answer = RED
+     */
 
     clickedButton.classList.add(
       "wrong"
     );
 
+
+    /*
+     * Correct option = GREEN
+     *
+     * No text is displayed.
+     */
 
     buttons.forEach(
       function(button){
@@ -4601,9 +3201,7 @@ function selectExamAnswer(
    SHUFFLE
 ===================================================== */
 
-function shuffleArray(
-  array
-){
+function shuffleArray(array){
 
   const arr =
     [...array];
@@ -4628,10 +3226,8 @@ function shuffleArray(
     const temp =
       arr[i];
 
-
     arr[i] =
       arr[j];
-
 
     arr[j] =
       temp;
@@ -4648,87 +3244,21 @@ function shuffleArray(
    LIVE EXAM STATUS
 ===================================================== */
 
-function updateExamLiveStatus(
-  lastQuestionIndex
-){
+function updateExamLiveStatus(lastQuestionIndex){
+  const total = examRecords.length;
+  const attempted = Object.keys(examAnswers).length;
+  const remaining = Math.max(0, total - attempted);
 
-  const total =
-    examRecords.length;
+  const qEl = document.getElementById("examQuestionLive");
+  const aEl = document.getElementById("examAttemptedLive");
+  const rEl = document.getElementById("examRemainingLive");
 
-
-  const attempted =
-    Object.keys(
-      examAnswers
-    ).length;
-
-
-  const remaining =
-    Math.max(
-      0,
-      total - attempted
-    );
-
-
-  const qEl =
-    document.getElementById(
-      "examQuestionLive"
-    );
-
-
-  const aEl =
-    document.getElementById(
-      "examAttemptedLive"
-    );
-
-
-  const rEl =
-    document.getElementById(
-      "examRemainingLive"
-    );
-
-
-  if(qEl){
-
-    const current =
-      total
-        ? Math.min(
-            total,
-            Math.max(
-              1,
-              Number(
-                lastQuestionIndex || 0
-              ) + 1
-            )
-          )
-        : 0;
-
-
-    qEl.textContent =
-      "Question " +
-      current +
-      "/" +
-      total;
-
+  if (qEl) {
+    const current = total ? Math.min(total, Math.max(1, Number(lastQuestionIndex || 0) + 1)) : 0;
+    qEl.textContent = "Question " + current + "/" + total;
   }
-
-
-  if(aEl){
-
-    aEl.textContent =
-      "Attempted " +
-      attempted;
-
-  }
-
-
-  if(rEl){
-
-    rEl.textContent =
-      "Remaining " +
-      remaining;
-
-  }
-
+  if (aEl) aEl.textContent = "Attempted " + attempted;
+  if (rEl) rEl.textContent = "Remaining " + remaining;
 }
 
 
@@ -4761,14 +3291,12 @@ function startExamTimer(){
 
           autoSubmitExam();
 
-
           return;
 
         }
 
 
         examRemainingSeconds--;
-
 
         updateExamTimer();
 
@@ -4843,16 +3371,10 @@ function formatTime(
 
 
   return String(min)
-    .padStart(
-      2,
-      "0"
-    ) +
+    .padStart(2,"0") +
     ":" +
     String(sec)
-      .padStart(
-        2,
-        "0"
-      );
+      .padStart(2,"0");
 
 }
 
@@ -4864,24 +3386,15 @@ function formatTime(
 async function submitExam(){
 
   if(examSubmitted){
-
     return;
-
   }
 
+  examSubmitted = true;
 
-  examSubmitted =
-    true;
-
-
-  clearInterval(
-    examTimer
-  );
-
+  clearInterval(examTimer);
 
   const isHindiToEnglish =
     examMode === "hi-en";
-
 
   const answers =
     examRecords.map(
@@ -4889,34 +3402,19 @@ async function submitExam(){
 
         const correctAnswer =
           isHindiToEnglish
-            ? String(
-                record.word || ""
-              ).trim()
-            : String(
-                record.meaning || ""
-              ).trim();
-
+            ? String(record.word || "").trim()
+            : String(record.meaning || "").trim();
 
         return {
-
-          word:
-            record.word,
-
-          answer:
-            examAnswers[index] || "",
-
-          correctAnswer:
-            correctAnswer
-
+          word:record.word,
+          answer:examAnswers[index] || "",
+          correctAnswer:correctAnswer
         };
 
       }
     );
 
-
-  let correctCount =
-    0;
-
+  let correctCount = 0;
 
   answers.forEach(
     function(item){
@@ -4926,52 +3424,30 @@ async function submitExam(){
         item.answer.toLowerCase() ===
         item.correctAnswer.toLowerCase()
       ){
-
         correctCount++;
-
       }
 
     }
   );
 
-
   try{
 
     await apiGet({
-
       action:"saveExam",
-
-      answers:
-        JSON.stringify(
-          answers
-        )
-
+      answers:JSON.stringify(answers)
     });
 
   }catch(error){
-
-    console.error(
-      error
-    );
-
+    console.error(error);
   }
-
 
   const total =
     examRecords.length;
 
-
   const attempted =
-    answers.filter(
-      function(item){
-
-        return Boolean(
-          item.answer
-        );
-
-      }
-    ).length;
-
+    answers.filter(function(item){
+      return Boolean(item.answer);
+    }).length;
 
   const incorrect =
     Math.max(
@@ -4979,13 +3455,11 @@ async function submitExam(){
       attempted - correctCount
     );
 
-
   const unanswered =
     Math.max(
       0,
       total - attempted
     );
-
 
   const elapsedSeconds =
     Math.max(
@@ -4994,18 +3468,12 @@ async function submitExam(){
       examRemainingSeconds
     );
 
-
   const percentage =
     attempted
       ? Math.round(
-          (
-            correctCount /
-            attempted
-          ) *
-          100
+          (correctCount / attempted) * 100
         )
       : 0;
-
 
   showExamResult(
     correctCount,
@@ -5056,158 +3524,73 @@ function showExamResult(
 
   document.getElementById(
     "examArea"
-  ).classList.add(
-    "hidden"
-  );
-
+  ).classList.add("hidden");
 
   const result =
-    document.getElementById(
-      "examResult"
-    );
+    document.getElementById("examResult");
 
-
-  result.classList.remove(
-    "hidden"
-  );
-
+  result.classList.remove("hidden");
 
   result.innerHTML = `
 
     <div class="exam-result">
 
-      <h2>
-        Exam Result
-      </h2>
+      <h2>Exam Result</h2>
 
       <div class="score">
         ${correct} / ${total}
       </div>
 
-
       <div class="exam-result-dashboard">
 
         <div class="exam-pie-box">
-
-          <canvas
-            id="examPieChart"
-            width="220"
-            height="220"
-          ></canvas>
-
+          <canvas id="examPieChart" width="220" height="220"></canvas>
         </div>
-
 
         <div class="exam-stats-box">
 
-          <div
-            class="exam-stat-card exam-stat-total"
-          >
-
-            <span class="label">
-              Total Questions
-            </span>
-
-            <span class="value">
-              ${total}
-            </span>
-
+          <div class="exam-stat-card exam-stat-total">
+            <span class="label">Total Questions</span>
+            <span class="value">${total}</span>
           </div>
 
-
-          <div
-            class="exam-stat-card exam-stat-attempted"
-          >
-
-            <span class="label">
-              Attempted
-            </span>
-
-            <span class="value">
-              ${attempted}
-            </span>
-
+          <div class="exam-stat-card exam-stat-attempted">
+            <span class="label">Attempted</span>
+            <span class="value">${attempted}</span>
           </div>
 
-
-          <div
-            class="exam-stat-card exam-stat-correct"
-          >
-
-            <span class="label">
-              Correct
-            </span>
-
-            <span class="value">
-              ${correct}
-            </span>
-
+          <div class="exam-stat-card exam-stat-correct">
+            <span class="label">Correct</span>
+            <span class="value">${correct}</span>
           </div>
 
-
-          <div
-            class="exam-stat-card exam-stat-incorrect"
-          >
-
-            <span class="label">
-              Incorrect
-            </span>
-
-            <span class="value">
-              ${incorrect}
-            </span>
-
+          <div class="exam-stat-card exam-stat-incorrect">
+            <span class="label">Incorrect</span>
+            <span class="value">${incorrect}</span>
           </div>
 
-
-          <div
-            class="exam-stat-card exam-stat-unattempted"
-          >
-
-            <span class="label">
-              Unattempted
-            </span>
-
-            <span class="value">
-              ${unanswered}
-            </span>
-
+          <div class="exam-stat-card exam-stat-unattempted">
+            <span class="label">Unattempted</span>
+            <span class="value">${unanswered}</span>
           </div>
 
         </div>
 
       </div>
-
 
       <div class="exam-summary-grid">
 
         <div class="exam-summary-item">
-
-          <div class="exam-summary-label">
-            Time Taken
-          </div>
-
-          <div class="exam-summary-value">
-            ${formatTime(elapsedSeconds)}
-          </div>
-
+          <div class="exam-summary-label">Time Taken</div>
+          <div class="exam-summary-value">${formatTime(elapsedSeconds)}</div>
         </div>
 
-
         <div class="exam-summary-item">
-
-          <div class="exam-summary-label">
-            Accuracy
-          </div>
-
-          <div class="exam-summary-value">
-            ${percentage}%
-          </div>
-
+          <div class="exam-summary-label">Accuracy</div>
+          <div class="exam-summary-value">${percentage}%</div>
         </div>
 
       </div>
-
 
       <button
         class="primary"
@@ -5220,155 +3603,72 @@ function showExamResult(
 
   `;
 
-
-  if(
-    typeof Chart !==
-    "undefined"
-  ){
+  if(typeof Chart !== "undefined"){
 
     const pieCanvas =
-      document.getElementById(
-        "examPieChart"
-      );
+      document.getElementById("examPieChart");
 
-
-    if(
-      typeof ChartDataLabels !==
-      "undefined"
-    ){
-
-      Chart.register(
-        ChartDataLabels
-      );
-
+    if(typeof ChartDataLabels !== "undefined"){
+      Chart.register(ChartDataLabels);
     }
-
 
     new Chart(
       pieCanvas,
       {
-
         type:"pie",
-
         data:{
-
           labels:[
             "Correct",
             "Incorrect",
             "Unattempted"
           ],
-
           datasets:[
             {
-
               data:[
                 correct,
                 incorrect,
                 unanswered
               ]
-
             }
           ]
-
         },
-
         options:{
-
           responsive:true,
-
           maintainAspectRatio:true,
-
           plugins:{
-
             legend:{
-
               position:"bottom",
-
               labels:{
-
                 boxWidth:12,
-
-                font:{
-                  size:11
-                }
-
+                font:{size:11}
               }
-
             },
-
-
             title:{
-
               display:true,
-
-              text:
-                "Exam Performance",
-
-              font:{
-                size:14
-              }
-
+              text:"Exam Performance",
+              font:{size:14}
             },
-
-
             datalabels:{
-
               display:true,
-
-              formatter:
-                function(
-                  value,
-                  context
-                ){
-
-                  const totalValue =
-                    context.chart.data.datasets[0].data
-                      .reduce(
-                        function(a,b){
-                          return a + b;
-                        },
-                        0
-                      );
-
-
-                  if(!totalValue){
-
-                    return "0%";
-
-                  }
-
-
-                  return Math.round(
-                    (
-                      value /
-                      totalValue
-                    ) *
-                    100
-                  ) +
-                  "%";
-
-                },
-
-
+              formatter:function(value, context){
+                const totalValue =
+                  context.chart.data.datasets[0].data
+                    .reduce(function(a,b){ return a + b; }, 0);
+                if(!totalValue){
+                  return "0%";
+                }
+                return Math.round((value / totalValue) * 100) + "%";
+              },
               font:{
-
                 weight:"bold",
-
                 size:12
-
               }
-
             }
-
           }
-
         }
-
       }
     );
-
   }
-
 }
 
 
@@ -5431,8 +3731,7 @@ document
     function(event){
 
       if(
-        event.key ===
-        "Enter"
+        event.key === "Enter"
       ){
 
         searchWord();
