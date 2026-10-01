@@ -1217,7 +1217,7 @@ async function apiGet(params){
       function(){
         controller.abort();
       },
-      30000
+      60000
     );
 
 
@@ -2883,9 +2883,15 @@ async function startExam(){
 
   }catch(error){
 
+    const message =
+      error &&
+      error.name === "AbortError"
+        ? "Exam preparation timed out. Please try again."
+        : (error.message || "Unable to prepare exam.");
+
     showMessage(
       "examSetupMessage",
-      error.message,
+      message,
       "error"
     );
 
