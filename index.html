@@ -52,13 +52,22 @@ header p{
 }
 
 .server-status{
-  padding:9px;
-  margin-bottom:12px;
-  border-radius:8px;
+  display:inline-block;
+  width:auto;
+  padding:4px 10px;
+  margin:0 auto 8px;
+  border-radius:6px;
   text-align:center;
-  font-size:14px;
+  font-size:11px;
+  line-height:1.2;
   background:#fff3cd;
   color:#856404;
+}
+
+#serverStatus{
+  position:relative;
+  left:50%;
+  transform:translateX(-50%);
 }
 
 .tabs{
@@ -82,24 +91,31 @@ header p{
 /* Dictionary list gets its own vertical scroll area. */
 #dictionaryList{
   max-height:60vh;
-  overflow-y:auto;
+  overflow-y:scroll;
   overflow-x:hidden;
-  padding-right:4px;
+  padding-right:6px;
   scrollbar-width:auto;
   -webkit-overflow-scrolling:touch;
 }
 
 #dictionaryList::-webkit-scrollbar{
-  width:10px;
+  width:18px;
 }
 
 #dictionaryList::-webkit-scrollbar-thumb{
-  background:#aeb8c7;
-  border-radius:8px;
+  background:#7f8da3;
+  border:3px solid #eef2f7;
+  border-radius:12px;
+  min-height:70px;
+}
+
+#dictionaryList::-webkit-scrollbar-thumb:hover{
+  background:#5f6f86;
 }
 
 #dictionaryList::-webkit-scrollbar-track{
   background:#eef2f7;
+  border-radius:12px;
 }
 
 .tab-btn.active{
@@ -503,10 +519,19 @@ label{
   background:#eaf2ff;
 }
 
-.audio-controls button.audio-main{
-  background:#0b5ed7;
-  color:white;
-  border-color:#0b5ed7;
+.audio-controls button.audio-main,
+.audio-controls button.audio-main:hover,
+.audio-controls button.audio-main:focus,
+.audio-controls button.audio-main:active{
+  background:#0b5ed7 !important;
+  color:white !important;
+  border-color:#0b5ed7 !important;
+  opacity:1 !important;
+  box-shadow:none;
+}
+
+.audio-controls button.audio-main:active{
+  transform:scale(.98);
 }
 
 .audio-status{
