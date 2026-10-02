@@ -32,17 +32,17 @@ header{
   background:#0b5ed7;
   color:white;
   text-align:center;
-  padding:18px 10px;
+  padding:12px 10px;
 }
 
 header h1{
   margin:0;
-  font-size:25px;
+  font-size:21px;
 }
 
 header p{
-  margin:5px 0 0;
-  font-size:14px;
+  margin:3px 0 0;
+  font-size:12px;
 }
 
 .container{
@@ -70,8 +70,8 @@ header p{
 
 .tab-btn{
   flex:1;
-  min-width:125px;
-  padding:12px 8px;
+  min-width:105px;
+  padding:9px 6px;
   border:none;
   border-radius:8px;
   background:#ddd;
@@ -1513,6 +1513,10 @@ let dictionaryAudioStopped = true;
 let dictionaryAudioPaused = false;
 let dictionaryAudioCurrentUtterance = null;
 let dictionaryAudioCurrentPhase = "";
+let dictionaryAudioCurrentText = "";
+let dictionaryAudioLastBoundary = 0;
+let dictionaryAudioResumeText = "";
+let dictionaryAudioResumePhase = "";
 
 
 /* =====================================================
@@ -2571,26 +2575,18 @@ function playSelectedDictionaryAudio(){
   }
 
   /*
-   * IMPORTANT AUDIO FIX:
-   * Never rebuild the utterance after Pause. Keep the same utterance
-   * alive and ask the browser to resume it. This preserves the current
-   * spoken position instead of starting the word again.
+   * Reliable pause/resume:
+   * Chrome speechSynthesis.pause()/resume() can sometimes restart an utterance.
+   * We therefore remember the last boundary and, on Play, speak only the
+   * remaining part of the current English/Hindi text.
    */
-  if(dictionaryAudioPaused && !dictionaryAudioStopped && dictionaryAudioCurrentUtterance){
+  if(dictionaryAudioPaused && !dictionaryAudioStopped){
     dictionaryAudioPaused = false;
-    try{
-      window.speechSynthesis.resume();
-    }catch(error){}
-    setAudioStatus("Audio resumed — wahi se continue ho raha hai.");
-    return;
-  }
-
-  if(window.speechSynthesis.paused && !dictionaryAudioStopped && dictionaryAudioCurrentUtterance){
-    dictionaryAudioPaused = false;
-    try{
-      window.speechSynthesis.resume();
-    }catch(error){}
-    setAudioStatus("Audio resumed — wahi se continue ho raha hai.");
+    window.speechSynthesis.cancel();
+    setTimeout(function(){
+      if(dictionaryAudioStopped) return;
+      speakCurrentAudioFromSavedPosition();
+    }, 40);
     return;
   }
 
@@ -2621,6 +2617,10 @@ function playSelectedDictionaryAudio(){
   dictionaryAudioPaused = false;
   dictionaryAudioCurrentUtterance = null;
   dictionaryAudioCurrentPhase = "";
+  dictionaryAudioCurrentText = "";
+  dictionaryAudioLastBoundary = 0;
+  dictionaryAudioResumeText = "";
+  dictionaryAudioResumePhase = "";
 
   window.speechSynthesis.cancel();
   speakNextDictionaryAudio();
@@ -2632,6 +2632,7 @@ function speakNextDictionaryAudio(){
       setAudioStatus("Audio complete — " + dictionaryAudioQueue.length + " words sunaye gaye.");
     }
     dictionaryAudioStopped = true;
+    dictionaryAudioCurrentUtterance = null;
     setAudioNowPlaying();
     return;
   }
@@ -2647,71 +2648,128 @@ function speakNextDictionaryAudio(){
     return;
   }
 
-  setAudioNowPlaying(number, englishText, hindiText, "english");
-  setAudioStatus("Playing No. " + number + " — English: " + englishText + " → Hindi: " + (hindiText || "meaning pending"));
+  dictionaryAudioResumeText = "";
+  dictionaryAudioResumePhase = "";
+  speakAudioPart(englishText, "english", number, englishText, hindiText);
+}
 
-  const englishUtterance = new SpeechSynthesisUtterance(englishText);
-  dictionaryAudioCurrentUtterance = englishUtterance;
-  dictionaryAudioCurrentPhase = "english";
-  englishUtterance.lang = "en-US";
-  englishUtterance.rate = 0.85;
-  englishUtterance.pitch = 1;
-
-  englishUtterance.onend = function(){
-    if(dictionaryAudioCurrentUtterance === englishUtterance) dictionaryAudioCurrentUtterance = null;
-    if(dictionaryAudioStopped) return;
-
-    if(!hindiText){
-      dictionaryAudioIndex++;
-      speakNextDictionaryAudio();
-      return;
-    }
-
-    setAudioNowPlaying(number, englishText, hindiText, "hindi");
-    setAudioStatus("Playing No. " + number + " — Hindi: " + hindiText);
-
-    const hindiUtterance = new SpeechSynthesisUtterance(hindiText);
-    dictionaryAudioCurrentUtterance = hindiUtterance;
-    dictionaryAudioCurrentPhase = "hindi";
-    hindiUtterance.lang = "hi-IN";
-    hindiUtterance.rate = 0.85;
-    hindiUtterance.pitch = 1;
-
-    hindiUtterance.onend = function(){
-      if(dictionaryAudioCurrentUtterance === hindiUtterance) dictionaryAudioCurrentUtterance = null;
-      if(dictionaryAudioStopped) return;
-      dictionaryAudioIndex++;
-      speakNextDictionaryAudio();
-    };
-
-    hindiUtterance.onerror = function(){
-      if(dictionaryAudioCurrentUtterance === hindiUtterance) dictionaryAudioCurrentUtterance = null;
-      if(dictionaryAudioStopped) return;
-      dictionaryAudioIndex++;
-      speakNextDictionaryAudio();
-    };
-
-    window.speechSynthesis.speak(hindiUtterance);
-  };
-
-  englishUtterance.onerror = function(){
-    if(dictionaryAudioCurrentUtterance === englishUtterance) dictionaryAudioCurrentUtterance = null;
-    if(dictionaryAudioStopped) return;
-    dictionaryAudioIndex++;
+function speakCurrentAudioFromSavedPosition(){
+  const item = dictionaryAudioQueue[dictionaryAudioIndex];
+  if(!item){
     speakNextDictionaryAudio();
+    return;
+  }
+
+  const number = dictionaryWordsCache.indexOf(item) + 1;
+  const englishText = String(item.word || "").trim();
+  const hindiText = isMissingDictionaryMeaning(item.meaning) ? "" : String(item.meaning || "").trim();
+  const phase = dictionaryAudioResumePhase || dictionaryAudioCurrentPhase || "english";
+  const fullText = phase === "hindi" ? hindiText : englishText;
+  let remaining = dictionaryAudioResumeText || fullText;
+
+  if(!remaining){
+    if(phase === "english" && hindiText){
+      speakAudioPart(hindiText,"hindi",number,englishText,hindiText);
+    }else{
+      dictionaryAudioIndex++;
+      speakNextDictionaryAudio();
+    }
+    return;
+  }
+
+  speakAudioPart(remaining, phase, number, englishText, hindiText);
+}
+
+function speakAudioPart(text, phase, number, englishText, hindiText){
+  if(dictionaryAudioStopped) return;
+
+  const cleanText = String(text || "").trim();
+  if(!cleanText){
+    if(phase === "english" && hindiText){
+      speakAudioPart(hindiText,"hindi",number,englishText,hindiText);
+    }else{
+      dictionaryAudioIndex++;
+      speakNextDictionaryAudio();
+    }
+    return;
+  }
+
+  const utterance = new SpeechSynthesisUtterance(cleanText);
+  dictionaryAudioCurrentUtterance = utterance;
+  dictionaryAudioCurrentPhase = phase;
+  dictionaryAudioCurrentText = cleanText;
+  dictionaryAudioLastBoundary = 0;
+  dictionaryAudioResumeText = "";
+  dictionaryAudioResumePhase = "";
+
+  setAudioNowPlaying(number, englishText, hindiText, phase);
+  setAudioStatus(
+    "Playing No. " + number + " — " +
+    (phase === "english" ? "English: " + englishText + " → Hindi: " + (hindiText || "meaning pending") : "Hindi: " + hindiText)
+  );
+
+  utterance.lang = phase === "english" ? "en-US" : "hi-IN";
+  utterance.rate = 0.85;
+  utterance.pitch = 1;
+
+  utterance.onboundary = function(event){
+    if(dictionaryAudioCurrentUtterance !== utterance || dictionaryAudioPaused) return;
+    if(typeof event.charIndex === "number"){
+      dictionaryAudioLastBoundary = event.charIndex;
+    }
   };
 
-  window.speechSynthesis.speak(englishUtterance);
+  utterance.onend = function(){
+    if(dictionaryAudioCurrentUtterance !== utterance) return;
+    dictionaryAudioCurrentUtterance = null;
+    dictionaryAudioResumeText = "";
+    dictionaryAudioResumePhase = "";
+    if(dictionaryAudioStopped || dictionaryAudioPaused) return;
+
+    if(phase === "english" && hindiText){
+      speakAudioPart(hindiText,"hindi",number,englishText,hindiText);
+    }else{
+      dictionaryAudioIndex++;
+      speakNextDictionaryAudio();
+    }
+  };
+
+  utterance.onerror = function(event){
+    if(dictionaryAudioCurrentUtterance !== utterance) return;
+    dictionaryAudioCurrentUtterance = null;
+    if(dictionaryAudioStopped || dictionaryAudioPaused || event.error === "canceled") return;
+    if(phase === "english" && hindiText){
+      speakAudioPart(hindiText,"hindi",number,englishText,hindiText);
+    }else{
+      dictionaryAudioIndex++;
+      speakNextDictionaryAudio();
+    }
+  };
+
+  window.speechSynthesis.speak(utterance);
 }
 
 function pauseDictionaryAudio(){
-  if("speechSynthesis" in window && dictionaryAudioCurrentUtterance && window.speechSynthesis.speaking){
-    dictionaryAudioPaused = true;
-    try{
-      window.speechSynthesis.pause();
-    }catch(error){}
-    setAudioStatus("Audio paused — Play dabane par isi jagah se resume hoga.");
+  if(!("speechSynthesis" in window) || dictionaryAudioStopped || !dictionaryAudioCurrentUtterance) return;
+
+  const utterance = dictionaryAudioCurrentUtterance;
+  const fullText = dictionaryAudioCurrentText || utterance.text || "";
+  let position = dictionaryAudioLastBoundary || 0;
+
+  /* Save the text from the last spoken boundary onward. */
+  if(position > 0 && position < fullText.length){
+    dictionaryAudioResumeText = fullText.substring(position).trim();
+  }else{
+    dictionaryAudioResumeText = fullText;
   }
+  dictionaryAudioResumePhase = dictionaryAudioCurrentPhase;
+  dictionaryAudioPaused = true;
+
+  /* Cancel instead of browser pause: this avoids Chrome restarting the utterance. */
+  try{ window.speechSynthesis.cancel(); }catch(error){}
+  dictionaryAudioCurrentUtterance = null;
+
+  setAudioStatus("Audio paused — Play dabane par isi jagah se resume hoga.");
 }
 
 function stopDictionaryAudio(){
@@ -2719,13 +2777,16 @@ function stopDictionaryAudio(){
   dictionaryAudioPaused = false;
   dictionaryAudioCurrentUtterance = null;
   dictionaryAudioCurrentPhase = "";
+  dictionaryAudioCurrentText = "";
+  dictionaryAudioLastBoundary = 0;
+  dictionaryAudioResumeText = "";
+  dictionaryAudioResumePhase = "";
   dictionaryAudioQueue = [];
   dictionaryAudioIndex = 0;
   if("speechSynthesis" in window) window.speechSynthesis.cancel();
   setAudioNowPlaying();
   setAudioStatus("Audio stopped.");
 }
-
 
 /* =====================================================
    DICTIONARY WORD DETAILS
