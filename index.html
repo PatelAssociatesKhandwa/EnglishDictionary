@@ -3566,7 +3566,7 @@ function renderExam(){
     const distractors=getDistractors(correctKey,3);
     distractors.forEach(markShown);
 
-    const options=shuffleArray([correct,...distractors]);
+    const options=shuffleLocal([correct,...distractors]);
     const modeLabel=isHindiToEnglish ? "Hindi → English" : "English → Hindi";
 
     question.innerHTML=`
