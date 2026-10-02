@@ -937,6 +937,212 @@ label{
 .dictionary-meaning-toggle-btn{width:auto;min-width:62px;padding:4px 8px;border:1px solid #b9c7dd;border-radius:5px;background:white;color:#0b5ed7;font-size:11px;line-height:1.1;font-weight:bold;cursor:pointer;}
 .dictionary-meaning-toggle-btn:hover{background:#e7f0ff;}
 body.dictionary-meanings-hidden .dictionary-word-hindi{display:none;}
+
+/* =====================================================
+   DARK / LIGHT MODE
+===================================================== */
+:root{
+  --bg:#f4f7fb;
+  --surface:#ffffff;
+  --surface-2:#f8fafc;
+  --surface-3:#f5f8fc;
+  --text:#222;
+  --muted:#666;
+  --border:#d7dfeb;
+  --input-bg:#ffffff;
+  --primary:#0b5ed7;
+  --header:#0b5ed7;
+}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  transition:background .2s ease,color .2s ease;
+}
+
+body.dark-mode{
+  --bg:#111827;
+  --surface:#1f2937;
+  --surface-2:#172033;
+  --surface-3:#243044;
+  --text:#f3f4f6;
+  --muted:#aeb8c7;
+  --border:#3b475a;
+  --input-bg:#111827;
+  --primary:#4f9cff;
+  --header:#162a46;
+}
+
+.card,
+.word-item,
+.word-button,
+.exam-timer,
+.exam-question,
+.exam-result{
+  background:var(--surface);
+  color:var(--text);
+}
+
+.card,
+.word-item{
+  border-color:var(--border);
+}
+
+h2,
+.word-title,
+.dictionary-word-english,
+.details-meaning,
+.question-word{
+  color:var(--primary);
+}
+
+input,
+select{
+  background:var(--input-bg);
+  color:var(--text);
+  border-color:var(--border);
+}
+
+input::placeholder{
+  color:var(--muted);
+}
+
+.server-status{
+  background:var(--surface-2);
+  color:var(--text);
+}
+
+.tab-btn{
+  background:var(--surface-3);
+  color:var(--text);
+  border:1px solid var(--border);
+}
+
+.tab-btn.active{
+  background:var(--primary);
+  color:white;
+  border-color:var(--primary);
+}
+
+.copy-text-btn,
+.word-edit-btn,
+.dictionary-search-clear,
+.dictionary-meaning-toggle-btn,
+.quick-option-btn,
+.exam-mode-btn,
+.audio-controls button{
+  background:var(--surface-3);
+  color:var(--primary);
+  border-color:var(--border);
+}
+
+.copy-text-btn:hover,
+.word-edit-btn:hover,
+.quick-option-btn:hover,
+.exam-mode-btn:hover,
+.audio-controls button:hover,
+.dictionary-meaning-toggle-btn:hover{
+  background:var(--surface-2);
+}
+
+.dictionary-word-hindi{
+  color:var(--text);
+}
+
+.dictionary-word-hindi.empty,
+.dictionary-search-count,
+.audio-info,
+.pronunciation,
+.details-pronunciation,
+.question-number,
+.exam-summary-label,
+.loading{
+  color:var(--muted);
+}
+
+.word-button:hover{
+  background:var(--surface-2);
+}
+
+.audio-range-box,
+.audio-status,
+.dictionary-meaning-toggle{
+  background:var(--surface-2);
+  border-color:var(--border);
+}
+
+.audio-status{
+  color:var(--text);
+}
+
+.example,
+.detail-example{
+  background:var(--surface-2);
+}
+
+.exam-summary-item{
+  background:var(--surface-2);
+  border-color:var(--border);
+}
+
+.answer-option{
+  background:var(--surface);
+  color:var(--text);
+  border-color:var(--border);
+}
+
+#themeToggleBtn{
+  position:absolute;
+  right:10px;
+  top:10px;
+  width:auto;
+  min-width:86px;
+  padding:7px 10px;
+  border:1px solid rgba(255,255,255,.45);
+  border-radius:7px;
+  background:rgba(255,255,255,.14);
+  color:white;
+  font-size:12px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+#themeToggleBtn:hover{
+  background:rgba(255,255,255,.24);
+}
+
+.audio-voice-box{
+  margin-top:10px;
+  padding:10px 12px;
+  border:1px solid var(--border);
+  border-radius:8px;
+  background:var(--surface-2);
+}
+
+.audio-voice-box label{
+  margin:0 0 5px;
+  font-size:13px;
+}
+
+.audio-voice-box select{
+  padding:9px;
+  font-size:14px;
+}
+
+.audio-voice-info{
+  margin-top:6px;
+  font-size:11px;
+  color:var(--muted);
+}
+
+@media(max-width:600px){
+  #themeToggleBtn{
+    min-width:74px;
+    padding:6px 8px;
+    font-size:11px;
+  }
+}
+
 </style>
 
 </head>
@@ -946,6 +1152,13 @@ body.dictionary-meanings-hidden .dictionary-word-hindi{display:none;}
 
 
 <header>
+
+<button
+  type="button"
+  id="themeToggleBtn"
+  onclick="toggleTheme()"
+  aria-label="Toggle dark and light mode"
+>☀️ Light</button>
 
 <h1>
 PATEL ASSOCIATES
@@ -1165,6 +1378,17 @@ Audio List
 
   <div id="audioRangeInfo" class="audio-info">
     Dictionary load hone ke baad range select karein.
+  </div>
+</div>
+
+<div class="audio-voice-box">
+  <label for="audioGender">Audio Voice</label>
+  <select id="audioGender" onchange="setAudioGender(this.value)">
+    <option value="male" selected>♂ Male</option>
+    <option value="female">♀ Female</option>
+  </select>
+  <div id="audioVoiceInfo" class="audio-voice-info">
+    Male voice selected by default.
   </div>
 </div>
 
@@ -1432,6 +1656,11 @@ let dictionaryWordsCache = [];
 let dictionaryAudioQueue = [];
 let dictionaryAudioIndex = 0;
 let dictionaryAudioStopped = true;
+let dictionaryAudioGender = "male";
+let dictionaryAudioCurrentUtterance = null;
+let dictionaryAudioCurrentText = "";
+let dictionaryAudioCurrentPhase = "";
+let dictionaryAudioPaused = false;
 
 
 /* =====================================================
@@ -2465,10 +2694,149 @@ function loadDictionaryForAudio(){
   });
 }
 
+function getSelectedAudioGender(){
+  const select = document.getElementById("audioGender");
+  const value = select ? String(select.value || "male").toLowerCase() : "male";
+  return value === "female" ? "female" : "male";
+}
+
+function setAudioGender(gender){
+  dictionaryAudioGender = String(gender || "male").toLowerCase() === "female"
+    ? "female"
+    : "male";
+
+  try{
+    localStorage.setItem(
+      "PATEL_ASSOCIATES_AUDIO_GENDER",
+      dictionaryAudioGender
+    );
+  }catch(error){}
+
+  const select = document.getElementById("audioGender");
+  if(select) select.value = dictionaryAudioGender;
+
+  const info = document.getElementById("audioVoiceInfo");
+  if(info){
+    info.textContent =
+      dictionaryAudioGender === "female"
+        ? "Female voice selected."
+        : "Male voice selected.";
+  }
+
+  /* If audio is paused, keep the current paused position.
+     The new voice will be used when Play/Resume is pressed. */
+  if(dictionaryAudioPaused){
+    setAudioStatus(
+      (dictionaryAudioGender === "female" ? "Female" : "Male") +
+      " voice selected. Press Play / Resume to continue."
+    );
+  }
+}
+
+function initAudioGender(){
+  let saved = "male";
+
+  try{
+    const value = localStorage.getItem("PATEL_ASSOCIATES_AUDIO_GENDER");
+    if(value === "female" || value === "male"){
+      saved = value;
+    }
+  }catch(error){}
+
+  dictionaryAudioGender = saved;
+
+  const select = document.getElementById("audioGender");
+  if(select) select.value = saved;
+
+  const info = document.getElementById("audioVoiceInfo");
+  if(info){
+    info.textContent =
+      saved === "female"
+        ? "Female voice selected."
+        : "Male voice selected by default.";
+  }
+}
+
+function getSpeechVoice(gender, lang){
+  if(!("speechSynthesis" in window)){
+    return null;
+  }
+
+  const voices = window.speechSynthesis.getVoices() || [];
+  if(!voices.length){
+    return null;
+  }
+
+  const wantedLang = String(lang || "").toLowerCase();
+  const baseLang = wantedLang.split("-")[0];
+
+  const matching = voices.filter(function(voice){
+    const voiceLang = String(voice.lang || "").toLowerCase();
+    return voiceLang === wantedLang || voiceLang.startsWith(baseLang + "-") || voiceLang === baseLang;
+  });
+
+  const pool = matching.length ? matching : voices;
+
+  const maleHints = [
+    "male","man","boy","david","mark","daniel","alex",
+    "george","james","richard","tom","fred","guy","microsoft david",
+    "google uk english male","google us english male"
+  ];
+
+  const femaleHints = [
+    "female","woman","girl","zira","samantha","susan","karen",
+    "hazel","heera","veena","raveena","joanna","aria","libby",
+    "google uk english female","google us english female"
+  ];
+
+  const hints = gender === "female" ? femaleHints : maleHints;
+
+  const byName = pool.find(function(voice){
+    const name = String(voice.name || "").toLowerCase();
+    return hints.some(function(hint){
+      return name.indexOf(hint) !== -1;
+    });
+  });
+
+  if(byName) return byName;
+
+  /* Some browsers do not expose gender in voice names.
+     Keep a language-matched voice as a safe fallback. */
+  return pool[0] || voices[0] || null;
+}
+
+function configureUtteranceVoice(utterance, gender, lang){
+  const voice = getSpeechVoice(gender, lang);
+  if(voice){
+    utterance.voice = voice;
+    utterance.lang = voice.lang || lang;
+  }else{
+    utterance.lang = lang;
+  }
+
+  utterance.rate = 0.85;
+  utterance.pitch = gender === "female" ? 1.05 : 0.9;
+}
+
 function playSelectedDictionaryAudio(){
   if(!("speechSynthesis" in window)){
     setAudioStatus("Aapke browser me audio speech support available nahi hai.");
     return;
+  }
+
+  if(dictionaryAudioPaused){
+    dictionaryAudioPaused = false;
+    window.speechSynthesis.resume();
+    setAudioStatus("Audio resumed — " + (dictionaryAudioGender === "female" ? "Female" : "Male") + " voice.");
+    return;
+  }
+
+  if(!dictionaryAudioStopped && dictionaryAudioQueue.length){
+    /* Already playing: do not restart the current word. */
+    if(window.speechSynthesis.speaking){
+      setAudioStatus("Audio already playing.");
+      return;
+    }
   }
 
   if(!dictionaryWordsCache.length){
@@ -2492,9 +2860,14 @@ function playSelectedDictionaryAudio(){
     return;
   }
 
+  dictionaryAudioGender = getSelectedAudioGender();
   dictionaryAudioQueue = dictionaryWordsCache.slice(start-1,end);
   dictionaryAudioIndex = 0;
   dictionaryAudioStopped = false;
+  dictionaryAudioPaused = false;
+  dictionaryAudioCurrentUtterance = null;
+  dictionaryAudioCurrentText = "";
+  dictionaryAudioCurrentPhase = "";
 
   window.speechSynthesis.cancel();
   speakNextDictionaryAudio();
@@ -2503,16 +2876,25 @@ function playSelectedDictionaryAudio(){
 function speakNextDictionaryAudio(){
   if(dictionaryAudioStopped || dictionaryAudioIndex >= dictionaryAudioQueue.length){
     if(!dictionaryAudioStopped){
-      setAudioStatus("Audio complete — " + dictionaryAudioQueue.length + " words sunaye gaye.");
+      setAudioStatus(
+        "Audio complete — " +
+        dictionaryAudioQueue.length +
+        " words sunaye gaye."
+      );
     }
+
     dictionaryAudioStopped = true;
+    dictionaryAudioPaused = false;
+    dictionaryAudioCurrentUtterance = null;
     return;
   }
 
   const item = dictionaryAudioQueue[dictionaryAudioIndex];
   const number = dictionaryWordsCache.indexOf(item) + 1;
   const englishText = String(item.word || "").trim();
-  const hindiText = isMissingDictionaryMeaning(item.meaning) ? "" : String(item.meaning || "").trim();
+  const hindiText = isMissingDictionaryMeaning(item.meaning)
+    ? ""
+    : String(item.meaning || "").trim();
 
   if(!englishText){
     dictionaryAudioIndex++;
@@ -2520,38 +2902,71 @@ function speakNextDictionaryAudio(){
     return;
   }
 
-  setAudioStatus("Playing " + number + ". " + englishText + " → Hindi");
+  setAudioStatus(
+    "Playing " +
+    number +
+    ". " +
+    englishText +
+    " → Hindi (" +
+    (dictionaryAudioGender === "female" ? "Female" : "Male") +
+    ")"
+  );
 
   const englishUtterance = new SpeechSynthesisUtterance(englishText);
-  englishUtterance.lang = "en-US";
-  englishUtterance.rate = 0.85;
-  englishUtterance.pitch = 1;
+  dictionaryAudioCurrentUtterance = englishUtterance;
+  dictionaryAudioCurrentText = englishText;
+  dictionaryAudioCurrentPhase = "english";
+
+  configureUtteranceVoice(
+    englishUtterance,
+    dictionaryAudioGender,
+    "en-US"
+  );
 
   englishUtterance.onend = function(){
     if(dictionaryAudioStopped) return;
 
     if(!hindiText){
       dictionaryAudioIndex++;
+      dictionaryAudioCurrentUtterance = null;
       speakNextDictionaryAudio();
       return;
     }
 
-    setAudioStatus("Playing " + number + ". " + englishText + " → Hindi meaning");
+    setAudioStatus(
+      "Playing " +
+      number +
+      ". " +
+      englishText +
+      " → Hindi meaning (" +
+      (dictionaryAudioGender === "female" ? "Female" : "Male") +
+      ")"
+    );
 
     const hindiUtterance = new SpeechSynthesisUtterance(hindiText);
-    hindiUtterance.lang = "hi-IN";
-    hindiUtterance.rate = 0.85;
-    hindiUtterance.pitch = 1;
+    dictionaryAudioCurrentUtterance = hindiUtterance;
+    dictionaryAudioCurrentText = hindiText;
+    dictionaryAudioCurrentPhase = "hindi";
+
+    configureUtteranceVoice(
+      hindiUtterance,
+      dictionaryAudioGender,
+      "hi-IN"
+    );
 
     hindiUtterance.onend = function(){
       if(dictionaryAudioStopped) return;
+
       dictionaryAudioIndex++;
+      dictionaryAudioCurrentUtterance = null;
       speakNextDictionaryAudio();
     };
 
     hindiUtterance.onerror = function(){
       if(dictionaryAudioStopped) return;
+
       dictionaryAudioIndex++;
+      dictionaryAudioCurrentUtterance = null;
       speakNextDictionaryAudio();
     };
 
@@ -2560,7 +2975,9 @@ function speakNextDictionaryAudio(){
 
   englishUtterance.onerror = function(){
     if(dictionaryAudioStopped) return;
+
     dictionaryAudioIndex++;
+    dictionaryAudioCurrentUtterance = null;
     speakNextDictionaryAudio();
   };
 
@@ -2568,17 +2985,32 @@ function speakNextDictionaryAudio(){
 }
 
 function pauseDictionaryAudio(){
-  if("speechSynthesis" in window && window.speechSynthesis.speaking){
+  if(
+    "speechSynthesis" in window &&
+    window.speechSynthesis.speaking &&
+    !window.speechSynthesis.paused
+  ){
+    dictionaryAudioPaused = true;
     window.speechSynthesis.pause();
-    setAudioStatus("Audio paused.");
+    setAudioStatus(
+      "Audio paused. Play / Resume dabane par yahin se continue hoga."
+    );
   }
 }
 
 function stopDictionaryAudio(){
   dictionaryAudioStopped = true;
+  dictionaryAudioPaused = false;
   dictionaryAudioQueue = [];
   dictionaryAudioIndex = 0;
-  if("speechSynthesis" in window) window.speechSynthesis.cancel();
+  dictionaryAudioCurrentUtterance = null;
+  dictionaryAudioCurrentText = "";
+  dictionaryAudioCurrentPhase = "";
+
+  if("speechSynthesis" in window){
+    window.speechSynthesis.cancel();
+  }
+
   setAudioStatus("Audio stopped.");
 }
 
@@ -4123,8 +4555,51 @@ function resetExam(){
 
 
 /* =====================================================
+   THEME
+===================================================== */
+
+function applyTheme(mode){
+  const dark = mode !== "light";
+
+  document.body.classList.toggle("dark-mode", dark);
+
+  const button = document.getElementById("themeToggleBtn");
+  if(button){
+    button.textContent = dark ? "☀️ Light" : "🌙 Dark";
+    button.title = dark ? "Switch to Light Mode" : "Switch to Dark Mode";
+  }
+
+  try{
+    localStorage.setItem(
+      "PATEL_ASSOCIATES_THEME",
+      dark ? "dark" : "light"
+    );
+  }catch(error){}
+}
+
+function initTheme(){
+  let mode = "dark";
+
+  try{
+    const saved = localStorage.getItem("PATEL_ASSOCIATES_THEME");
+    if(saved === "light" || saved === "dark"){
+      mode = saved;
+    }
+  }catch(error){}
+
+  applyTheme(mode);
+}
+
+function toggleTheme(){
+  const isDark = document.body.classList.contains("dark-mode");
+  applyTheme(isDark ? "light" : "dark");
+}
+
+
+/* =====================================================
    ENTER KEY
 ===================================================== */
+
 
 document
   .getElementById(
@@ -4150,9 +4625,18 @@ document
    START
 ===================================================== */
 
+initTheme();
+initAudioGender();
 initDictionaryMeaningToggle();
 updateAudioRangeInfo();
 checkServer();
+
+/* Voice list is populated asynchronously in some browsers. */
+if("speechSynthesis" in window){
+  window.speechSynthesis.onvoiceschanged = function(){
+    /* Voice selection is resolved at playback time. */
+  };
+}
 
 </script>
 
