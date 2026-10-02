@@ -52,22 +52,13 @@ header p{
 }
 
 .server-status{
-  display:inline-block;
-  width:auto;
-  padding:4px 10px;
-  margin:0 auto 8px;
-  border-radius:6px;
+  padding:9px;
+  margin-bottom:12px;
+  border-radius:8px;
   text-align:center;
-  font-size:11px;
-  line-height:1.2;
+  font-size:14px;
   background:#fff3cd;
   color:#856404;
-}
-
-#serverStatus{
-  position:relative;
-  left:50%;
-  transform:translateX(-50%);
 }
 
 .tabs{
@@ -91,31 +82,24 @@ header p{
 /* Dictionary list gets its own vertical scroll area. */
 #dictionaryList{
   max-height:60vh;
-  overflow-y:scroll;
+  overflow-y:auto;
   overflow-x:hidden;
-  padding-right:6px;
+  padding-right:4px;
   scrollbar-width:auto;
   -webkit-overflow-scrolling:touch;
 }
 
 #dictionaryList::-webkit-scrollbar{
-  width:18px;
+  width:10px;
 }
 
 #dictionaryList::-webkit-scrollbar-thumb{
-  background:#7f8da3;
-  border:3px solid #eef2f7;
-  border-radius:12px;
-  min-height:70px;
-}
-
-#dictionaryList::-webkit-scrollbar-thumb:hover{
-  background:#5f6f86;
+  background:#aeb8c7;
+  border-radius:8px;
 }
 
 #dictionaryList::-webkit-scrollbar-track{
   background:#eef2f7;
-  border-radius:12px;
 }
 
 .tab-btn.active{
@@ -519,19 +503,10 @@ label{
   background:#eaf2ff;
 }
 
-.audio-controls button.audio-main,
-.audio-controls button.audio-main:hover,
-.audio-controls button.audio-main:focus,
-.audio-controls button.audio-main:active{
-  background:#0b5ed7 !important;
-  color:white !important;
-  border-color:#0b5ed7 !important;
-  opacity:1 !important;
-  box-shadow:none;
-}
-
-.audio-controls button.audio-main:active{
-  transform:scale(.98);
+.audio-controls button.audio-main{
+  background:#0b5ed7;
+  color:white;
+  border-color:#0b5ed7;
 }
 
 .audio-status{
@@ -3480,425 +3455,143 @@ async function startExam(){
 
 function renderExam(){
 
-  const container =
-    document.getElementById("examQuestions");
-
+  const container = document.getElementById("examQuestions");
   container.innerHTML = "";
 
-  const isHindiToEnglish =
-    examMode === "hi-en";
+  const isHindiToEnglish = examMode === "hi-en";
 
-  /*
-   * IMPORTANT:
-   * Distractor words are now distributed across questions.
-   *
-   * Old behavior:
-   *   Every question took the first 3 available distractors.
-   *   Therefore the same 2-3 words appeared again and again.
-   *
-   * New behavior:
-   *   1. Keep a usage count for every possible option.
-   *   2. Prefer words that have NOT been used as a distractor yet.
-   *   3. If all words have already been used, prefer the least-used ones.
-   *   4. Randomize candidates having the same usage count.
-   *
-   * This makes the options much more varied from question to question.
-   */
-
-  const distractorUsage = {};
-
-  function normalizeOption(value){
-    return String(value || "")
-      .trim()
-      .replace(/\s+/g, " ")
-      .toLowerCase();
+  function norm(value){
+    return String(value || "").trim().replace(/\s+/g," ").toLowerCase();
   }
 
   function shuffleLocal(array){
     const arr = [...array];
-
-    for(let i = arr.length - 1; i > 0; i--){
-      const j = Math.floor(Math.random() * (i + 1));
-      const temp = arr[i];
-      arr[i] = arr[j];
-      arr[j] = temp;
+    for(let i=arr.length-1;i>0;i--){
+      const j=Math.floor(Math.random()*(i+1));
+      [arr[i],arr[j]]=[arr[j],arr[i]];
     }
-
     return arr;
   }
 
-  function getAnswerValue(record){
-    return isHindiToEnglish
-      ? String(record.word || "").trim()
-      : String(record.meaning || "").trim();
+  function questionValue(record){
+    return isHindiToEnglish ? String(record.meaning||"").trim() : String(record.word||"").trim();
   }
 
-  /*
-   * Build one unique pool of possible distractors.
-   * Duplicate meanings/words are kept only once.
-   */
-  const allDistractors = [];
-  const globalSeen = new Set();
+  function answerValue(record){
+    return isHindiToEnglish ? String(record.word||"").trim() : String(record.meaning||"").trim();
+  }
 
-  examRecords.forEach(function(record){
-    const value = getAnswerValue(record);
-    const key = normalizeOption(value);
+  /* Question values: unique first; duplicates only after unique values are exhausted. */
+  const uniqueRecords=[];
+  const duplicateRecords=[];
+  const seenQuestions=new Set();
 
-    if(!value || globalSeen.has(key)){
-      return;
+  shuffleLocal(examRecords).forEach(function(record){
+    const value=questionValue(record), key=norm(value);
+    if(!value || !key) return;
+    if(!seenQuestions.has(key)){
+      seenQuestions.add(key);
+      uniqueRecords.push(record);
+    }else{
+      duplicateRecords.push(record);
     }
-
-    globalSeen.add(key);
-    allDistractors.push(value);
-    distractorUsage[key] = 0;
   });
 
-  examRecords.forEach(
-    function(record,index){
+  const questionRecords=[...uniqueRecords];
+  let duplicateIndex=0;
+  while(questionRecords.length<examRecords.length && duplicateRecords.length){
+    questionRecords.push(duplicateRecords[duplicateIndex % duplicateRecords.length]);
+    duplicateIndex++;
+  }
 
-      const question =
-        document.createElement("div");
-
-      question.className =
-        "exam-question";
-
-      /*
-       * English → Hindi:
-       *   Question = English word
-       *   Answer   = Hindi meaning
-       *
-       * Hindi → English:
-       *   Question = Hindi meaning
-       *   Answer   = English word
-       */
-      const questionText =
-        isHindiToEnglish
-          ? String(record.meaning || "").trim()
-          : String(record.word || "").trim();
-
-      const correct =
-        isHindiToEnglish
-          ? String(record.word || "").trim()
-          : String(record.meaning || "").trim();
-
-      const correctKey =
-        normalizeOption(correct);
-
-      /*
-       * Candidates cannot be the correct answer of this question.
-       */
-      const candidates =
-        allDistractors.filter(function(value){
-          return normalizeOption(value) !== correctKey;
-        });
-
-      /*
-       * First preference:
-       * words never used as distractors before.
-       *
-       * Second preference:
-       * words with the lowest usage count.
-       *
-       * Random shuffle before sorting prevents the same fixed
-       * order from being selected every time.
-       */
-      const shuffledCandidates =
-        shuffleLocal(candidates);
-
-      shuffledCandidates.sort(function(a,b){
-        return (
-          (distractorUsage[normalizeOption(a)] || 0) -
-          (distractorUsage[normalizeOption(b)] || 0)
-        );
-      });
-
-      /*
-       * Select up to 3 distractors.
-       * Because usage is balanced, the same 2-3 words will
-       * no longer be repeatedly selected for every question
-       * while enough different words are available.
-       */
-      const selectedDistractors =
-        shuffledCandidates.slice(0,3);
-
-      selectedDistractors.forEach(function(value){
-        const key = normalizeOption(value);
-        distractorUsage[key] =
-          (distractorUsage[key] || 0) + 1;
-      });
-
-      const options =
-        shuffleArray([
-          correct,
-          ...selectedDistractors
-        ]);
-
-      const modeLabel =
-        isHindiToEnglish
-          ? "Hindi → English"
-          : "English → Hindi";
-
-      question.innerHTML = `
-
-        <div class="question-number">
-          Question ${index+1}
-          of ${examRecords.length}
-        </div>
-
-        <div class="question-number">
-          ${modeLabel}
-        </div>
-
-        <div class="question-word">
-          ${escapeHtml(questionText)}
-        </div>
-
-        <div class="options"></div>
-
-      `;
-
-      const optionsContainer =
-        question.querySelector(".options");
-
-      options.forEach(
-        function(option){
-
-          const button =
-            document.createElement("button");
-
-          button.className =
-            "answer-option";
-
-          button.textContent =
-            option;
-
-          button.onclick =
-            function(){
-
-              selectExamAnswer(
-                index,
-                option,
-                correct,
-                optionsContainer,
-                button
-              );
-
-            };
-
-          optionsContainer.appendChild(button);
-
-        }
-      );
-
-      container.appendChild(question);
-
+  /* One global answer pool. Every value is used once before any value is repeated. */
+  const allAnswers=[];
+  const answerSeen=new Set();
+  questionRecords.forEach(function(record){
+    const value=answerValue(record), key=norm(value);
+    if(value && key && !answerSeen.has(key)){
+      answerSeen.add(key);
+      allAnswers.push(value);
     }
-  );
+  });
 
+  const shown=new Set();
+  const lastShown=new Map();
+  let displayPosition=0;
+
+  function markShown(value){
+    const key=norm(value);
+    if(!key) return;
+    shown.add(key);
+    lastShown.set(key,displayPosition++);
+  }
+
+  function getDistractors(correctKey, needed){
+    const unused=allAnswers.filter(function(value){
+      const key=norm(value);
+      return key && key!==correctKey && !shown.has(key);
+    });
+
+    const selected=shuffleLocal(unused).slice(0,needed);
+    if(selected.length===needed) return selected;
+
+    /* Unique answers are exhausted: repeat only now, with maximum practical gap. */
+    const selectedKeys=new Set(selected.map(norm));
+    const repeats=shuffleLocal(allAnswers.filter(function(value){
+      const key=norm(value);
+      return key && key!==correctKey && !selectedKeys.has(key);
+    }));
+
+    repeats.sort(function(a,b){
+      const aLast=lastShown.has(norm(a))?lastShown.get(norm(a)):-999999;
+      const bLast=lastShown.has(norm(b))?lastShown.get(norm(b)):-999999;
+      return bLast-aLast;
+    });
+
+    return selected.concat(repeats.slice(0,needed-selected.length));
+  }
+
+  questionRecords.forEach(function(record,index){
+
+    const question=document.createElement("div");
+    question.className="exam-question";
+
+    const questionText=questionValue(record);
+    const correct=answerValue(record);
+    const correctKey=norm(correct);
+
+    /* Correct answers are also globally reserved, so they cannot become another question's option. */
+    markShown(correct);
+
+    const distractors=getDistractors(correctKey,3);
+    distractors.forEach(markShown);
+
+    const options=shuffleArray([correct,...distractors]);
+    const modeLabel=isHindiToEnglish ? "Hindi → English" : "English → Hindi";
+
+    question.innerHTML=`
+      <div class="question-number">Question ${index+1} of ${questionRecords.length}</div>
+      <div class="question-number">${modeLabel}</div>
+      <div class="question-word">${escapeHtml(questionText)}</div>
+      <div class="options"></div>
+    `;
+
+    const optionsContainer=question.querySelector(".options");
+
+    options.forEach(function(option){
+      const button=document.createElement("button");
+      button.className="answer-option";
+      button.textContent=option;
+      button.onclick=function(){
+        handleExamAnswer(index,option,correct,optionsContainer);
+      };
+      optionsContainer.appendChild(button);
+    });
+
+    container.appendChild(question);
+  });
 }
 
-/* =====================================================
-   ANSWER CLICK
-===================================================== */
-
-function selectExamAnswer(
-
-  questionIndex,
-
-  selectedAnswer,
-
-  correctAnswer,
-
-  optionsContainer,
-
-  clickedButton
-
-){
-
-  /*
-   * Prevent second click
-   */
-
-  if(
-    examAnswers[
-      questionIndex
-    ] !== undefined
-  ){
-
-    return;
-
-  }
-
-
-  examAnswers[
-    questionIndex
-  ] =
-    selectedAnswer;
-
-  updateExamLiveStatus(questionIndex);
-
-
-  const buttons =
-    optionsContainer
-      .querySelectorAll(
-        ".answer-option"
-      );
-
-
-  /*
-   * Disable all options.
-   */
-
-  buttons.forEach(
-    function(button){
-
-      button.disabled =
-        true;
-
-      button.classList.add(
-        "disabled"
-      );
-
-    }
-  );
-
-
-  /*
-   * Correct answer
-   */
-
-  if(
-    selectedAnswer
-      .toLowerCase() ===
-    correctAnswer
-      .toLowerCase()
-  ){
-
-    /*
-     * ONLY GREEN
-     */
-
-    clickedButton.classList.add(
-      "correct"
-    );
-
-  }
-
-
-  /*
-   * Wrong answer
-   */
-
-  else{
-
-    /*
-     * Selected answer = RED
-     */
-
-    clickedButton.classList.add(
-      "wrong"
-    );
-
-
-    /*
-     * Correct option = GREEN
-     *
-     * No text is displayed.
-     */
-
-    buttons.forEach(
-      function(button){
-
-        if(
-          button.textContent
-            .trim()
-            .toLowerCase() ===
-          correctAnswer
-            .toLowerCase()
-        ){
-
-          button.classList.add(
-            "correct"
-          );
-
-        }
-
-      }
-    );
-
-  }
-
-}
-
-
-/* =====================================================
-   SHUFFLE
-===================================================== */
-
-function shuffleArray(array){
-
-  const arr =
-    [...array];
-
-
-  for(
-    let i =
-      arr.length - 1;
-
-    i > 0;
-
-    i--
-  ){
-
-    const j =
-      Math.floor(
-        Math.random() *
-        (i + 1)
-      );
-
-
-    const temp =
-      arr[i];
-
-    arr[i] =
-      arr[j];
-
-    arr[j] =
-      temp;
-
-  }
-
-
-  return arr;
-
-}
-
-
-/* =====================================================
-   LIVE EXAM STATUS
-===================================================== */
-
-function updateExamLiveStatus(lastQuestionIndex){
-  const total = examRecords.length;
-  const attempted = Object.keys(examAnswers).length;
-  const remaining = Math.max(0, total - attempted);
-
-  const qEl = document.getElementById("examQuestionLive");
-  const aEl = document.getElementById("examAttemptedLive");
-  const rEl = document.getElementById("examRemainingLive");
-
-  if (qEl) {
-    const current = total ? Math.min(total, Math.max(1, Number(lastQuestionIndex || 0) + 1)) : 0;
-    qEl.textContent = "Question " + current + "/" + total;
-  }
-  if (aEl) aEl.textContent = "Attempted " + attempted;
-  if (rEl) rEl.textContent = "Remaining " + remaining;
-}
-
-
-/* =====================================================
-   TIMER
-===================================================== */
 
 function startExamTimer(){
 
