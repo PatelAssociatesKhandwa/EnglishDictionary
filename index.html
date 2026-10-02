@@ -69,29 +69,14 @@ header p{
 }
 
 .tab-btn{
-  flex:1 1 0;
-  min-width:0;
-  padding:9px 5px;
+  flex:1;
+  min-width:125px;
+  padding:12px 8px;
   border:none;
-  border-radius:7px;
+  border-radius:8px;
   background:#ddd;
   font-weight:bold;
-  font-size:12px;
-  line-height:1.15;
-  white-space:normal;
   cursor:pointer;
-}
-
-@media(max-width:600px){
-  .tabs{
-    gap:3px;
-    margin-bottom:10px;
-  }
-  .tab-btn{
-    padding:7px 2px;
-    font-size:10px;
-    border-radius:6px;
-  }
 }
 
 /* Dictionary list gets its own vertical scroll area. */
@@ -987,6 +972,43 @@ label{
 .dictionary-meaning-toggle-btn{width:auto;min-width:62px;padding:4px 8px;border:1px solid #b9c7dd;border-radius:5px;background:white;color:#0b5ed7;font-size:11px;line-height:1.1;font-weight:bold;cursor:pointer;}
 .dictionary-meaning-toggle-btn:hover{background:#e7f0ff;}
 body.dictionary-meanings-hidden .dictionary-word-hindi{display:none;}
+
+/* =====================================================
+   DARK / LIGHT MODE
+===================================================== */
+:root{
+  --bg:#f4f7fb; --surface:#ffffff; --surface-2:#f8fafc; --surface-3:#f5f8fc;
+  --text:#222; --muted:#666; --border:#d7dfeb; --input-bg:#ffffff;
+  --primary:#0b5ed7; --header:#0b5ed7;
+}
+body{background:var(--bg);color:var(--text);transition:background .2s ease,color .2s ease;}
+body.dark-mode{
+  --bg:#111827; --surface:#1f2937; --surface-2:#172033; --surface-3:#243044;
+  --text:#f3f4f6; --muted:#aeb8c7; --border:#3b475a; --input-bg:#111827;
+  --primary:#4f9cff; --header:#162a46;
+}
+.card,.word-item,.word-button,.exam-timer,.exam-question,.exam-result{background:var(--surface);color:var(--text);}
+.card,.word-item{border-color:var(--border);}
+h2,.word-title,.dictionary-word-english,.details-meaning,.question-word{color:var(--primary);}
+input,select{background:var(--input-bg);color:var(--text);border-color:var(--border);}
+input::placeholder{color:var(--muted);}
+.server-status{background:var(--surface-2);color:var(--text);}
+.tab-btn{background:var(--surface-3);color:var(--text);border:1px solid var(--border);}
+.tab-btn.active{background:var(--primary);color:white;border-color:var(--primary);}
+.copy-text-btn,.word-edit-btn,.dictionary-search-clear,.dictionary-meaning-toggle-btn,.quick-option-btn,.exam-mode-btn,.audio-controls button{background:var(--surface-3);color:var(--primary);border-color:var(--border);}
+.copy-text-btn:hover,.word-edit-btn:hover,.quick-option-btn:hover,.exam-mode-btn:hover,.audio-controls button:hover,.dictionary-meaning-toggle-btn:hover{background:var(--surface-2);}
+.dictionary-word-hindi{color:var(--text);}
+.dictionary-word-hindi.empty,.dictionary-search-count,.audio-info,.audio-current-word,.pronunciation,.details-pronunciation,.question-number,.exam-summary-label,.loading{color:var(--muted);}
+.word-button:hover{background:var(--surface-2);}
+.audio-range-box,.audio-status,.audio-current-word,.dictionary-meaning-toggle{background:var(--surface-2);border-color:var(--border);}
+.audio-status{color:var(--text);}
+.example,.detail-example{background:var(--surface-2);}
+.exam-summary-item{background:var(--surface-2);border-color:var(--border);}
+.answer-option{background:var(--surface);color:var(--text);border-color:var(--border);}
+#themeToggleBtn{position:absolute;right:10px;top:10px;width:auto;min-width:86px;padding:7px 10px;border:1px solid rgba(255,255,255,.45);border-radius:7px;background:rgba(255,255,255,.14);color:white;font-size:12px;font-weight:bold;cursor:pointer;}
+#themeToggleBtn:hover{background:rgba(255,255,255,.24);}
+@media(max-width:600px){#themeToggleBtn{min-width:74px;padding:6px 8px;font-size:11px;}}
+
 </style>
 
 </head>
@@ -996,6 +1018,8 @@ body.dictionary-meanings-hidden .dictionary-word-hindi{display:none;}
 
 
 <header>
+
+<button type="button" id="themeToggleBtn" onclick="toggleTheme()" aria-label="Toggle dark and light mode">☀️ Light</button>
 
 <h1>
 PATEL ASSOCIATES
@@ -4230,9 +4254,33 @@ document
 
 
 /* =====================================================
+   THEME
+===================================================== */
+function applyTheme(mode){
+  const dark = mode !== "light";
+  document.body.classList.toggle("dark-mode", dark);
+  const button = document.getElementById("themeToggleBtn");
+  if(button){
+    button.textContent = dark ? "☀️ Light" : "🌙 Dark";
+    button.title = dark ? "Switch to Light Mode" : "Switch to Dark Mode";
+  }
+  try{localStorage.setItem("PATEL_ASSOCIATES_THEME", dark ? "dark" : "light");}catch(error){}
+}
+function initTheme(){
+  let mode="dark";
+  try{const saved=localStorage.getItem("PATEL_ASSOCIATES_THEME");if(saved==="light"||saved==="dark")mode=saved;}catch(error){}
+  applyTheme(mode);
+}
+function toggleTheme(){
+  applyTheme(document.body.classList.contains("dark-mode") ? "light" : "dark");
+}
+
+
+/* =====================================================
    START
 ===================================================== */
 
+initTheme();
 initDictionaryMeaningToggle();
 updateAudioRangeInfo();
 checkServer();
