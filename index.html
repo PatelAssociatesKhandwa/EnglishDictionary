@@ -486,6 +486,17 @@ label{
   border-color:#0b5ed7;
 }
 
+.audio-current-word{
+  margin-top:8px;
+  padding:8px 10px;
+  border-radius:7px;
+  background:#eaf2ff;
+  color:#0b5ed7;
+  font-size:14px;
+  font-weight:bold;
+  text-align:center;
+}
+
 .audio-status{
   margin-top:10px;
   padding:8px 10px;
@@ -1381,22 +1392,13 @@ Audio List
   </div>
 </div>
 
-<div class="audio-voice-box">
-  <label for="audioGender">Audio Voice</label>
-  <select id="audioGender" onchange="setAudioGender(this.value)">
-    <option value="male" selected>♂ Male</option>
-    <option value="female">♀ Female</option>
-  </select>
-  <div id="audioVoiceInfo" class="audio-voice-info">
-    Male voice selected by default.
-  </div>
-</div>
-
 <div class="audio-controls">
   <button type="button" class="audio-main" onclick="playSelectedDictionaryAudio()">▶ Play</button>
   <button type="button" onclick="pauseDictionaryAudio()">⏸ Pause</button>
   <button type="button" onclick="stopDictionaryAudio()">⏹ Stop</button>
 </div>
+
+<div id="audioCurrentWord" class="audio-current-word">Audio not playing.</div>
 
 <div id="audioStatus" class="audio-status">
   English → Hindi audio ke liye Start aur End number select karein.
@@ -1656,7 +1658,6 @@ let dictionaryWordsCache = [];
 let dictionaryAudioQueue = [];
 let dictionaryAudioIndex = 0;
 let dictionaryAudioStopped = true;
-let dictionaryAudioGender = "male";
 let dictionaryAudioCurrentUtterance = null;
 let dictionaryAudioCurrentText = "";
 let dictionaryAudioCurrentPhase = "";
@@ -2694,128 +2695,17 @@ function loadDictionaryForAudio(){
   });
 }
 
-function getSelectedAudioGender(){
-  const select = document.getElementById("audioGender");
-  const value = select ? String(select.value || "male").toLowerCase() : "male";
-  return value === "female" ? "female" : "male";
-}
+function setAudioCurrentWord(number, word, phase){
+  const el = document.getElementById("audioCurrentWord");
+  if(!el) return;
 
-function setAudioGender(gender){
-  dictionaryAudioGender = String(gender || "male").toLowerCase() === "female"
-    ? "female"
-    : "male";
-
-  try{
-    localStorage.setItem(
-      "PATEL_ASSOCIATES_AUDIO_GENDER",
-      dictionaryAudioGender
-    );
-  }catch(error){}
-
-  const select = document.getElementById("audioGender");
-  if(select) select.value = dictionaryAudioGender;
-
-  const info = document.getElementById("audioVoiceInfo");
-  if(info){
-    info.textContent =
-      dictionaryAudioGender === "female"
-        ? "Female voice selected."
-        : "Male voice selected.";
+  if(!number || !word){
+    el.textContent = "Audio not playing.";
+    return;
   }
 
-  /* If audio is paused, keep the current paused position.
-     The new voice will be used when Play/Resume is pressed. */
-  if(dictionaryAudioPaused){
-    setAudioStatus(
-      (dictionaryAudioGender === "female" ? "Female" : "Male") +
-      " voice selected. Press Play / Resume to continue."
-    );
-  }
-}
-
-function initAudioGender(){
-  let saved = "male";
-
-  try{
-    const value = localStorage.getItem("PATEL_ASSOCIATES_AUDIO_GENDER");
-    if(value === "female" || value === "male"){
-      saved = value;
-    }
-  }catch(error){}
-
-  dictionaryAudioGender = saved;
-
-  const select = document.getElementById("audioGender");
-  if(select) select.value = saved;
-
-  const info = document.getElementById("audioVoiceInfo");
-  if(info){
-    info.textContent =
-      saved === "female"
-        ? "Female voice selected."
-        : "Male voice selected by default.";
-  }
-}
-
-function getSpeechVoice(gender, lang){
-  if(!("speechSynthesis" in window)){
-    return null;
-  }
-
-  const voices = window.speechSynthesis.getVoices() || [];
-  if(!voices.length){
-    return null;
-  }
-
-  const wantedLang = String(lang || "").toLowerCase();
-  const baseLang = wantedLang.split("-")[0];
-
-  const matching = voices.filter(function(voice){
-    const voiceLang = String(voice.lang || "").toLowerCase();
-    return voiceLang === wantedLang || voiceLang.startsWith(baseLang + "-") || voiceLang === baseLang;
-  });
-
-  const pool = matching.length ? matching : voices;
-
-  const maleHints = [
-    "male","man","boy","david","mark","daniel","alex",
-    "george","james","richard","tom","fred","guy","microsoft david",
-    "google uk english male","google us english male"
-  ];
-
-  const femaleHints = [
-    "female","woman","girl","zira","samantha","susan","karen",
-    "hazel","heera","veena","raveena","joanna","aria","libby",
-    "google uk english female","google us english female"
-  ];
-
-  const hints = gender === "female" ? femaleHints : maleHints;
-
-  const byName = pool.find(function(voice){
-    const name = String(voice.name || "").toLowerCase();
-    return hints.some(function(hint){
-      return name.indexOf(hint) !== -1;
-    });
-  });
-
-  if(byName) return byName;
-
-  /* Some browsers do not expose gender in voice names.
-     Keep a language-matched voice as a safe fallback. */
-  return pool[0] || voices[0] || null;
-}
-
-function configureUtteranceVoice(utterance, gender, lang){
-  const voice = getSpeechVoice(gender, lang);
-  if(voice){
-    utterance.voice = voice;
-    utterance.lang = voice.lang || lang;
-  }else{
-    utterance.lang = lang;
-  }
-
-  utterance.rate = 0.85;
-  utterance.pitch = gender === "female" ? 1.05 : 0.9;
+  const label = phase === "hindi" ? "Hindi meaning" : "English word";
+  el.textContent = "Now Playing: No. " + number + " — " + word + " (" + label + ")";
 }
 
 function playSelectedDictionaryAudio(){
@@ -2827,16 +2717,16 @@ function playSelectedDictionaryAudio(){
   if(dictionaryAudioPaused){
     dictionaryAudioPaused = false;
     window.speechSynthesis.resume();
-    setAudioStatus("Audio resumed — " + (dictionaryAudioGender === "female" ? "Female" : "Male") + " voice.");
+    const item = dictionaryAudioQueue[dictionaryAudioIndex];
+    const number = item ? dictionaryWordsCache.indexOf(item) + 1 : 0;
+    if(item) setAudioCurrentWord(number, String(item.word || "").trim(), dictionaryAudioCurrentPhase);
+    setAudioStatus("Audio resumed — yahin se continue hoga.");
     return;
   }
 
-  if(!dictionaryAudioStopped && dictionaryAudioQueue.length){
-    /* Already playing: do not restart the current word. */
-    if(window.speechSynthesis.speaking){
-      setAudioStatus("Audio already playing.");
-      return;
-    }
+  if(!dictionaryAudioStopped && dictionaryAudioQueue.length && window.speechSynthesis.speaking){
+    setAudioStatus("Audio already playing.");
+    return;
   }
 
   if(!dictionaryWordsCache.length){
@@ -2860,7 +2750,6 @@ function playSelectedDictionaryAudio(){
     return;
   }
 
-  dictionaryAudioGender = getSelectedAudioGender();
   dictionaryAudioQueue = dictionaryWordsCache.slice(start-1,end);
   dictionaryAudioIndex = 0;
   dictionaryAudioStopped = false;
@@ -2886,6 +2775,7 @@ function speakNextDictionaryAudio(){
     dictionaryAudioStopped = true;
     dictionaryAudioPaused = false;
     dictionaryAudioCurrentUtterance = null;
+    setAudioCurrentWord(0, "", "");
     return;
   }
 
@@ -2902,26 +2792,18 @@ function speakNextDictionaryAudio(){
     return;
   }
 
+  setAudioCurrentWord(number, englishText, "english");
   setAudioStatus(
-    "Playing " +
-    number +
-    ". " +
-    englishText +
-    " → Hindi (" +
-    (dictionaryAudioGender === "female" ? "Female" : "Male") +
-    ")"
+    "Playing No. " + number + ". " + englishText + " → Hindi"
   );
 
   const englishUtterance = new SpeechSynthesisUtterance(englishText);
   dictionaryAudioCurrentUtterance = englishUtterance;
   dictionaryAudioCurrentText = englishText;
   dictionaryAudioCurrentPhase = "english";
-
-  configureUtteranceVoice(
-    englishUtterance,
-    dictionaryAudioGender,
-    "en-US"
-  );
+  englishUtterance.lang = "en-US";
+  englishUtterance.rate = 0.85;
+  englishUtterance.pitch = 1;
 
   englishUtterance.onend = function(){
     if(dictionaryAudioStopped) return;
@@ -2933,26 +2815,18 @@ function speakNextDictionaryAudio(){
       return;
     }
 
+    setAudioCurrentWord(number, englishText, "hindi");
     setAudioStatus(
-      "Playing " +
-      number +
-      ". " +
-      englishText +
-      " → Hindi meaning (" +
-      (dictionaryAudioGender === "female" ? "Female" : "Male") +
-      ")"
+      "Playing No. " + number + ". " + englishText + " → Hindi meaning"
     );
 
     const hindiUtterance = new SpeechSynthesisUtterance(hindiText);
     dictionaryAudioCurrentUtterance = hindiUtterance;
     dictionaryAudioCurrentText = hindiText;
     dictionaryAudioCurrentPhase = "hindi";
-
-    configureUtteranceVoice(
-      hindiUtterance,
-      dictionaryAudioGender,
-      "hi-IN"
-    );
+    hindiUtterance.lang = "hi-IN";
+    hindiUtterance.rate = 0.85;
+    hindiUtterance.pitch = 1;
 
     hindiUtterance.onend = function(){
       if(dictionaryAudioStopped) return;
@@ -2992,6 +2866,9 @@ function pauseDictionaryAudio(){
   ){
     dictionaryAudioPaused = true;
     window.speechSynthesis.pause();
+    const item = dictionaryAudioQueue[dictionaryAudioIndex];
+    const number = item ? dictionaryWordsCache.indexOf(item) + 1 : 0;
+    if(item) setAudioCurrentWord(number, String(item.word || "").trim(), dictionaryAudioCurrentPhase);
     setAudioStatus(
       "Audio paused. Play / Resume dabane par yahin se continue hoga."
     );
@@ -3011,6 +2888,7 @@ function stopDictionaryAudio(){
     window.speechSynthesis.cancel();
   }
 
+  setAudioCurrentWord(0, "", "");
   setAudioStatus("Audio stopped.");
 }
 
@@ -4626,7 +4504,6 @@ document
 ===================================================== */
 
 initTheme();
-initAudioGender();
 initDictionaryMeaningToggle();
 updateAudioRangeInfo();
 checkServer();
