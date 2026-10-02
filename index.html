@@ -1510,6 +1510,9 @@ let dictionaryWordsCache = [];
 let dictionaryAudioQueue = [];
 let dictionaryAudioIndex = 0;
 let dictionaryAudioStopped = true;
+let dictionaryAudioPaused = false;
+let dictionaryAudioCurrentUtterance = null;
+let dictionaryAudioCurrentPhase = "";
 
 
 /* =====================================================
@@ -2567,10 +2570,27 @@ function playSelectedDictionaryAudio(){
     return;
   }
 
-  /* Resume exactly where Pause was pressed. */
-  if(window.speechSynthesis.paused && !dictionaryAudioStopped){
-    window.speechSynthesis.resume();
-    setAudioStatus("Audio resumed.");
+  /*
+   * IMPORTANT AUDIO FIX:
+   * Never rebuild the utterance after Pause. Keep the same utterance
+   * alive and ask the browser to resume it. This preserves the current
+   * spoken position instead of starting the word again.
+   */
+  if(dictionaryAudioPaused && !dictionaryAudioStopped && dictionaryAudioCurrentUtterance){
+    dictionaryAudioPaused = false;
+    try{
+      window.speechSynthesis.resume();
+    }catch(error){}
+    setAudioStatus("Audio resumed — wahi se continue ho raha hai.");
+    return;
+  }
+
+  if(window.speechSynthesis.paused && !dictionaryAudioStopped && dictionaryAudioCurrentUtterance){
+    dictionaryAudioPaused = false;
+    try{
+      window.speechSynthesis.resume();
+    }catch(error){}
+    setAudioStatus("Audio resumed — wahi se continue ho raha hai.");
     return;
   }
 
@@ -2598,6 +2618,9 @@ function playSelectedDictionaryAudio(){
   dictionaryAudioQueue = dictionaryWordsCache.slice(start-1,end);
   dictionaryAudioIndex = 0;
   dictionaryAudioStopped = false;
+  dictionaryAudioPaused = false;
+  dictionaryAudioCurrentUtterance = null;
+  dictionaryAudioCurrentPhase = "";
 
   window.speechSynthesis.cancel();
   speakNextDictionaryAudio();
@@ -2628,11 +2651,14 @@ function speakNextDictionaryAudio(){
   setAudioStatus("Playing No. " + number + " — English: " + englishText + " → Hindi: " + (hindiText || "meaning pending"));
 
   const englishUtterance = new SpeechSynthesisUtterance(englishText);
+  dictionaryAudioCurrentUtterance = englishUtterance;
+  dictionaryAudioCurrentPhase = "english";
   englishUtterance.lang = "en-US";
   englishUtterance.rate = 0.85;
   englishUtterance.pitch = 1;
 
   englishUtterance.onend = function(){
+    if(dictionaryAudioCurrentUtterance === englishUtterance) dictionaryAudioCurrentUtterance = null;
     if(dictionaryAudioStopped) return;
 
     if(!hindiText){
@@ -2645,17 +2671,21 @@ function speakNextDictionaryAudio(){
     setAudioStatus("Playing No. " + number + " — Hindi: " + hindiText);
 
     const hindiUtterance = new SpeechSynthesisUtterance(hindiText);
+    dictionaryAudioCurrentUtterance = hindiUtterance;
+    dictionaryAudioCurrentPhase = "hindi";
     hindiUtterance.lang = "hi-IN";
     hindiUtterance.rate = 0.85;
     hindiUtterance.pitch = 1;
 
     hindiUtterance.onend = function(){
+      if(dictionaryAudioCurrentUtterance === hindiUtterance) dictionaryAudioCurrentUtterance = null;
       if(dictionaryAudioStopped) return;
       dictionaryAudioIndex++;
       speakNextDictionaryAudio();
     };
 
     hindiUtterance.onerror = function(){
+      if(dictionaryAudioCurrentUtterance === hindiUtterance) dictionaryAudioCurrentUtterance = null;
       if(dictionaryAudioStopped) return;
       dictionaryAudioIndex++;
       speakNextDictionaryAudio();
@@ -2665,6 +2695,7 @@ function speakNextDictionaryAudio(){
   };
 
   englishUtterance.onerror = function(){
+    if(dictionaryAudioCurrentUtterance === englishUtterance) dictionaryAudioCurrentUtterance = null;
     if(dictionaryAudioStopped) return;
     dictionaryAudioIndex++;
     speakNextDictionaryAudio();
@@ -2674,14 +2705,20 @@ function speakNextDictionaryAudio(){
 }
 
 function pauseDictionaryAudio(){
-  if("speechSynthesis" in window && window.speechSynthesis.speaking && !window.speechSynthesis.paused){
-    window.speechSynthesis.pause();
-    setAudioStatus("Audio paused — Play dabane par yahin se resume hoga.");
+  if("speechSynthesis" in window && dictionaryAudioCurrentUtterance && window.speechSynthesis.speaking){
+    dictionaryAudioPaused = true;
+    try{
+      window.speechSynthesis.pause();
+    }catch(error){}
+    setAudioStatus("Audio paused — Play dabane par isi jagah se resume hoga.");
   }
 }
 
 function stopDictionaryAudio(){
   dictionaryAudioStopped = true;
+  dictionaryAudioPaused = false;
+  dictionaryAudioCurrentUtterance = null;
+  dictionaryAudioCurrentPhase = "";
   dictionaryAudioQueue = [];
   dictionaryAudioIndex = 0;
   if("speechSynthesis" in window) window.speechSynthesis.cancel();
